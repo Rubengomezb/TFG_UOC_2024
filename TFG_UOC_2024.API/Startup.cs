@@ -85,7 +85,7 @@ namespace TFG_UOC_2024.API
             services.AddDbContext<ApplicationContext>(options =>
                 options
                     .UseMySql(Configuration.GetConnectionString("DefaultConnection"),
-                        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                        ServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection")))
                     );
 
             // as of 3.1.1 the internal .net core JSON doens't handle referenceloophandling so we still need to use Newtonsoft
