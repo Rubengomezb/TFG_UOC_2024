@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using TFG_UOC_2024.DB.Models.Identity;
+using TFG_UOC_2024.DB.Models.BaseModels;
 
 namespace TFG_UOC_2024.DB.Context
 {

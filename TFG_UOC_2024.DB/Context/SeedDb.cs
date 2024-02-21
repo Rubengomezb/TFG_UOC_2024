@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using TFG_UOC_2024.DB.Models.Identity;
 
 namespace TFG_UOC_2024.DB.Context
 {

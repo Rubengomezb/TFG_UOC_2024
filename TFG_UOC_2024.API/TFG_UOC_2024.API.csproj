@@ -34,4 +34,7 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TFG_UOC_2024.CORE\TFG_UOC_2024.CORE.csproj" />
+  </ItemGroup>
 </Project>

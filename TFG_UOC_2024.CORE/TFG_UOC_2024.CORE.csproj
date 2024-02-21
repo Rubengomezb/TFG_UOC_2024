@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TFG_UOC_2024.DB\TFG_UOC_2024.DB.csproj" />
+  </ItemGroup>
+
 </Project>
