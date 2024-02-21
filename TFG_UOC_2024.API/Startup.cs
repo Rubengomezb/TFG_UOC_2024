@@ -34,6 +34,12 @@ using Newtonsoft.Json;
 using RainstormTech.Services.CoreServices;
 using RainstormTech.Helpers;
 using Microsoft.AspNetCore.Authentication;
+using TFG_UOC_2024.DB.Context;
+using TFG_UOC_2024.DB.Models.Identity;
+using TFG_UOC_2024.CORE.Components;
+using TFG_UOC_2024.CORE.Services.Interfaces;
+using TFG_UOC_2024.CORE.Services.User;
+using TFG_UOC_2024.API.Components;
 
 namespace TFG_UOC_2024.API
 {
@@ -194,7 +200,7 @@ namespace TFG_UOC_2024.API
             // configure DI for application services
 
             /* Authentication / users / roles */
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<Microsoft.AspNetCore.Authentication.IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
         }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TFG_UOC_2024.CORE.Components.Authorization
 {
-    public static class Claims
+    public static class SystemClaims
     {
         public static List<Claim> GetClaims()
         {

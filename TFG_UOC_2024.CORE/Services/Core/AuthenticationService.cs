@@ -1,8 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using TFG_UOC_2024.CORE.Components;
+using TFG_UOC_2024.CORE.Models;
+using TFG_UOC_2024.CORE.Models.DTOs;
+using TFG_UOC_2024.CORE.Services.Base;
+using TFG_UOC_2024.CORE.Services.Interfaces;
+using TFG_UOC_2024.DB.Context;
+using TFG_UOC_2024.DB.Models.Identity;
+using static TFG_UOC_2024.CORE.Models.DTOs.ContactPropertyDTO;
 
 namespace TFG_UOC_2024.CORE.Services.Core
 {
@@ -163,11 +181,11 @@ namespace TFG_UOC_2024.CORE.Services.Core
 
             // get security key
             var appSettingsSection = config.GetSection("AppSettings");
-            var appSettings = appSettingsSection.Get<AppSettings>();
+            var appSettings = appSettingsSection..Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
             // create a signing key from the app settings
-            var authSigningKey = new SymmetricSecurityKey(key);
+            var authSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key);
 
             // generate JWT token
             var token = new JwtSecurityToken(

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using TFG_UOC_2024.DB.Models.Identity;
 using TFG_UOC_2024.DB.Models.BaseModels;
+using System.Security.Claims;
 
 namespace TFG_UOC_2024.DB.Context
 {

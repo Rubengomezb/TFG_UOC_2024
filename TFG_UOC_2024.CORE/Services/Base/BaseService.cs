@@ -1,8 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using TFG_UOC_2024.CORE.Components;
+using TFG_UOC_2024.DB.Context;
+using TFG_UOC_2024.DB.Models.Identity;
 
 namespace TFG_UOC_2024.CORE.Services.Base
 {
