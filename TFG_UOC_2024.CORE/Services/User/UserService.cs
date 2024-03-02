@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TFG_UOC_2024.CORE.Components;
+using TFG_UOC_2024.CORE.Components.Authorization;
 using TFG_UOC_2024.CORE.Helpers;
 using TFG_UOC_2024.CORE.Models;
 using TFG_UOC_2024.CORE.Models.DTOs;
@@ -543,7 +544,7 @@ namespace TFG_UOC_2024.CORE.Services.User
                 var aRole = await _roleManager.FindByNameAsync(role);
                 if (string.Equals(role.ToLower(), AdministratorUser.ToLower(), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    roleClaims.AddRange(RainstormTech.Api.Components.Authorization.SystemClaims.GetClaims());
+                    roleClaims.AddRange(SystemClaims.GetClaims());
                 }
                 roleClaims.AddRange(await _roleManager.GetClaimsAsync(aRole).ConfigureAwait(false));
             }

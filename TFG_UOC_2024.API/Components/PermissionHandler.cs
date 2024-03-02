@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TFG_UOC_2024.DB.Models.Identity;
+using static TFG_UOC_2024.CORE.Components.Authorization.SystemClaims;
 
 namespace TFG_UOC_2024.API.Components
 {

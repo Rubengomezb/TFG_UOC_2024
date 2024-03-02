@@ -18,21 +18,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using RainstormTech.Components;
-using RainstormTech.Data.Data;
-using RainstormTech.Models.Identity;
-using RainstormTech.Services;
 using Microsoft.OpenApi.Models;
-using RainstormTech.Services.Interfaces;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using RainstormTech.API.Components;
-using RainstormTech.Services.User;
 using Microsoft.AspNetCore.Authorization;
-using RainstormTech.Components.Authorization;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using RainstormTech.Services.CoreServices;
-using RainstormTech.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using TFG_UOC_2024.DB.Context;
 using TFG_UOC_2024.DB.Models.Identity;
@@ -40,6 +30,7 @@ using TFG_UOC_2024.CORE.Components;
 using TFG_UOC_2024.CORE.Services.Interfaces;
 using TFG_UOC_2024.CORE.Services.User;
 using TFG_UOC_2024.API.Components;
+using TFG_UOC_2024.CORE.Helpers;
 
 namespace TFG_UOC_2024.API
 {

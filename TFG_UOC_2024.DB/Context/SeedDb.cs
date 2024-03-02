@@ -35,7 +35,8 @@ namespace TFG_UOC_2024.DB.Context
                     SecurityStamp = Guid.NewGuid().ToString(),
                     UserName = adminUsername,
                     CreatedOn = DateTime.UtcNow,
-                    Contact = new Contact() { Email = adminEmail, FirstName = adminFirst, LastName = adminLast, CreatedOn = DateTime.UtcNow }
+                    PhoneNumber = "666666666",
+                    Contact = new Contact() { Email = adminEmail, FirstName = adminFirst, LastName = adminLast, CreatedOn = DateTime.UtcNow, PhoneNumber = "666666666", Title = "Prueba", }
                 };
                 var result = userManager.CreateAsync(user, adminPassword).Result;
             }

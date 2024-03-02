@@ -181,7 +181,7 @@ namespace TFG_UOC_2024.CORE.Services.Core
 
             // get security key
             var appSettingsSection = config.GetSection("AppSettings");
-            var appSettings = appSettingsSection..Get<AppSettings>();
+            var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
             // create a signing key from the app settings
