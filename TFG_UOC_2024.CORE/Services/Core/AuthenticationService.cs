@@ -48,7 +48,7 @@ namespace TFG_UOC_2024.CORE.Services.Core
         #region Login
         public async Task<ServiceResponse<UserDTO>> Login(Login model)
         {
-            var r = new ServiceResponse<UserDTO>();
+            ServiceResponse<UserDTO>? r = new ServiceResponse<UserDTO>();
 
             try
             {

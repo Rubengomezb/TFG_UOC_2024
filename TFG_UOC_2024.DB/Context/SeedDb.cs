@@ -36,7 +36,7 @@ namespace TFG_UOC_2024.DB.Context
                     UserName = adminUsername,
                     CreatedOn = DateTime.UtcNow,
                     PhoneNumber = "666666666",
-                    Contact = new Contact() { Email = adminEmail, FirstName = adminFirst, LastName = adminLast, CreatedOn = DateTime.UtcNow, PhoneNumber = "666666666", Title = "Prueba", CreatedBy = Guid.NewGuid()}
+                    Contact = new Contact() { Email = adminEmail, FirstName = adminFirst, LastName = adminLast, CreatedOn = DateTime.UtcNow, PhoneNumber = "666666666", Title = "Prueba", CreatedBy = Guid.NewGuid(), WebsiteUrl = "."}
                 };
                 var result = userManager.CreateAsync(user, adminPassword).Result;
             }

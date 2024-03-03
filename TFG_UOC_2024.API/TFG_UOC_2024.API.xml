@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<doc>
+  <assembly>
+    <name>Demo.API</name>
+  </assembly>
+  <members>
+    <member name="T:TFG_UOC_2024.API.Components.Authorization.PermissionRequirement">
+      <summary>
+        Holds the permissionto be evaluated
+      </summary>
+    </member>
+    <member name="T:TFG_UOC_2024.API.Components.Authorization.PermissionAuthorizationHandler">
+      <summary>
+        This authorization handler checks whether a user has the required permission, and if so, access is allowed.
+      </summary>
+    </member>
+    <member name="T:TFG_UOC_2024.API.Components.Authorization.PermissionPolicyProvider">
+      <summary>
+        Dynamically handle policies
+      </summary>
+    </member>
+    <member name="M:TFG_UOC_2024.API.Controllers.BaseController.Respond``1(TFG_UOC_2024.API.Models.ServiceResponse{``0})">
+      <summary>
+        Create the ActionResult response based on the underlying response from the service layer
+      </summary>
+      <typeparam name="T"></typeparam>
+      <param name="r"></param>
+      <returns></returns>
+    </member>
+    <member name="M:TFG_UOC_2024.API.Controllers.BaseController.Respond(TFG_UOC_2024.API.Models.GenericResponse)">
+      <summary>
+        Create the ActionResult response based on the underlying response from the service layer
+      </summary>
+      <param name="r"></param>
+      <returns></returns>
+    </member>
+    <member name="M:TFG_UOC_2024.API.Controllers.UserController.Get(TFG_UOC_2024.API.Models.UserSearchInput)">
+      <summary>
+        Searches for users
+      </summary>
+      <param name="req"></param>
+      <returns>Returns a paged list of matching users</returns>
+    </member>
+  </members>
+</doc>

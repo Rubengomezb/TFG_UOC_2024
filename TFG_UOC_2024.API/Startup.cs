@@ -23,7 +23,6 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authentication;
 using TFG_UOC_2024.DB.Context;
 using TFG_UOC_2024.DB.Models.Identity;
 using TFG_UOC_2024.CORE.Components;
@@ -31,6 +30,7 @@ using TFG_UOC_2024.CORE.Services.Interfaces;
 using TFG_UOC_2024.CORE.Services.User;
 using TFG_UOC_2024.API.Components;
 using TFG_UOC_2024.CORE.Helpers;
+using TFG_UOC_2024.CORE.Services.Core;
 
 namespace TFG_UOC_2024.API
 {
@@ -74,7 +74,7 @@ namespace TFG_UOC_2024.API
                         },
                     });
 
-                var filePath = Path.Combine(System.AppContext.BaseDirectory, "RainstormTech.API.xml");
+                var filePath = Path.Combine(System.AppContext.BaseDirectory, "TFG_UOC_2024.API.xml");
                 c.IncludeXmlComments(filePath);
             });
 
@@ -191,7 +191,7 @@ namespace TFG_UOC_2024.API
             // configure DI for application services
 
             /* Authentication / users / roles */
-            services.AddScoped<Microsoft.AspNetCore.Authentication.IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
         }
