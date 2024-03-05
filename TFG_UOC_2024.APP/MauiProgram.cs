@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using TFG_UOC_2024.APP.Interfaces;
 using TFG_UOC_2024.APP.Services;
 using TFG_UOC_2024.APP.Views;
 
@@ -32,16 +33,6 @@ namespace TFG_UOC_2024.APP
 
         public static IServiceCollection AddCustomApiHttpClient(this IServiceCollection services)
         {
-            services.AddSingleton<Interfaces.IPlatformHttpMessageHandler>(_ =>
-            {
-#if ANDROID
-            return new TFG_UOC_2024.APP.Platforms.Android.AndroidHttpMessageHandler();
-#elif IOS
-                return new TFG_UOC_2024.APP.Platforms.iOS.IosHttpMessageHandler();
-#endif
-                return null;
-            });
-
             services.AddHttpClient("Client", httpClient =>
             {
                 var baseAddress =
@@ -50,12 +41,7 @@ namespace TFG_UOC_2024.APP
                             : "https://localhost:44318";
 
                 httpClient.BaseAddress = new Uri(baseAddress);
-            })
-                .ConfigureHttpMessageHandlerBuilder(builder =>
-                {
-                    var platfromHttpMessageHandler = builder.Services.GetRequiredService<Interfaces.IPlatformHttpMessageHandler>();
-                    builder.PrimaryHandler = platfromHttpMessageHandler.GetHttpMessageHandler();
-                });
+            });
 
             return services;
         }

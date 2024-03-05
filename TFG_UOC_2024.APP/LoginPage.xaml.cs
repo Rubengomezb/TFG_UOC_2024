@@ -18,11 +18,11 @@ public partial class LoginPage : ContentPage
     {
         var loginDto = new Login();
         loginDto.Username = "admin";
-        loginDto.Username = "passW0rd!";
+        loginDto.Password = "passW0rd!";
         var error = await _authService.LoginAsync(loginDto);
         if (string.IsNullOrWhiteSpace(error))
         {
-            await Shell.Current.GoToAsync($"//{nameof(ApplicationDetailsPage)}");
+            await Shell.Current.GoToAsync($"{nameof(ApplicationDetailsPage)}");
         }
         else
         {

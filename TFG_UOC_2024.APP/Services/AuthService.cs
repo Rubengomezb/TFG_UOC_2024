@@ -45,7 +45,7 @@ namespace TFG_UOC_2024.APP.Services
         {
             var httpClient = _httpClientFactory.CreateClient("Client");
 
-            var response = await httpClient.PostAsJsonAsync<Login>("api/auth/login", dto);
+            var response = await httpClient.PostAsJsonAsync<Login>("api/Authentication/login", dto);
 
             if (response.IsSuccessStatusCode)
             {
