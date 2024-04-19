@@ -31,6 +31,12 @@ using TFG_UOC_2024.CORE.Services.User;
 using TFG_UOC_2024.API.Components;
 using TFG_UOC_2024.CORE.Helpers;
 using TFG_UOC_2024.CORE.Services.Core;
+using TFG_UOC_2024.DB.Repository.Interfaces;
+using TFG_UOC_2024.DB.Repository;
+using TFG_UOC_2024.CORE.Managers.Interfaces;
+using TFG_UOC_2024.CORE.Managers;
+using TFG_UOC_2024.CORE.Services.Menu;
+using TFG_UOC_2024.CORE.Clients;
 
 namespace TFG_UOC_2024.API
 {
@@ -194,6 +200,20 @@ namespace TFG_UOC_2024.API
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IRecipeManager, RecipeManager>();
+            services.AddScoped<IMenuManager, MenuManager>();
+            services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<IHttpRecipeClient, HttpRecipeClient>();
+            services.AddScoped<IUserRepository>(provider => new UserRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IContactRepository>(provider => new ContactRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IUserRoleRepository>(provider => new UserRoleRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<ICategoryRepository>(provider => new CategoryRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IIngredientRepository>(provider => new IngredientRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IMenuRepository>(provider => new MenuRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IRecipeRepository>(provider => new RecipeRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IUserFavoriteRepository>(provider => new UserFavoriteRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IUserRoleRepository>(provider => new UserRoleRepository(provider.GetRequiredService<ApplicationContext>()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

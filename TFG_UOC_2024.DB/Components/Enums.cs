@@ -24,5 +24,12 @@ namespace TFG_UOC_2024.DB.Components
             BadRequest,
             NotFound
         }
+
+        public enum EatTime
+        {
+            Breakfast,
+            Lunch,
+            Dinner
+        }
     }
 }

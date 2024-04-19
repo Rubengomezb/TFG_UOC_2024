@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using TFG_UOC_2024.DB.Models.Identity;
 using TFG_UOC_2024.DB.Models.BaseModels;
 using System.Security.Claims;
+using TFG_UOC_2024.DB.Models;
 
 namespace TFG_UOC_2024.DB.Context
 {
@@ -18,6 +19,11 @@ namespace TFG_UOC_2024.DB.Context
     ApplicationRoleClaim, ApplicationUserToken>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ApplicationContext()
+        {
+
+        }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options, IHttpContextAccessor httpContextAccessor = null)
             : base(options)
@@ -34,6 +40,11 @@ namespace TFG_UOC_2024.DB.Context
         public virtual DbSet<ApplicationUserLogin> ApplicationUserLogins { get; set; }
         public virtual DbSet<ApplicationUserToken> ApplicationUserTokens { get; set; }
         public virtual DbSet<Contact> Contact { get; set; }
+        public virtual DbSet<UserFavorite> UserFavorite { get; set; }
+        public virtual DbSet<Recipe> Recipe { get; set; }
+        public virtual DbSet<Menu> Menu { get; set; }
+        public virtual DbSet<Ingredient> Ingredient { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -87,6 +98,30 @@ namespace TFG_UOC_2024.DB.Context
                     .WithOne(e => e.Role)
                     .HasForeignKey(rc => rc.RoleId)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<Recipe>(b =>
+            {
+                b.HasMany(e => e.Ingredients)
+                .WithOne(e => e.RecipeNavigation)
+                .HasForeignKey(rc => rc.Recipe)
+                .IsRequired();
+            });
+
+            modelBuilder.Entity<Category>(b =>
+            {
+                b.HasMany(e => e.Ingredients)
+                .WithOne(e => e.CategoryNavigation)
+                .HasForeignKey(rc => rc.Category)
+                .IsRequired();
+            });
+
+            modelBuilder.Entity<Menu>(b =>
+            {
+                b.HasMany(e => e.Recipes)
+                .WithOne(e => e.MenuNavigation)
+                .HasForeignKey(rc => rc.Menu)
+                .IsRequired();
             });
 
             OnModelCreatingPartial(modelBuilder);

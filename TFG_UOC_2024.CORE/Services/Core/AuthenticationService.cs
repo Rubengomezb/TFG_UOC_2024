@@ -20,6 +20,7 @@ using TFG_UOC_2024.CORE.Services.Base;
 using TFG_UOC_2024.CORE.Services.Interfaces;
 using TFG_UOC_2024.DB.Context;
 using TFG_UOC_2024.DB.Models.Identity;
+using TFG_UOC_2024.DB.Repository.Interfaces;
 using static TFG_UOC_2024.CORE.Models.DTOs.ContactPropertyDTO;
 
 namespace TFG_UOC_2024.CORE.Services.Core
@@ -29,6 +30,8 @@ namespace TFG_UOC_2024.CORE.Services.Core
         #region Constructor        
         private IUserService _userService;
         protected RoleManager<ApplicationRole> _roleManager;
+        private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IContactRepository _contactRepository;
 
         public AuthenticationService(
             UserManager<ApplicationUser> userManager,
@@ -36,12 +39,15 @@ namespace TFG_UOC_2024.CORE.Services.Core
             IConfiguration configuration,
             IMapper mapper,
             IUserService us,
-            ApplicationContext context,
+            IUserRoleRepository userRoleRepository,
+            IContactRepository contactRepository,
             ILogger<AuthenticationService> logger,
-            IHttpContextAccessor hca) : base(userManager, context, mapper, hca, logger, configuration)
+            IHttpContextAccessor hca) : base(userManager, mapper, hca, logger, configuration)
         {
             _roleManager = roleManager;
             _userService = us;
+            _userRoleRepository = userRoleRepository;
+            _contactRepository = contactRepository;
         }
         #endregion
 
@@ -146,12 +152,10 @@ namespace TFG_UOC_2024.CORE.Services.Core
             try
             {
                 // get the Contact related to this user/login
-                user.Contact = await db.Contact.FirstAsync(o => o.Id == user.ContactId);
+                user.Contact = _contactRepository.GetById(user.ContactId);
 
                 // get user roles
-                user.UserRoles = db.UserRoles
-                                    .Include(o => o.Role)
-                                    .Where(o => o.UserId == user.Id).ToList();
+                user.UserRoles = _userRoleRepository.GetUserRole(user.Id).ToList();
 
                 // send down user info including the new JWT token
                 var dto = mapper.Map<UserDTO>(user);

@@ -20,7 +20,6 @@ namespace TFG_UOC_2024.CORE.Services.Base
 
         // define db context
         protected UserManager<ApplicationUser> userManager;
-        protected ApplicationContext db { get; set; }
         protected IMapper mapper { get; set; }
         protected Microsoft.Extensions.Logging.ILogger log;
         protected IConfiguration config;
@@ -29,14 +28,12 @@ namespace TFG_UOC_2024.CORE.Services.Base
 
         public BaseService(
             UserManager<ApplicationUser> u,
-            ApplicationContext dbContext,
             IMapper m,
             IHttpContextAccessor hca,
             Microsoft.Extensions.Logging.ILogger logger = null,
             IConfiguration configuration = null)
         {
             this.userManager = u;
-            this.db = dbContext;
             this.mapper = m;
             this.log = logger;
             this.config = configuration;

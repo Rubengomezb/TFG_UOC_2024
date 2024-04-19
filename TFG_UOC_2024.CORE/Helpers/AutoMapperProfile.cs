@@ -8,6 +8,8 @@ using static TFG_UOC_2024.CORE.Models.DTOs.ContactPropertyDTO;
 using TFG_UOC_2024.CORE.Models.DTOs;
 using TFG_UOC_2024.DB.Models.Identity;
 using System.IdentityModel.Claims;
+using TFG_UOC_2024.DB.Models;
+using TFG_UOC_2024.CORE.Models.ApiModels;
 
 namespace TFG_UOC_2024.CORE.Helpers
 {
@@ -36,6 +38,27 @@ namespace TFG_UOC_2024.CORE.Helpers
 
             CreateMap<Contact, ContactSimpleDTO>();
             CreateMap<Contact, ContactDTO>();
+
+            CreateMap<RecipeFavorite, UserFavorite>();
+            CreateMap<Recipe,RecipeDTO>();
+            CreateMap<RecipeDTO, Recipe>();
+            CreateMap<Category, CategoryDTO>();
+
+            CreateMap<Ingredient, IngredientDTO>();
+            CreateMap<Category, IngredientCategoryDTO>();
+            CreateMap<Category, CategoryDTO>();
+            CreateMap<CategoryDTO, Category>();
+            CreateMap<RecipeApi, RecipeDTO>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.label))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.image));
+
+            CreateMap<IngredientApi, IngredientDTO>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.text))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.image))
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => (double)src.quantity))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.foodCategory));
+
+            CreateMap<IngredientDTO, Ingredient>();
 
             // make sure all datetime values are UTC
             ValueTransformers.Add<DateTime>(val => !((DateTime?)val).HasValue ? val : DateTime.SpecifyKind(val, DateTimeKind.Utc));
