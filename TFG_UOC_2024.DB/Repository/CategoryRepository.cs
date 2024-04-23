@@ -24,7 +24,7 @@ namespace TFG_UOC_2024.DB.Repository
 
         public void UpsertRange(List<Category> categories) 
         {
-            DbContext.Category.UpsertRange(categories);
+            DbContext.Category.UpdateRange(categories);
         }
     }
 }

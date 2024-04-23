@@ -26,7 +26,7 @@ namespace TFG_UOC_2024.CORE.Helpers
 
             CreateMap<UserDTO, ApplicationUser>();
             CreateMap<UserInput, ApplicationUser>()
-                .ForMember(dest => dest.Contact, opt => opt.MapFrom(src => new Contact() { FirstName = src.FirstName, LastName = src.LastName, Email = src.Email }));
+                .ForMember(dest => dest.Contact, opt => opt.MapFrom(src => new Contact() { FirstName = src.FirstName, LastName = src.LastName, Email = src.Email, PhoneNumber = src.PhoneNumber}));
 
             CreateMap<ApplicationUserRole, UserRoleDTO>()
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name))
@@ -41,7 +41,7 @@ namespace TFG_UOC_2024.CORE.Helpers
 
             CreateMap<RecipeFavorite, UserFavorite>();
             CreateMap<Recipe,RecipeDTO>();
-            CreateMap<RecipeDTO, Recipe>();
+            CreateMap<RecipeDTO, Recipe>().ReverseMap();
             CreateMap<Category, CategoryDTO>();
 
             CreateMap<Ingredient, IngredientDTO>();
@@ -59,6 +59,8 @@ namespace TFG_UOC_2024.CORE.Helpers
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.foodCategory));
 
             CreateMap<IngredientDTO, Ingredient>();
+            CreateMap<Menu, MenuDTO>();
+            CreateMap<MenuDTO, Menu>();
 
             // make sure all datetime values are UTC
             ValueTransformers.Add<DateTime>(val => !((DateTime?)val).HasValue ? val : DateTime.SpecifyKind(val, DateTimeKind.Utc));

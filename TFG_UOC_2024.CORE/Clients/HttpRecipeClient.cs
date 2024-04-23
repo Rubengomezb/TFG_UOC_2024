@@ -33,15 +33,12 @@ namespace TFG_UOC_2024.CORE.Clients
             this.baseApiUrl = appSettings.BaseRecipeApiUrl;
             this.token = appSettings.RecipeApiToken;
             this.baseApiId = appSettings.RecipeApiId;
-            //this.baseApiUrl = _configuration.GetValue<string>("BaseRecipeApiUrl");
-            //this.token = _configuration.GetValue<string>("RecipeApiToken");
-            //this.baseApiId = _configuration.GetValue<string>("RecipeApiId");
         }
 
         public async Task<RecipeResponse> GetRecipe(string filter)
         {
             var parameters = string.Format("?q={0}&app_id={1}&app_key={2}&from=0&to=50", filter, this.baseApiId, this.token);
-            var requestUrl = string.Format("{0}{1}", this.baseApiUrl, parameters); ;
+            var requestUrl = string.Format("{0}{1}", this.baseApiUrl, parameters);
 
             return await this.Get<RecipeResponse>(requestUrl);
         }

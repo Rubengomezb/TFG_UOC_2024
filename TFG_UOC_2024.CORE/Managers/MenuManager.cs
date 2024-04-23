@@ -31,9 +31,9 @@ namespace TFG_UOC_2024.CORE.Managers
             _m = m;
         }
 
-        public async Task<ServiceResponse<MenuDTO>> GetMenu(DateTime startTime, DateTime endTime)
+        public async Task<ServiceResponse<IEnumerable<MenuDTO>>> GetMenu(DateTime startTime, DateTime endTime)
         {
-            var r = new ServiceResponse<MenuDTO>();
+            var r = new ServiceResponse<IEnumerable<MenuDTO>>();
             try
             {
                 var user = await _userService.GetSelf();
@@ -41,7 +41,7 @@ namespace TFG_UOC_2024.CORE.Managers
                 if (!re.Any())
                     return r.NotFound("recipe not found");
 
-                var menuDto = _m.Map<MenuDTO>(re);
+                var menuDto = _m.Map<IEnumerable<MenuDTO>>(re);
                 return r.Ok(menuDto);
             }
             catch (Exception ex)
@@ -66,14 +66,15 @@ namespace TFG_UOC_2024.CORE.Managers
                         var menuDto = new MenuDTO()
                         {
                             EatTime = (EatTime)eatTime,
-                            Id = Guid.NewGuid(),
                             Date = startTime,
                             userId = user.Data.Id,
-                            Recipe = _m.Map<RecipeDTO>(recipe.hits.FirstOrDefault())
+                            Recipe = _m.Map<RecipeDTO>(recipe.hits.FirstOrDefault().recipe)
                         };
+
+                        menuList.Add(menuDto);
                     }
                    
-                    startTime.AddDays(1);
+                    startTime = startTime.AddDays(1);
                 }
                 
 

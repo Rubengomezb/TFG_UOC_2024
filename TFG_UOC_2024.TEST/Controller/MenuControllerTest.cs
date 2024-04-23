@@ -44,8 +44,8 @@ namespace TFG_UOC_2024.TEST.Controller
 
             var startDate = new DateTime(2024, 4, 1);
             var endDate = new DateTime(2024, 4, 7);
-            var expectedMenu = new MenuDTO();
-            var serviceResponse = new ServiceResponse<MenuDTO>()
+            var expectedMenu = new List<MenuDTO>().AsEnumerable();
+            var serviceResponse = new ServiceResponse<IEnumerable<MenuDTO>>()
             {
                 Data = expectedMenu,
             };
@@ -59,7 +59,7 @@ namespace TFG_UOC_2024.TEST.Controller
             ActionResult? actionResult = await controller.GetWeeklyMenu(startDate, endDate);
 
             // Assert
-            var result = ((OkObjectResult)actionResult).Value as MenuDTO; ;
+            var result = ((OkObjectResult)actionResult).Value as IEnumerable<MenuDTO>; ;
             Assert.IsNotNull(actionResult);
             Assert.That(result, Is.EqualTo(expectedMenu));
         }

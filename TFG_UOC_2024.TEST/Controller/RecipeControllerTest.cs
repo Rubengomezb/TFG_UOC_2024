@@ -63,7 +63,7 @@ namespace TFG_UOC_2024.TEST.Controller
             ActionResult? actionResult = await controller.GetRecipe(id);
 
             // Assert
-            var result = ((OkObjectResult)actionResult).Value as RecipeDTO; ;
+            var result = ((OkObjectResult)actionResult).Value as RecipeDTO;
             Assert.IsNotNull(actionResult);
             Assert.That(result, Is.EqualTo(expectedRecipe));
         }
