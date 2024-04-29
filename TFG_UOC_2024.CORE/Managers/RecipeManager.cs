@@ -11,6 +11,7 @@ using TFG_UOC_2024.CORE.Services.Interfaces;
 using AutoMapper;
 using TFG_UOC_2024.DB.Models;
 using TFG_UOC_2024.CORE.Models.ApiModels;
+using System.Security.Cryptography;
 
 namespace TFG_UOC_2024.CORE.Managers
 {
@@ -191,6 +192,29 @@ namespace TFG_UOC_2024.CORE.Managers
             }
         }
 
+        public async Task<ServiceResponse<bool>> IsFavorite(Guid userId, Guid recipeId)
+        {
+            var r = new ServiceResponse<bool>();
+            var recipefav = new UserFavorite()
+            {
+                RecipeId = recipeId,
+                UserId = userId
+            };
+
+            try
+            {
+                var re = await _recipeService.IsFavourite(recipefav);
+                if (re == null || !re)
+                    return r.NotFound("categories not found");
+
+                return r.Ok(re);
+            }
+            catch (Exception ex)
+            {
+                return r.BadRequest(ex.Message);
+            }
+        }
+
         public async Task<ServiceResponse<List<IngredientCategoryDTO>>> GetIngredientsByCategory(Guid categoryId)
         {
             var r = new ServiceResponse<List<IngredientCategoryDTO>>();
@@ -202,6 +226,32 @@ namespace TFG_UOC_2024.CORE.Managers
 
                 var ingredientDto = _m.Map<List<IngredientCategoryDTO>>(re);
                 return r.Ok(ingredientDto);
+            }
+            catch (Exception ex)
+            {
+                return r.BadRequest(ex.Message);
+            }
+        }
+
+        public async Task<ServiceResponse<List<RecipeDTO>>> GetRecipesByIngredient(string ingredients, int from, int to)
+        {
+            var r = new ServiceResponse<List<RecipeDTO>>();
+            var result = new List<RecipeDTO>();
+            try
+            {
+                var ingredientList = ingredients.Split(',').ToList();
+                var re = await _recipeService.GetCompleteRecipesByIngredient(ingredientList, from, to);
+                if (re == null)
+                    return r.NotFound("recipe not found");
+
+                var recipes = re.hits.Select(x => x.recipe);
+                foreach (var recipe in recipes)
+                {
+                    var recipeDto = _m.Map<RecipeDTO>(recipe);
+                    result.Add(recipeDto);
+                }
+
+                return r.Ok(result);
             }
             catch (Exception ex)
             {

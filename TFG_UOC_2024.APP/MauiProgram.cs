@@ -1,7 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using TFG_UOC_2024.APP.Interfaces;
 using TFG_UOC_2024.APP.Services;
+using TFG_UOC_2024.APP.ViewModels;
 using TFG_UOC_2024.APP.Views;
+using Microsoft.Maui.Devices;
 
 namespace TFG_UOC_2024.APP
 {
@@ -12,6 +16,7 @@ namespace TFG_UOC_2024.APP
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -19,10 +24,14 @@ namespace TFG_UOC_2024.APP
                 });
 
             builder.Services.AddCustomApiHttpClient();
+            builder.Services.AddSingleton<IMapper, Mapper>();
             builder.Services.AddSingleton<IAuthService, AuthService>();
+            builder.Services.AddSingleton<IRecipeService, RecipeService>();
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddTransient<LoginPage>();
-            builder.Services.AddTransient<ApplicationDetailsPage>();
+            builder.Services.AddTransient<SignUpPage>();
+            builder.Services.AddSingleton<LoginPageViewModel>();
+            builder.Services.AddSingleton<SignUpViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug();

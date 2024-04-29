@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TFG_UOC_2024.APP.Views.SignUpPage" 
+             Title="SignPage"
+             Shell.NavBarIsVisible="True"
+             xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
+             x:DataType="viewmodels:SignUpViewModel">
+             
+     <ScrollView>
+        <VerticalStackLayout Padding="16,0">
+            <ImageButton Source="arrow_left.png" HorizontalOptions="Start"/>
+            <VerticalStackLayout HorizontalOptions="FillAndExpand" Margin="0,0,0,64">
+                <Image
+                        Source="logo.png"
+                        WidthRequest="256"
+                        Aspect="AspectFit"
+                        SemanticProperties.Description="CoLab Logo"
+                            Margin="0,0,0,18"/>
+                <Label Text="Let's set up your CoLab account." HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="Gray"/>
+            </VerticalStackLayout>
+            <VerticalStackLayout Spacing="16">
+                <FlexLayout JustifyContent="Start">
+                    <VerticalStackLayout Margin="0,0,8,0" FlexLayout.Grow="1">
+                        <Label Text="First Name" FontAttributes="Bold"  />
+                        <Border>
+                            <Entry x:Name="FirstName" Placeholder="Juan" Text="{Binding FirstName}"/>
+                        </Border>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout FlexLayout.Grow="1">
+                        <Label Text="Last Name" FontAttributes="Bold"  />
+                        <Border>
+                            <Entry x:Name="LastName" Placeholder="dela Cruz" Text="{Binding LastName}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </FlexLayout>
+                <VerticalStackLayout>
+                    <Label
+                               FontAttributes="Bold"
+                               Text="Username"
+                               SemanticProperties.Description="Your username" />
+                    <Border>
+                        <Entry x:Name="Username" Placeholder="juan.delacruz" Keyboard="Default" Text="{Binding Username}" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout>
+                    <Label Text="Password" FontAttributes="Bold" />
+                    <Border>
+                        <Entry IsPassword="True" x:Name="Password" Placeholder="●●●●●●●●" Text="{Binding Password}"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout>
+                    <Label Text="Confirm Password" FontAttributes="Bold" />
+                    <Border>
+                        <Entry IsPassword="True" x:Name="ConfirmPassword" Placeholder="●●●●●●●●" Text="{Binding ConfirmPassword}" />
+                    </Border>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="16" Margin="0,110,0,0">
+                <Button
+                                x:Name="CreateAccountBtn"
+                                Text="Create Account" 
+                                Command="{Binding SignUpCommand}"
+                                HorizontalOptions="Fill" />
+                <HorizontalStackLayout>
+                    <Label Text="Already have an account?" TextColor="Gray" FontAttributes="Bold" Padding="0,0,4,0"/>
+                    <Label Text="Sign In"
+                               TextColor="DodgerBlue"
+                               HorizontalOptions="Center">
+                    </Label>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

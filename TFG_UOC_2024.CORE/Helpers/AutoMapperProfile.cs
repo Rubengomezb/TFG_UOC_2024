@@ -28,6 +28,8 @@ namespace TFG_UOC_2024.CORE.Helpers
             CreateMap<UserInput, ApplicationUser>()
                 .ForMember(dest => dest.Contact, opt => opt.MapFrom(src => new Contact() { FirstName = src.FirstName, LastName = src.LastName, Email = src.Email, PhoneNumber = src.PhoneNumber}));
 
+            CreateMap<UserSimpleDTO, UserDTO>();
+
             CreateMap<ApplicationUserRole, UserRoleDTO>()
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name))
                 .ForMember(dest => dest.RoleNormalizedName, opt => opt.MapFrom(src => src.Role.NormalizedName));

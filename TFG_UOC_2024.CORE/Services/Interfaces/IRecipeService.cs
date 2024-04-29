@@ -16,6 +16,8 @@ namespace TFG_UOC_2024.CORE.Services.Interfaces
 
         Task<bool> RemoveFavorite(UserFavorite recipeFavorite);
 
+        Task<bool> IsFavourite(UserFavorite recipeFavorite);
+
         Recipe GetRecipe(Guid recipeId);
 
         IEnumerable<Category> GetCategories();
@@ -35,6 +37,8 @@ namespace TFG_UOC_2024.CORE.Services.Interfaces
         Task<bool> AddCategories(List<Category> category);
 
         IEnumerable<Ingredient> GetIngredients();
+
+        Task<RecipeResponse> GetCompleteRecipesByIngredient(List<string> ingredients, int from, int to);
 
         string GetRandomIngredient();
     }

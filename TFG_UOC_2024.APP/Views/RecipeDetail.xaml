@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="TFG_UOC_2024.APP.Views.RecipeDetail"
+             Title="RecipeDetail">
+
+    <VerticalStackLayout>
+        <Frame CornerRadius="50" WidthRequest="120" HeightRequest="120"  Margin="0,20,0,0" Padding="0" BorderColor="Green">
+            <Image Source="{Binding Image}" WidthRequest="80" HeightRequest="80" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+        </Frame>
+
+        <ImageButton Source="{Binding IsFavourite, Converter={StaticResource BoolToIconConverter}}" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="15" WidthRequest="15" Command="{Binding MakeFavourite}">
+            <ImageButton.Behaviors>
+                <toolkit:IconTintColorBehavior TintColor="Red" />
+            </ImageButton.Behaviors>
+        </ImageButton>
+        
+        <Label Text="{Binding Name}" FontSize="Title" FontAttributes="Bold" />
+        <Label Text="{Binding Description}" FontSize="Subtitle" />
+        <CollectionView ItemsSource="{Binding Ingredients}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout>
+                        <Label Text="{Binding Name}" FontSize="Subtitle" />
+                        <Label Text="{Binding Description}" FontSize="Caption" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

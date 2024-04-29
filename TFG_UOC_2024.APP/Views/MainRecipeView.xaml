@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TFG_UOC_2024.APP.Views.MainRecipeView"
+             Title="MainRecipeView">
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
+                <StackLayout>
+                    <Label Text="¿Quieres generar una receta?" FontSize="Large" HorizontalOptions="Center" />
+                    <Button Text="Aceptar" HorizontalOptions="Center">
+                        <Button.GestureRecognizers>
+                            <TapGestureRecognizer Command="{ Binding BindingContext.Button_Clicked, Source={x:Reference Name=IngredientsView}}" />
+                        </Button.GestureRecognizers>
+                    </Button>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>
+    
+    

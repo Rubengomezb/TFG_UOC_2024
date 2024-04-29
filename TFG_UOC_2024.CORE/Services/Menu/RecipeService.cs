@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using TFG_UOC_2024.CORE.Clients;
 using TFG_UOC_2024.CORE.Models.ApiModels;
 using TFG_UOC_2024.CORE.Models.DTOs;
@@ -96,6 +97,11 @@ namespace TFG_UOC_2024.CORE.Services.Menu
             return result;
         }
 
+        public async Task<RecipeResponse> GetCompleteRecipesByIngredient(List<string> ingredients, int from, int to)
+        {
+            return await _httpRecipeClient.GetRecipePaginated(string.Join(",", ingredients), from, to);
+        }
+
         public async Task<bool> AddIngredients(List<Ingredient> ingredients)
         {
             _ingredientRepository.UpsertRange(ingredients);
@@ -141,6 +147,11 @@ namespace TFG_UOC_2024.CORE.Services.Menu
             var rnd = new Random();
             var num = rnd.Next(0, maxRandom);
             return this.ingredientsDict.GetValueOrDefault(num);
+        }
+
+        public async Task<bool> IsFavourite(UserFavorite recipeFavorite)
+        {
+            return _userFavoriteRepository.Find(x => x.UserId == recipeFavorite.UserId && x.RecipeId == recipeFavorite.RecipeId).Any();
         }
     }
 }

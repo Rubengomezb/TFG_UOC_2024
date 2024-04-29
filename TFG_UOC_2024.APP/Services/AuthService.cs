@@ -4,15 +4,18 @@ using System.Text.Json;
 using TFG_UOC_2024.CORE.Models;
 using TFG_UOC_2024.CORE.Models.DTOs;
 using static TFG_UOC_2024.CORE.Models.DTOs.ContactPropertyDTO;
+using Microsoft.Maui.Storage;
 
 namespace TFG_UOC_2024.APP.Services
 {
     public interface IAuthService
     {
         Task<bool> IsUserAuthenticated();
-        Task<string?> LoginAsync(Login dto);
+        Task<UserDTO> LoginAsync(Login dto);
         Task<UserDTO> GetAuthenticatedUserAsync();
         Task<HttpClient> GetAuthenticatedHttpClientAsync();
+        Task<Guid> SignUpAsync(UserInput dto);
+        Task<UserSimpleDTO> UpdateUserAsync(string id, UserSimpleDTO dto);
         void Logout();
     }
 
@@ -27,8 +30,8 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<bool> IsUserAuthenticated()
         {
-            var serializedData = await SecureStorage.Default.GetAsync(AppConstants.AuthStorageKeyName);
-            return !string.IsNullOrWhiteSpace(serializedData);
+            var serializedData = App.user;
+            return serializedData != null;
         }
 
         public async Task<UserDTO> GetAuthenticatedUserAsync()
@@ -41,39 +44,60 @@ namespace TFG_UOC_2024.APP.Services
             return null;
         }
 
-        public async Task<string?> LoginAsync(Login dto)
+        public async Task<UserDTO?> LoginAsync(Login dto)
         {
             var httpClient = _httpClientFactory.CreateClient("Client");
 
             var response = await httpClient.PostAsJsonAsync<Login>("api/Authentication/login", dto);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                ServiceResponse<UserDTO> authResponse =
-                    JsonSerializer.Deserialize<ServiceResponse<UserDTO>>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+            var content = await response.Content.ReadAsStringAsync();
+            ServiceResponse<UserDTO> authResponse =
+                JsonSerializer.Deserialize<ServiceResponse<UserDTO>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
-                if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
-                {
-                    var serializedData = JsonSerializer.Serialize(authResponse.Data);
-                    await SecureStorage.SetAsync(AppConstants.AuthStorageKeyName, serializedData);
-                }
-                else
-                {
-                    return authResponse.Status.ToString();
-                }
+            if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
+            {
+                return authResponse.Data;
             }
             else
             {
-                return "Error in logging in";
+                return null;
             }
-            return null;
         }
 
-        public void Logout() => SecureStorage.Default.Remove(AppConstants.AuthStorageKeyName);
+        public async Task<Guid> SignUpAsync(UserInput dto)
+        {
+            var httpClient = _httpClientFactory.CreateClient("Client");
+
+            var response = await httpClient.PostAsJsonAsync<UserInput>("api/User/Post", dto);
+
+            var content = await response.Content.ReadAsStringAsync();
+            ServiceResponse<Guid> authResponse =
+                JsonSerializer.Deserialize<ServiceResponse<Guid>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
+            {
+                return authResponse.Data;
+            }
+            else
+            {
+                return Guid.Empty;
+            }
+        }
+
+        public void Logout()
+        {
+            App.user = null;
+            if (Preferences.ContainsKey(nameof(App.user)))
+            {
+                Preferences.Remove(nameof(App.user));
+            }
+        }
 
         public async Task<HttpClient> GetAuthenticatedHttpClientAsync()
         {
@@ -85,6 +109,29 @@ namespace TFG_UOC_2024.APP.Services
                 new AuthenticationHeaderValue("Bearer", authenticatedUser.Token);
 
             return httpClient;
+        }
+
+        public async Task<UserSimpleDTO> UpdateUserAsync(string id, UserSimpleDTO dto)
+        {
+            var httpClient = _httpClientFactory.CreateClient("Client");
+
+            var response = await httpClient.PutAsJsonAsync<UserSimpleDTO>($"api/user/{id}", dto);
+
+            var content = await response.Content.ReadAsStringAsync();
+            ServiceResponse<UserSimpleDTO> authResponse =
+                JsonSerializer.Deserialize<ServiceResponse<UserSimpleDTO>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
+            {
+                return authResponse.Data;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

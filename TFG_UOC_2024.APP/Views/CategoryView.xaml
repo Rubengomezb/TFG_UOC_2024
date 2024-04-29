@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TFG_UOC_2024.APP.Views.CategoryView"
+             Title="CategoryView"
+             xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
+            x:DataType="viewmodels:CategoryViewModel">
+    <VerticalStackLayout>
+        <CollectionView ItemsSource="{Binding Categories}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="{Binding Image}" HeightRequest="50" WidthRequest="50" />
+                        <Label Grid.Column="1" Text="{Binding Name}" />
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.CategorySelectedCommand, Source={x:Reference Name=CategoryView}}" CommandParameter="{Binding Id }" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

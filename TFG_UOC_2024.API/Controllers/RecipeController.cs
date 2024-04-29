@@ -32,6 +32,10 @@ namespace TFG_UOC_2024.API.Controllers
         public async Task<ActionResult> GetRecipes() =>
             Respond(await _recipeManager.GetRecipes());
 
+        [HttpGet("recipesByIngredients")]
+        public async Task<ActionResult> GetRecipes(string ingredients, int from, int to) =>
+            Respond(await _recipeManager.GetRecipesByIngredient(ingredients, from, to));
+
         [HttpGet("categories")]
         public async Task<ActionResult> GetCategories() =>
             Respond(await _recipeManager.GetCategories());
@@ -40,15 +44,19 @@ namespace TFG_UOC_2024.API.Controllers
         public async Task<ActionResult> GetIngredientsByCategory(Guid categoryId) =>
             Respond(await _recipeManager.GetIngredientsByCategory(categoryId));
 
-        [HttpPost("favorite")]
+        [HttpPost("addFavorite")]
         public async Task<ActionResult>AddFavority([FromBody] RecipeFavorite recipeFavorite) =>
             Respond(await _recipeManager.AddFavorite(recipeFavorite));
+
+        [HttpGet("favorite")]
+        public async Task<ActionResult> IsFavorite(Guid userId, Guid recipeId) =>
+            Respond(await _recipeManager.IsFavorite(userId, recipeId));
 
         [HttpPost("ingredients")]
         public async Task<ActionResult> AddIngredients() =>
             Respond(await _recipeManager.AddIngredients());
 
-        [HttpDelete("favorite")]
+        [HttpPost("removeFavorite")]
         public async Task<ActionResult> RemoveFavority([FromBody] RecipeFavorite recipeFavorite) =>
             Respond(await _recipeManager.RemoveFavorite(recipeFavorite));
         #endregion
