@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TFG_UOC_2024.CORE.Managers.Interfaces;
+using TFG_UOC_2024.CORE.Models.ApiModels;
 using TFG_UOC_2024.DB.Context;
 using TFG_UOC_2024.DB.Models;
 using TFG_UOC_2024.DB.Models.Identity;
@@ -24,7 +25,7 @@ namespace TFG_UOC_2024.API.Controllers
             Respond(await _menuManager.GetMenu(startDate, endDate));
 
         [HttpPost("menu")]
-        public async Task<ActionResult> CreateMenu([FromBody] DateTime startDate, [FromBody] DateTime endDate) =>
-            Respond(await _menuManager.CreateMenu( startDate, endDate));
+        public async Task<ActionResult> CreateMenu([FromBody] CreateMenuRequest createMenuRequest) =>
+            Respond(await _menuManager.CreateMenu(createMenuRequest.StartDate, createMenuRequest.EndDate));
     }
 }
