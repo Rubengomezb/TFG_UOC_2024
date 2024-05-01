@@ -2,10 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TFG_UOC_2024.APP.Views.SearchRecipesView"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="SearchRecipesView"
              Shell.NavBarIsVisible="True"
             xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
             x:DataType="viewmodels:SearchRecipesViewModel">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
     <VerticalStackLayout>
         <Grid>
             <Grid.RowDefinitions>
@@ -27,7 +31,7 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SearchRecipesViewModel}}, Path=RecipeSelectedCommand}" CommandParameter="{Binding Id}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SearchRecipesViewModel}}, Path=RecipeSelectedCommand}" CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>

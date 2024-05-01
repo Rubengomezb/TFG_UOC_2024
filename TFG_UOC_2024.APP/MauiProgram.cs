@@ -6,6 +6,7 @@ using TFG_UOC_2024.APP.Services;
 using TFG_UOC_2024.APP.ViewModels;
 using TFG_UOC_2024.APP.Views;
 using Microsoft.Maui.Devices;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace TFG_UOC_2024.APP
 {
@@ -23,6 +24,7 @@ namespace TFG_UOC_2024.APP
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.ConfigureSyncfusionCore();
             builder.Services.AddCustomApiHttpClient();
             builder.Services.AddSingleton<IMapper, Mapper>();
             builder.Services.AddSingleton<IAuthService, AuthService>();

@@ -27,7 +27,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private DateTime _menuDate;
 
-        [ObservableProperty]
         private bool isVisible = false;
 
         private readonly IMenuService _menuService;

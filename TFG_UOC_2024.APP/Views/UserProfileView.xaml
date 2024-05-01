@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TFG_UOC_2024.APP.Views.UserProfileView"
              Title="UserProfileView"
              xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
             x:DataType="viewmodels:SignUpViewModel">
-    
-    <!-- Add xaml code for profile user with image at middle top of view and below a grid with firstname, lastname, email and phonenumber -->
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout>
             <Image Source="{Binding Image}" Aspect="AspectFill" HeightRequest="200" WidthRequest="200" HorizontalOptions="Center" VerticalOptions="Center"/>

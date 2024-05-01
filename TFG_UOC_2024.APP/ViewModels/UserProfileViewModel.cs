@@ -13,6 +13,7 @@ using Microsoft.Maui.Storage;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Networking;
 using Microsoft.Maui.ApplicationModel.Communication;
+using System.Collections.ObjectModel;
 
 namespace TFG_UOC_2024.APP.ViewModels
 {
@@ -30,7 +31,8 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private string _phoneNumber;
 
-        private Guid _id;
+        [ObservableProperty]
+        private string _id;
 
         private readonly IAuthService _authService;
 
@@ -40,11 +42,21 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             _authService = authService;
             _m = m;
-            FirstName = App.user.FirstName;
-            LastName = App.user.LastName;
-            PhoneNumber = App.user.PhoneNumber;
-            Email = App.user.Email;
-            _id = App.user.Id;
+        }
+
+        private bool _isInitialized = false;
+        [RelayCommand]
+        async Task AppearingAsync()
+        {
+            if (_isInitialized) return;
+            _isInitialized = true;
+            await RefreshAsync();
+        }
+
+        [RelayCommand]
+        async Task RefreshAsync()
+        {
+            LoadUser();
         }
 
         [RelayCommand]
@@ -52,7 +64,7 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             try
             {
-                var dto = new UserSimpleDTO() { Id = _id, FirstName = FirstName, LastName = LastName, PhoneNumber = PhoneNumber, Email = Email };
+                var dto = new UserSimpleDTO() { Id = Guid.Parse(Id), FirstName = FirstName, LastName = LastName, PhoneNumber = PhoneNumber, Email = Email };
                 if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
                 {
                     var user = _m.Map<UserDTO>(await _authService.UpdateUserAsync(_id.ToString(), dto));
@@ -73,6 +85,15 @@ namespace TFG_UOC_2024.APP.ViewModels
             {
                 await App.Current.MainPage.DisplayAlert("Error", "Error al registrar el usuario", "Ok");
             }
-        }   
+        }
+        
+        private void LoadUser()
+        {
+            FirstName = App.user.FirstName;
+            LastName = App.user.LastName;
+            PhoneNumber = App.user.PhoneNumber;
+            Email = App.user.Email;
+            Id = App.user.Id.ToString();
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace TFG_UOC_2024.APP.ViewModels
     public partial class SignUpViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string _userName;
+        private string _username;
 
         [ObservableProperty]
         private string _password;
@@ -50,10 +50,10 @@ namespace TFG_UOC_2024.APP.ViewModels
             {
                 if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
                 {
-                    if (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(ConfirmPassword) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))
+                    if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(ConfirmPassword) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))
                     {
                         var signUpDto = new UserInput();
-                        signUpDto.UserName = UserName;
+                        signUpDto.UserName = Username;
                         signUpDto.Password = Password;
                         signUpDto.Email = Email;
                         signUpDto.FirstName = FirstName;
@@ -67,7 +67,7 @@ namespace TFG_UOC_2024.APP.ViewModels
                         }
 
                         var loginDto = new Login();
-                        loginDto.Username = UserName;
+                        loginDto.Username = Username;
                         loginDto.Password = Password;
 
                         var userLogged = await _authService.LoginAsync(loginDto);

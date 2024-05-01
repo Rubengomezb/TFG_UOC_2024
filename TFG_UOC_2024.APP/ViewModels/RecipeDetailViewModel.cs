@@ -17,6 +17,7 @@ namespace TFG_UOC_2024.APP.ViewModels
         private readonly IRecipeService _recipeService;
         private RecipeDTO recipe;
 
+        [ObservableProperty]
         private string _recipeId;
 
         [ObservableProperty]
@@ -31,32 +32,46 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private List<IngredientDTO> _ingredients;
 
+        private bool _isInitialized = false;
+        [RelayCommand]
+        async Task AppearingAsync()
+        {
+            if (_isInitialized) return;
+            _isInitialized = true;
+            await RefreshAsync();
+        }
+
+        [RelayCommand]
+        async Task RefreshAsync()
+        {
+            recipe = _recipeService.GetRecipeByIdAsync(Guid.Parse(RecipeId)).Result;
+            Description = recipe.Description;
+            Name = recipe.Name;
+            Ingredients = recipe.Ingredients;
+            IsFavourite = _recipeService.IsFavourite(Guid.Parse(RecipeId), App.user.Id).Result;
+        }
+
         [RelayCommand]
         public async Task MakeFavourite(int recipeId)
         {
             if (IsFavourite)
             {
-                await _recipeService.DeleteFavourite(Guid.Parse(_recipeId), App.user.Id);
+                await _recipeService.DeleteFavourite(Guid.Parse(RecipeId), App.user.Id);
             }   
             else
             {
-                await _recipeService.AddFavourite(Guid.Parse(_recipeId), App.user.Id);
+                await _recipeService.AddFavourite(Guid.Parse(RecipeId), App.user.Id);
             }
         }
 
         public RecipeDetailViewModel(IRecipeService recipeService)
         {
             _recipeService = recipeService;
-            IsFavourite = _recipeService.IsFavourite(Guid.Parse(_recipeId), App.user.Id).Result;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            _recipeId = query["Id"].ToString();
-            recipe = _recipeService.GetRecipeByIdAsync(Guid.Parse(_recipeId)).Result;
-            Description = recipe.Description;
-            Name = recipe.Name;
-            Ingredients = recipe.Ingredients;
+            RecipeId = query["Id"].ToString();
         }
 
         async Task GoBack()

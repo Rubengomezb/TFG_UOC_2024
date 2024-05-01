@@ -8,6 +8,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using TFG_UOC_2024.CORE.Models.DTOs;
 using TFG_UOC_2024.APP.Services;
 using TFG_UOC_2024.APP.Views;
+using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace TFG_UOC_2024.APP.ViewModels
 {
@@ -16,9 +18,7 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private string _categoryId;
 
-        [ObservableProperty]
-        private List<IngredientDTO> _ingredients;
-
+        public ObservableCollection<IngredientDTO> Ingredients { get; set; } = new();
         private List<IngredientDTO> SelectedIngredients;
 
         private readonly IRecipeService _recipeService;
@@ -26,7 +26,21 @@ namespace TFG_UOC_2024.APP.ViewModels
         public IngredientsViewModel(IRecipeService recipeService)
         {
             _recipeService = recipeService;
-            SelectedIngredients = new List<IngredientDTO>();
+        }
+
+        private bool _isInitialized = false;
+        [RelayCommand]
+        async Task AppearingAsync()
+        {
+            if (_isInitialized) return;
+            _isInitialized = true;
+            await RefreshAsync();
+        }
+
+        [RelayCommand]
+        async Task RefreshAsync()
+        {
+            LoadIngredients();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -34,18 +48,23 @@ namespace TFG_UOC_2024.APP.ViewModels
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             CategoryId = query["Id"].ToString();
-            Ingredients = _recipeService.GetIngredients(_categoryId).Result;
+            LoadIngredients();
         }
 
         public void SelectIngredientCommand(int Id)
         {
-            SelectedIngredients.Add(Ingredients.Find(x => x.Name == Id.ToString()));
+            SelectedIngredients.Add(Ingredients.FirstOrDefault(x => x.Name == Id.ToString()));
         }
 
         public async Task GenerateRecipe()
         {
             var selectIngredientsNames = string.Join(",", SelectedIngredients.Select(x => x.Name).ToList());
             await Shell.Current.GoToAsync($"{nameof(SearchRecipesView)}?selectedIngredients={selectIngredientsNames}");
+        }
+        
+        private void LoadIngredients()
+        {
+            Ingredients = new ObservableCollection<IngredientDTO>(_recipeService.GetIngredients(CategoryId).Result);
         }
     }
 }

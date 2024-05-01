@@ -13,6 +13,7 @@ using static TFG_UOC_2024.CORE.Components.Authorization.SystemClaims.Permissions
 using System.ComponentModel;
 using TFG_UOC_2024.DB.Models;
 using Microsoft.Maui.ApplicationModel;
+using System.Collections.ObjectModel;
 
 namespace TFG_UOC_2024.APP.ViewModels
 {
@@ -22,7 +23,10 @@ namespace TFG_UOC_2024.APP.ViewModels
         private string _searchText;
 
         [ObservableProperty]
-        private List<RecipeDTO> _recipes;
+        private string _image; 
+
+        public ObservableCollection<RecipeDTO> Recipes { get; set; } = new();
+
 
         private readonly IRecipeService _recipeService;
 
@@ -45,7 +49,7 @@ namespace TFG_UOC_2024.APP.ViewModels
                 }
                 else
                 {
-                    Recipes = App.recipes;
+                    Recipes = new ObservableCollection<RecipeDTO>(App.recipes);
                 }
             }
             
@@ -62,28 +66,42 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             from += 5;
             to += 5;
-            Recipes = GetRecipes().Result;
+            Recipes = new ObservableCollection<RecipeDTO>(GetRecipes().Result);
             /*string recipeDetails = JsonConvert.SerializeObject(Recipes);
             Preferences.Set(nameof(App.recipes), recipeDetails);
             App.recipes = Recipes;*/
         }
 
-        public SearchRecipesViewModel(IRecipeService recipeService)
+        private bool _isInitialized = false;
+        [RelayCommand]
+        async Task AppearingAsync()
         {
-            _recipeService = recipeService;
+            if (_isInitialized) return;
+            _isInitialized = true;
+            await RefreshAsync();
+        }
+
+        [RelayCommand]
+        async Task RefreshAsync()
+        {
             if (App.recipes == null)
             {
-                Recipes = GetRecipes().Result;
+                Recipes = new ObservableCollection<RecipeDTO>(GetRecipes().Result);
             }
             else
             {
-                Recipes = App.recipes;
+                Recipes = new ObservableCollection<RecipeDTO>(App.recipes);
             }
+        }
+
+        public SearchRecipesViewModel(IRecipeService recipeService)
+        {
+            _recipeService = recipeService;
         }
 
         private void OnSearchCommand()
         {
-            Recipes = App.recipes;
+            Recipes = new ObservableCollection<RecipeDTO>(App.recipes);
             var foundRecipes = Recipes.Where(r => r.Name.Contains(TextSearch) || r.Description.Contains(TextSearch)).ToList();
             if (foundRecipes.Count > 0)
             {
@@ -98,7 +116,7 @@ namespace TFG_UOC_2024.APP.ViewModels
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             selectedIngredients = query["selectedIngredients"].ToString().Split(',').ToList();
-            Recipes = GetRecipes().Result;
+            Recipes = new ObservableCollection<RecipeDTO>(GetRecipes().Result);
         }
 
         public async Task<List<RecipeDTO>> GetRecipes()
