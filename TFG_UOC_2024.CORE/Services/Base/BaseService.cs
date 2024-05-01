@@ -24,7 +24,6 @@ namespace TFG_UOC_2024.CORE.Services.Base
         protected Microsoft.Extensions.Logging.ILogger log;
         protected IConfiguration config;
         protected IHttpContextAccessor httpContextAccessor;
-        protected string domain;
 
         public BaseService(
             UserManager<ApplicationUser> u,
@@ -38,14 +37,6 @@ namespace TFG_UOC_2024.CORE.Services.Base
             this.log = logger;
             this.config = configuration;
             httpContextAccessor = hca;
-
-            // get the domain, either CdnEndpoint or ApiUrl
-            if (config != null)
-            {
-                domain = !string.IsNullOrEmpty(config.GetValue<string>("CdnEndpoint"))
-                        ? config.GetValue<string>("CdnEndpoint")
-                        : config.GetValue<string>("ApiUrl");
-            }
         }
 
         protected async Task<ApplicationUser> GetUser()

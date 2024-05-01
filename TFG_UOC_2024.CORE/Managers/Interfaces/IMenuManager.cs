@@ -10,7 +10,7 @@ namespace TFG_UOC_2024.CORE.Managers.Interfaces
 {
     public interface IMenuManager
     {
-        Task<ServiceResponse<MenuDTO>> GetMenu(DateTime startTime, DateTime endTime);
+        Task<ServiceResponse<IEnumerable<MenuDTO>>> GetMenu(DateTime startTime, DateTime endTime);
 
         Task<GenericResponse> CreateMenu(DateTime startTime, DateTime endTime);
     }

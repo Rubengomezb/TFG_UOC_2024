@@ -20,7 +20,7 @@ namespace TFG_UOC_2024.DB.Repository
 
         public IEnumerable<Menu> GetMenu(DateTime start, DateTime end, Guid userId)
         {
-            return DbContext.Menu.Include(x => x.Recipes).Where(x => x.Date >= start && x.Date <= end &&  x.userId == userId);
+            return DbContext.Menu.Include(x => x.Recipe).Where(x => x.Date >= start && x.Date <= end &&  x.userId == userId);
         }
 
         public void UpsertRange(List<Menu> list)

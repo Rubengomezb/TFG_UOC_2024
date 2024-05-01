@@ -5,20 +5,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:TFG_UOC_2024.APP"
     xmlns:views="clr-namespace:TFG_UOC_2024.APP.Views"
-    Shell.FlyoutBehavior="Disabled">
+    Shell.FlyoutBehavior="Flyout">
+    
+    <FlyoutItem 
+        Title="Menu">
+        <Tab 
+            Title="Recipe">
+            <ShellContent
+                Title="Recipe"
+                ContentTemplate="{DataTemplate views:MainRecipeView}"
+                Route="MainRecipeView" />
+        </Tab>
+        <Tab 
+            Title="Menu">
+            <ShellContent
+                Title="Menu"
+                ContentTemplate="{DataTemplate views:MenuView}"
+                Route="Menu" />
+        </Tab>
+    </FlyoutItem>
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
-    <ShellContent
-        Title="Login"
-        ContentTemplate="{DataTemplate local:LoginPage}"
-        Route="LoginPage" />
-
-     <ShellContent
-        Title="Applcation Details"
-        ContentTemplate="{DataTemplate views:ApplicationDetailsPage}"
-        Route="ApplicationDetailsPage" />   
+    <FlyoutItem 
+        Title="Profile">
+        <ShellContent
+            Title="Profile"
+            ContentTemplate="{DataTemplate views:UserProfileView}"
+            Route="UserProfileView" />
+    </FlyoutItem>
 </Shell>

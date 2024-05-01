@@ -13,6 +13,7 @@ using Moq;
 using TFG_UOC_2024.API.Controllers;
 using TFG_UOC_2024.CORE.Managers.Interfaces;
 using TFG_UOC_2024.CORE.Models;
+using TFG_UOC_2024.CORE.Models.ApiModels;
 using TFG_UOC_2024.CORE.Models.DTOs;
 using TFG_UOC_2024.DB.Context;
 using TFG_UOC_2024.DB.Models;
@@ -44,8 +45,8 @@ namespace TFG_UOC_2024.TEST.Controller
 
             var startDate = new DateTime(2024, 4, 1);
             var endDate = new DateTime(2024, 4, 7);
-            var expectedMenu = new MenuDTO();
-            var serviceResponse = new ServiceResponse<MenuDTO>()
+            var expectedMenu = new List<MenuDTO>().AsEnumerable();
+            var serviceResponse = new ServiceResponse<IEnumerable<MenuDTO>>()
             {
                 Data = expectedMenu,
             };
@@ -59,7 +60,7 @@ namespace TFG_UOC_2024.TEST.Controller
             ActionResult? actionResult = await controller.GetWeeklyMenu(startDate, endDate);
 
             // Assert
-            var result = ((OkObjectResult)actionResult).Value as MenuDTO; ;
+            var result = ((OkObjectResult)actionResult).Value as IEnumerable<MenuDTO>; ;
             Assert.IsNotNull(actionResult);
             Assert.That(result, Is.EqualTo(expectedMenu));
         }
@@ -95,8 +96,13 @@ namespace TFG_UOC_2024.TEST.Controller
 
             var controller = new MenuController(mockUserManager, mockDbContext.Object, mockMapper.Object, mockMenuManager.Object, mockLogger.Object, mockConfiguration.Object);
 
-            // Act
-            var actionResult = await controller.CreateMenu(startDate, endDate);
+            var request = new CreateMenuRequest()
+            {
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            var actionResult = await controller.CreateMenu(request);
 
             // Assert
             Assert.That(actionResult.GetType(), Is.EqualTo(typeof(OkResult)));

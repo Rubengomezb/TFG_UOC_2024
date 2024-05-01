@@ -27,11 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Manager\" />
-    <Folder Include="Service\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TFG_UOC_2024.API\TFG_UOC_2024.API.csproj" />
     <ProjectReference Include="..\TFG_UOC_2024.CORE\TFG_UOC_2024.CORE.csproj" />
     <ProjectReference Include="..\TFG_UOC_2024.DB\TFG_UOC_2024.DB.csproj" />

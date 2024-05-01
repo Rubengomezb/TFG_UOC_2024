@@ -32,7 +32,7 @@ namespace TFG_UOC_2024.CORE.Services.Menu
 
         public async Task<bool> CreateWeeklyMenu(List<DB.Models.Menu> menus)
         {
-            _menuRepository.UpsertRange(menus);
+            _menuRepository.UpdateRange(menus);
             return true;
         }
     }

@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.IdentityModel.Protocols.WSFederation.Metadata;
 using Moq;
 using TFG_UOC_2024.DB.Context;
@@ -54,6 +55,19 @@ namespace TFG_UOC_2024.TEST.Repository
 
             // Assert
             Assert.That(entity, Is.EqualTo(result));
+        }
+
+        [Test]
+        public void Create_SaveChangesTrue()
+        {
+            // Arrange
+            var entity = new Menu();
+
+            // Act
+            _repository.Create(entity);
+
+            // Assert
+            _mockContext.Verify(m => m.SaveChanges(), Times.Once());
         }
     }
 }

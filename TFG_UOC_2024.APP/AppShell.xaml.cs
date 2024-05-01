@@ -8,7 +8,13 @@ namespace TFG_UOC_2024.APP
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
-            Routing.RegisterRoute(nameof(ApplicationDetailsPage), typeof(ApplicationDetailsPage));
+            Routing.RegisterRoute(nameof(SignUpPage), typeof(SignUpPage));
+            Routing.RegisterRoute(nameof(SearchRecipesView), typeof(SearchRecipesView));
+            Routing.RegisterRoute(nameof(RecipeDetail), typeof(RecipeDetail));
+            Routing.RegisterRoute(nameof(MainRecipeView), typeof(MainRecipeView));
+            Routing.RegisterRoute(nameof(IngredientsView), typeof(IngredientsView));
+            Routing.RegisterRoute(nameof(CategoryView), typeof(CategoryView));
+            Routing.RegisterRoute(nameof(UserProfileView), typeof(UserProfileView));
         }
     }
 }

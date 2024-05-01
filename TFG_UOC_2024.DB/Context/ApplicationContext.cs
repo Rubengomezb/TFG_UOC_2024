@@ -10,6 +10,7 @@ using TFG_UOC_2024.DB.Models.Identity;
 using TFG_UOC_2024.DB.Models.BaseModels;
 using System.Security.Claims;
 using TFG_UOC_2024.DB.Models;
+using System.Reflection.Metadata;
 
 namespace TFG_UOC_2024.DB.Context
 {
@@ -102,10 +103,10 @@ namespace TFG_UOC_2024.DB.Context
 
             modelBuilder.Entity<Recipe>(b =>
             {
-                b.HasMany(e => e.Ingredients)
-                .WithOne(e => e.RecipeNavigation)
-                .HasForeignKey(rc => rc.Recipe)
-                .IsRequired();
+                b.HasOne(e => e.Menu)
+                .WithOne(e => e.Recipe)
+                .HasForeignKey<Menu>(e => e.RecipeId)
+                .IsRequired(false);
             });
 
             modelBuilder.Entity<Category>(b =>
@@ -116,12 +117,17 @@ namespace TFG_UOC_2024.DB.Context
                 .IsRequired();
             });
 
-            modelBuilder.Entity<Menu>(b =>
+            modelBuilder.Entity<Ingredient>(b =>
             {
-                b.HasMany(e => e.Recipes)
-                .WithOne(e => e.MenuNavigation)
-                .HasForeignKey(rc => rc.Menu)
-                .IsRequired();
+                b.HasOne(e => e.RecipeNavigation)
+                .WithMany(e => e.Ingredients)
+                .HasForeignKey(rc => rc.Recipe)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                b.HasOne(e => e.CategoryNavigation)
+                .WithMany(e => e.Ingredients)
+                .HasForeignKey(rc => rc.Category)
+                .OnDelete(DeleteBehavior.Cascade);
             });
 
             OnModelCreatingPartial(modelBuilder);

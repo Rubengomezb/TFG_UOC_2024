@@ -16,13 +16,9 @@ namespace TFG_UOC_2024.DB.Models
 
         public string ImageUrl { get; set; }
 
-        public Guid Menu {  get; set; }
+        public Menu Menu {  get; set; }
 
         [InverseProperty("RecipeNavigation")]
         public virtual ICollection<Ingredient> Ingredients { get; set; }
-
-        [InverseProperty("Recipes")]
-        [ForeignKey("Menu")]
-        public virtual Menu MenuNavigation { get; set; }
     }
 }
