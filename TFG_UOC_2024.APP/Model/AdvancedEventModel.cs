@@ -8,8 +8,10 @@ namespace TFG_UOC_2024.APP.Model
 {
     public class AdvancedEventModel
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Starting { get; set; }
+        public Brush Background { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using TFG_UOC_2024.APP.ViewModels;
 using TFG_UOC_2024.APP.Views;
 using Microsoft.Maui.Devices;
 using Syncfusion.Maui.Core.Hosting;
+using TFG_UOC_2024.APP.Helper;
 
 namespace TFG_UOC_2024.APP
 {
@@ -29,17 +30,34 @@ namespace TFG_UOC_2024.APP
             builder.Services.AddSingleton<IMapper, Mapper>();
             builder.Services.AddSingleton<IAuthService, AuthService>();
             builder.Services.AddSingleton<IRecipeService, RecipeService>();
+            builder.Services.AddSingleton<IMenuService, MenuService>();
+
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<SignUpPage>();
+            builder.Services.AddTransient<CategoryView>();
+            builder.Services.AddTransient<IngredientsView>();
+            builder.Services.AddTransient<MenuView>();
+            builder.Services.AddTransient<RecipeDetail>();
+            builder.Services.AddTransient<SearchRecipesView>();
+            builder.Services.AddTransient<UserProfileView>();
+
             builder.Services.AddSingleton<LoginPageViewModel>();
             builder.Services.AddSingleton<SignUpViewModel>();
+            builder.Services.AddSingleton<CategoryViewModel>();
+            builder.Services.AddSingleton<IngredientsViewModel>();
+            builder.Services.AddSingleton<MenuViewModel>();
+            builder.Services.AddSingleton<RecipeDetailViewModel>();
+            builder.Services.AddSingleton<SearchRecipesViewModel>();
+            builder.Services.AddSingleton<UserProfileViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
+            var app = builder.Build();
 
-            return builder.Build();
+            ServiceHelper.Initialize(app.Services);
+            return app;
         }
 
         public static IServiceCollection AddCustomApiHttpClient(this IServiceCollection services)

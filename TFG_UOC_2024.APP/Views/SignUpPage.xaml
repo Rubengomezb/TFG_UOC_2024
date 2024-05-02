@@ -2,77 +2,139 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TFG_UOC_2024.APP.Views.SignUpPage" 
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:inputLayout="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              Title="SignPage"
-             Shell.NavBarIsVisible="True"
+             Shell.NavBarIsVisible="False"
              xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
              x:DataType="viewmodels:SignUpViewModel">
              
      <ScrollView>
         <VerticalStackLayout Padding="16,0">
             <ImageButton Source="arrow_left.png" HorizontalOptions="Start"/>
-            <VerticalStackLayout HorizontalOptions="FillAndExpand" Margin="0,0,0,64">
-                <Image
-                        Source="logo.png"
-                        WidthRequest="256"
-                        Aspect="AspectFit"
-                        SemanticProperties.Description="CoLab Logo"
-                            Margin="0,0,0,18"/>
-                <Label Text="Let's set up your CoLab account." HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="Gray"/>
+            <VerticalStackLayout HorizontalOptions="FillAndExpand" Margin="0,0,0,33">
+                <Frame CornerRadius="50" WidthRequest="80" HeightRequest="80"  Margin="0,20,0,0" Padding="0" BorderColor="#9B5DB0">
+                    <Image Source="logo.png" WidthRequest="60" HeightRequest="60" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+                </Frame>
             </VerticalStackLayout>
-            <VerticalStackLayout Spacing="16">
+            <VerticalStackLayout Spacing="8">
                 <FlexLayout JustifyContent="Start">
                     <VerticalStackLayout Margin="0,0,8,0" FlexLayout.Grow="1">
-                        <Label Text="First Name" FontAttributes="Bold"  />
-                        <Border>
-                            <Entry x:Name="FirstName" Placeholder="Juan" Text="{Binding FirstName}"/>
-                        </Border>
+                        <inputLayout:SfTextInputLayout 
+                                Hint="First Name" 
+                                HeightRequest="80" 
+                                WidthRequest="160"
+                                IsHintAlwaysFloated="true" 
+                                ContainerType="Outlined"
+                                OutlineCornerRadius="8"
+                                ContainerBackground="Transparent"
+                                Stroke="#9B5DB0">
+                            <Entry Placeholder="Name"
+                                        Text="{Binding FirstName}"/>
+                            <inputLayout:SfTextInputLayout.HintLabelStyle>
+                                <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                            </inputLayout:SfTextInputLayout.HintLabelStyle>
+                        </inputLayout:SfTextInputLayout>
                     </VerticalStackLayout>
                     <VerticalStackLayout FlexLayout.Grow="1">
-                        <Label Text="Last Name" FontAttributes="Bold"  />
-                        <Border>
-                            <Entry x:Name="LastName" Placeholder="dela Cruz" Text="{Binding LastName}" />
-                        </Border>
+                        <inputLayout:SfTextInputLayout
+                            Hint="Last Name" 
+                            HeightRequest="80" 
+                            WidthRequest="160"
+                            IsHintAlwaysFloated="true" 
+                            ContainerType="Outlined"
+                            OutlineCornerRadius="8"
+                            ContainerBackground="Transparent"
+                            Stroke="#9B5DB0">
+                            <Entry Placeholder="Last Name"
+                                            Text="{Binding LastName}"/>
+                            <inputLayout:SfTextInputLayout.HintLabelStyle>
+                                <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                            </inputLayout:SfTextInputLayout.HintLabelStyle>
+                        </inputLayout:SfTextInputLayout>
                     </VerticalStackLayout>
                 </FlexLayout>
-                <VerticalStackLayout>
-                    <Label
-                               FontAttributes="Bold"
-                               Text="Username"
-                               SemanticProperties.Description="Your username" />
-                    <Border>
-                        <Entry x:Name="Username" Placeholder="juan.delacruz" Keyboard="Default" Text="{Binding Username}" />
-                    </Border>
+                <VerticalStackLayout Margin="8,0,8,0">
+                    <inputLayout:SfTextInputLayout
+                            Hint="Email" 
+                            HeightRequest="80" 
+                            IsHintAlwaysFloated="true" 
+                            ContainerType="Outlined"
+                            OutlineCornerRadius="8"
+                            ContainerBackground="Transparent"
+                            Stroke="#9B5DB0">
+                        <Entry Placeholder="Email"
+                                Text="{Binding Email}"/>
+                        <inputLayout:SfTextInputLayout.HintLabelStyle>
+                            <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                        </inputLayout:SfTextInputLayout.HintLabelStyle>
+                    </inputLayout:SfTextInputLayout>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout>
-                    <Label Text="Password" FontAttributes="Bold" />
-                    <Border>
-                        <Entry IsPassword="True" x:Name="Password" Placeholder="●●●●●●●●" Text="{Binding Password}"/>
-                    </Border>
+                <VerticalStackLayout Margin="8,0,8,0">
+                    <inputLayout:SfTextInputLayout
+                        Hint="Phone" 
+                        HeightRequest="80" 
+                        IsHintAlwaysFloated="true" 
+                        ContainerType="Outlined"
+                        OutlineCornerRadius="8"
+                        ContainerBackground="Transparent"
+                        Stroke="#9B5DB0">
+                        <Entry Placeholder="Phone"
+                                    Text="{Binding PhoneNumber}"/>
+                        <inputLayout:SfTextInputLayout.HintLabelStyle>
+                            <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                        </inputLayout:SfTextInputLayout.HintLabelStyle>
+                    </inputLayout:SfTextInputLayout>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout>
-                    <Label Text="Confirm Password" FontAttributes="Bold" />
-                    <Border>
-                        <Entry IsPassword="True" x:Name="ConfirmPassword" Placeholder="●●●●●●●●" Text="{Binding ConfirmPassword}" />
-                    </Border>
+                <VerticalStackLayout Margin="8,0,8,0">
+                    <inputLayout:SfTextInputLayout 
+                        Hint="Password" 
+                        HeightRequest="80" 
+                        IsHintAlwaysFloated="true" 
+                        ContainerType="Outlined"
+                        OutlineCornerRadius="8"
+                        ContainerBackground="Transparent"
+                        Stroke="#9B5DB0">
+                        <Entry IsPassword="True" Placeholder="●●●●●●●●"
+                                Text="{Binding Password}"/>
+                        <inputLayout:SfTextInputLayout.HintLabelStyle>
+                            <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                        </inputLayout:SfTextInputLayout.HintLabelStyle>
+                    </inputLayout:SfTextInputLayout>
+
                 </VerticalStackLayout>
 
+                <VerticalStackLayout Margin="8,0,8,0">
+                    <inputLayout:SfTextInputLayout 
+                            Hint="Confirm Password" 
+                            HeightRequest="80" 
+                            IsHintAlwaysFloated="true" 
+                            ContainerType="Outlined"
+                            OutlineCornerRadius="8"
+                            ContainerBackground="Transparent"
+                            Stroke="#9B5DB0">
+                        <Entry IsPassword="True" Placeholder="●●●●●●●●"
+                            Text="{Binding ConfirmPassword}"/>
+                        <inputLayout:SfTextInputLayout.HintLabelStyle>
+                            <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                        </inputLayout:SfTextInputLayout.HintLabelStyle>
+                    </inputLayout:SfTextInputLayout>
+                </VerticalStackLayout>
             </VerticalStackLayout>
 
-            <VerticalStackLayout Spacing="16" Margin="0,110,0,0">
+            <VerticalStackLayout Spacing="16" Margin="0,30,0,0">
                 <Button
                                 x:Name="CreateAccountBtn"
                                 Text="Create Account" 
                                 Command="{Binding SignUpCommand}"
-                                HorizontalOptions="Fill" />
-                <HorizontalStackLayout>
-                    <Label Text="Already have an account?" TextColor="Gray" FontAttributes="Bold" Padding="0,0,4,0"/>
-                    <Label Text="Sign In"
-                               TextColor="DodgerBlue"
-                               HorizontalOptions="Center">
-                    </Label>
-                </HorizontalStackLayout>
+                                HorizontalOptions="Fill" 
+                                Background="#9B5DB0"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="Already have an account?" TextColor="Gray" FontAttributes="Bold" Padding="0,0,4,0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Button Text="Login" FontSize="Small" TextColor="#9B5DB0" BorderWidth="0" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"  BackgroundColor="Transparent" Command="{Binding LoginCommand}"/>
+                </StackLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

@@ -4,28 +4,98 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TFG_UOC_2024.APP.Views.CategoryView"
              Title="CategoryView"
+             xmlns:local="clr-namespace:TFG_UOC_2024.APP.Behaviours"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"  
              xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
-            x:DataType="viewmodels:CategoryViewModel">
+             xmlns:model="clr-namespace:TFG_UOC_2024.APP.Model"
+            x:DataType="viewmodels:CategoryViewModel"
+             Shell.BackgroundColor="BlueViolet">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <local:CategoryBehaviour/>
     </ContentPage.Behaviors>
-    <VerticalStackLayout>
-        <CollectionView ItemsSource="{Binding Categories}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Padding="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="{Binding Image}" HeightRequest="50" WidthRequest="50" />
-                        <Label Grid.Column="1" Text="{Binding Name}" />
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding BindingContext.CategorySelectedCommand, Source={x:Reference Name=CategoryView}}" CommandParameter="{Binding . }" />
-                        </Grid.GestureRecognizers>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+    <ContentPage.Content>
+        <Grid Margin="0" RowSpacing="0" Background="#9B5DB0" Opacity="0.5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid x:Name="headerGrid" Grid.Row="0" HeightRequest="60" ColumnSpacing="0" RowSpacing="0" HorizontalOptions="Center">
+                <Border Stroke="#ffffff"
+                         StrokeThickness="1"
+                         StrokeShape="RoundRectangle 20,20,20,20"
+                         WidthRequest="350"
+                         Padding="2,8"
+                         HorizontalOptions="Center">
+
+                    <SearchBar x:Name="filterText" BackgroundColor="White"
+                          Grid.Row="0"
+                          Grid.Column="0"
+                               Margin='{OnPlatform Default="100,5,100,0",iOS="10,5,10,0", WinUI="10,5,10,0", MacCatalyst="0,5,0,0"}'                               
+                               FontSize="18"
+                               IsVisible="true"
+                               HeightRequest="50" WidthRequest='{OnPlatform Android="350"}'
+                          Placeholder="Search here to filter"
+                               HorizontalOptions="Center">
+                    </SearchBar>
+                </Border>
+            </Grid>
+            <Grid>
+                <syncfusion:SfListView x:Name="listView" ItemSize="70" ItemsSource="{Binding Categories}" ItemSpacing="0,0,5,0" SelectionMode="Single">
+                    <syncfusion:SfListView.ItemTemplate>
+                        <DataTemplate x:Name="ItemTemplate" x:DataType="model:CategoryModel">
+                            <ViewCell>
+                                <ViewCell.View>
+                                    <Grid x:Name="grid" RowSpacing="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="1" />
+                                        </Grid.RowDefinitions>
+                                        <Grid RowSpacing="1" Padding="10,0,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="50" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Image Source="{Binding ImageUrl}"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center"
+                                                   HeightRequest="50"/>
+                                            <Grid Grid.Column="1"
+                                                  RowSpacing="1"
+                                                  Padding="10,0,0,0"
+                                                  VerticalOptions="Center">         
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <Label LineBreakMode="NoWrap"
+                                                     TextColor="#474747"
+                                                     Text="{Binding Name}"
+                                                   FontSize="12">
+                                                </Label>
+                                            </Grid>
+                                            <Grid Grid.Row="0"
+                                                  x:Name="temp"
+                                                  Grid.Column="2"
+                                                  RowSpacing="0"
+                                                  HorizontalOptions="End"
+                                                  Padding="0,10,10,0">          
+                                                <Image Source="navigate.png" HeightRequest="50">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.TapCommand, Source = {x:Reference list}}" CommandParameter="{Binding}" />
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </Grid>
+                                        </Grid>
+                                        <StackLayout Grid.Row="1" BackgroundColor="#E4E4E4" HeightRequest="1"/>
+                                    </Grid>
+                                </ViewCell.View>
+                            </ViewCell>
+                        </DataTemplate>
+                    </syncfusion:SfListView.ItemTemplate>
+                </syncfusion:SfListView>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

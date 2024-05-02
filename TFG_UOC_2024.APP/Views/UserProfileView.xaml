@@ -5,7 +5,7 @@
              x:Class="TFG_UOC_2024.APP.Views.UserProfileView"
              Title="UserProfileView"
              xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
-            x:DataType="viewmodels:SignUpViewModel">
+            x:DataType="viewmodels:UserProfileViewModel">
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
@@ -36,7 +36,7 @@
                 <Label Grid.Row="3" Grid.Column="0" Text="E-mail" VerticalOptions="Center"/>
                 <Entry Grid.Row="3" Grid.Column="1" Text="{Binding Email}" VerticalOptions="Center"/>
             </Grid>
-            <Button Text="Actualizar" HorizontalOptions="Center" Command="{ Binding UpdateUser }" />
+            <Button Text="Actualizar" HorizontalOptions="Center" Command="{ Binding UpdateUserCommand }" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

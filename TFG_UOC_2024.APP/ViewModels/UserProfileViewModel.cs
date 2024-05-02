@@ -32,19 +32,20 @@ namespace TFG_UOC_2024.APP.ViewModels
         private string _phoneNumber;
 
         [ObservableProperty]
+        private string _image;
+
+        [ObservableProperty]
         private string _id;
 
         private readonly IAuthService _authService;
 
-        private readonly IMapper _m;
-
-        public UserProfileViewModel(IAuthService authService, IMapper m)
+        public UserProfileViewModel(IAuthService authService)
         {
             _authService = authService;
-            _m = m;
         }
 
         private bool _isInitialized = false;
+
         [RelayCommand]
         async Task AppearingAsync()
         {
@@ -67,14 +68,14 @@ namespace TFG_UOC_2024.APP.ViewModels
                 var dto = new UserSimpleDTO() { Id = Guid.Parse(Id), FirstName = FirstName, LastName = LastName, PhoneNumber = PhoneNumber, Email = Email };
                 if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
                 {
-                    var user = _m.Map<UserDTO>(await _authService.UpdateUserAsync(_id.ToString(), dto));
+                    /*var user = _m.Map<UserDTO>(await _authService.UpdateUserAsync(_id.ToString(), dto));
                     App.user = user;
                     if (Preferences.ContainsKey(nameof(App.user)))
                     {
                         Preferences.Remove(nameof(App.user));
                     }
                     string userDetails = JsonConvert.SerializeObject(user);
-                    Preferences.Set(nameof(App.user), userDetails);
+                    Preferences.Set(nameof(App.user), userDetails);*/
                 }
                 else
                 {

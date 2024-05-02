@@ -12,7 +12,6 @@ namespace TFG_UOC_2024.APP.Services
     {
         Task<bool> IsUserAuthenticated();
         Task<UserDTO> LoginAsync(Login dto);
-        Task<UserDTO> GetAuthenticatedUserAsync();
         Task<HttpClient> GetAuthenticatedHttpClientAsync();
         Task<Guid> SignUpAsync(UserInput dto);
         Task<UserSimpleDTO> UpdateUserAsync(string id, UserSimpleDTO dto);
@@ -34,16 +33,6 @@ namespace TFG_UOC_2024.APP.Services
             return serializedData != null;
         }
 
-        public async Task<UserDTO> GetAuthenticatedUserAsync()
-        {
-            var serializedData = await SecureStorage.Default.GetAsync(AppConstants.AuthStorageKeyName);
-            if (!string.IsNullOrWhiteSpace(serializedData))
-            {
-                return JsonSerializer.Deserialize<UserDTO>(serializedData);
-            }
-            return null;
-        }
-
         public async Task<UserDTO?> LoginAsync(Login dto)
         {
             var httpClient = _httpClientFactory.CreateClient("Client");
@@ -51,15 +40,16 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.PostAsJsonAsync<Login>("api/Authentication/login", dto);
 
             var content = await response.Content.ReadAsStringAsync();
-            ServiceResponse<UserDTO> authResponse =
-                JsonSerializer.Deserialize<ServiceResponse<UserDTO>>(content, new JsonSerializerOptions
+
+            var user =
+                JsonSerializer.Deserialize<UserDTO>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-            if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return authResponse.Data;
+                return user;
             }
             else
             {
@@ -103,7 +93,7 @@ namespace TFG_UOC_2024.APP.Services
         {
             var httpClient = _httpClientFactory.CreateClient(AppConstants.HttpClientName);
 
-            var authenticatedUser = await GetAuthenticatedUserAsync();
+            var authenticatedUser = App.user;
 
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", authenticatedUser.Token);

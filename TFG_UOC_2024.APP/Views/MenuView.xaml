@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:cal="clr-namespace:Plugin.Maui.Calendar.Controls;assembly=Plugin.Maui.Calendar"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TFG_UOC_2024.APP.Views.MenuView"
-             Title="MenuView"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+             Title="Menu Semanal"
+             Shell.BackgroundColor="BlueViolet"
              xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
              x:DataType="viewmodels:MenuViewModel">
-    <VerticalStackLayout>
-        <cal:Calendar Events="{Binding Events}" EventsScrollViewVisible="True" SelectedDayBackgroundColor="Red"
-                  CalendarLayout="Month">
-            <cal:Calendar.EventTemplate>
-                <DataTemplate>
-                    <VerticalStackLayout>
-                        <Label Text="{Binding Name}" FontSize="25" FontAttributes="Bold"/>
-                        <Label Text="{Binding Description}"/>
-                    </VerticalStackLayout>
-                </DataTemplate>
-            </cal:Calendar.EventTemplate>
-            <cal:Calendar.EmptyTemplate>
-                <DataTemplate>
-                    <StackLayout>
-                        <Label Text="NO MENUS FOR THE SELECTED DATE" HorizontalTextAlignment="Center" Margin="0,5,0,5" />
-                        <Button Text="Add Weekly Menu" Command="{Binding AddWeeklyMenuCommand}"/>
-                        <DatePicker Margin="10" x:Name="MyDatePicker" IsVisible="{Binding Path=IsVisible}" Date = "{Binding MenuDate}" >
-                            <DatePicker.Behaviors>
-                                <toolkit:EventToCommandBehavior
-                                    Command="{Binding DatePickedCommand}"
-                                    CommandParameter="{Binding Date, Source={x:Reference MyDatePicker}}"
-                                    EventName="DateSelected" />
-                            </DatePicker.Behaviors>
-                        </DatePicker>
-                    </StackLayout>
-                </DataTemplate>
-            </cal:Calendar.EmptyTemplate>
-        </cal:Calendar>
+    <VerticalStackLayout Background="#9B5DB0" Opacity="0.5">
+        <syncfusion:SfScheduler x:Name="Scheduler" View="Month" BackgroundColor="#ffffff">
+            <syncfusion:SfScheduler.MonthView>
+                <syncfusion:SchedulerMonthView AppointmentDisplayMode="Indicator" 
+                                                AppointmentIndicatorCount="3"
+                                               ShowLeadingAndTrailingDates="False"
+                                               NumberOfVisibleWeeks="4">
+                    <syncfusion:SchedulerMonthView.ViewHeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background = "MediumPurple" >
+                                <Label x:Name="label" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding StringFormat='{0:ddd}'}" TextColor="White" FontSize="Subtitle" FontFamily="Bold" />
+                            </Grid>
+                        </DataTemplate>
+                    </syncfusion:SchedulerMonthView.ViewHeaderTemplate>
+                </syncfusion:SchedulerMonthView>
+            </syncfusion:SfScheduler.MonthView>
+        </syncfusion:SfScheduler>
+        <Grid Margin="0, 20, 0, 0">
+            <picker:SfDatePicker x:Name="datepicker"
+                         Mode="Dialog" IsOpen="{Binding IsOpen}"/>
+            <Button Text="Open Picker" 
+                x:Name="pickerButton"
+                Command="{Binding Source={x:Reference datepicker}, Path=BindingContext.IsOpenCommand}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                HeightRequest="50" 
+                WidthRequest="150">
+            </Button>
+        </Grid>
     </VerticalStackLayout>
 </ContentPage>

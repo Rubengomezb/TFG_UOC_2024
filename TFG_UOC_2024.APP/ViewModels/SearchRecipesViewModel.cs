@@ -14,18 +14,13 @@ using System.ComponentModel;
 using TFG_UOC_2024.DB.Models;
 using Microsoft.Maui.ApplicationModel;
 using System.Collections.ObjectModel;
+using TFG_UOC_2024.APP.Model;
 
 namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class SearchRecipesViewModel : ObservableObject, IQueryAttributable, INotifyPropertyChanged
     {
-        [ObservableProperty]
-        private string _searchText;
-
-        [ObservableProperty]
-        private string _image; 
-
-        public ObservableCollection<RecipeDTO> Recipes { get; set; } = new();
+        public ObservableCollection<RecipeModel> Recipes { get; set; } = new();
 
 
         private readonly IRecipeService _recipeService;
@@ -36,25 +31,6 @@ namespace TFG_UOC_2024.APP.ViewModels
 
         private int to = 5;
 
-        public string TextSearch
-        {
-            get => _searchText;
-            set
-            {
-                SetProperty(ref _searchText, value);
-                OnPropertyChanged(nameof(TextSearch));
-                if (_searchText.Length > 0)
-                {
-                    OnSearchCommand();
-                }
-                else
-                {
-                    Recipes = new ObservableCollection<RecipeDTO>(App.recipes);
-                }
-            }
-            
-        }
-
         [RelayCommand]
         public async Task RecipeSelectedCommand(int recipeId)
         {
@@ -62,14 +38,11 @@ namespace TFG_UOC_2024.APP.ViewModels
         }
 
         [RelayCommand]
-        public void GenerateAlternativesCommand()
+        public void GenerateAlternatives()
         {
             from += 5;
             to += 5;
-            Recipes = new ObservableCollection<RecipeDTO>(GetRecipes().Result);
-            /*string recipeDetails = JsonConvert.SerializeObject(Recipes);
-            Preferences.Set(nameof(App.recipes), recipeDetails);
-            App.recipes = Recipes;*/
+            Recipes = new ObservableCollection<RecipeModel>(GetRecipes().Result);
         }
 
         private bool _isInitialized = false;
@@ -86,11 +59,29 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             if (App.recipes == null)
             {
-                Recipes = new ObservableCollection<RecipeDTO>(GetRecipes().Result);
+                Recipes = new ObservableCollection<RecipeModel>(GetRecipes().Result);
             }
             else
             {
-                Recipes = new ObservableCollection<RecipeDTO>(App.recipes);
+                foreach (var recipe in App.recipes)
+                {
+                    Recipes.Add(new RecipeModel()
+                    {
+                        Name = recipe.Name,
+                        Description = recipe.Description,
+                        ImageUrl = recipe.ImageUrl,
+                        Id = recipe.Id.ToString(),
+                    });
+                }
+            }
+        }
+
+        private async void OnTapped(object obj)
+        {
+            if (obj is RecipeDTO recipe)
+            {
+                var rec = (recipe as RecipeDTO);
+                await Shell.Current.GoToAsync($"{nameof(IngredientsView)}?Id={rec.Id.ToString()}");
             }
         }
 
@@ -99,29 +90,27 @@ namespace TFG_UOC_2024.APP.ViewModels
             _recipeService = recipeService;
         }
 
-        private void OnSearchCommand()
-        {
-            Recipes = new ObservableCollection<RecipeDTO>(App.recipes);
-            var foundRecipes = Recipes.Where(r => r.Name.Contains(TextSearch) || r.Description.Contains(TextSearch)).ToList();
-            if (foundRecipes.Count > 0)
-            {
-                Recipes.Clear();
-                foreach (var recipe in foundRecipes)
-                {
-                    Recipes.Add(recipe);
-                }
-            }
-        }
-
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             selectedIngredients = query["selectedIngredients"].ToString().Split(',').ToList();
-            Recipes = new ObservableCollection<RecipeDTO>(GetRecipes().Result);
+            Recipes = new ObservableCollection<RecipeModel>(GetRecipes().Result);
         }
 
-        public async Task<List<RecipeDTO>> GetRecipes()
-        {
-            return await _recipeService.GetRecipeByIngredientsAsync(selectedIngredients, from, to);
+        public async Task<List<RecipeModel>> GetRecipes()
+        {   var recipesDTO = await _recipeService.GetRecipeByIngredientsAsync(selectedIngredients, from, to);
+            var recipesModels = new List<RecipeModel>();
+            foreach (var recipe in recipesDTO)
+            {
+                recipesModels.Add(new RecipeModel()
+                {
+                    Name = recipe.Name,
+                    Description = recipe.Description,
+                    ImageUrl = recipe.ImageUrl,
+                    Id = recipe.Id.ToString(),
+                });
+            }
+
+            return recipesModels;
         }
     }
 }

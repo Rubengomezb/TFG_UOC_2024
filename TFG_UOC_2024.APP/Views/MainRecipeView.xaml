@@ -2,20 +2,29 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TFG_UOC_2024.APP.Views.MainRecipeView"
-             Title="MainRecipeView">
+             Title="Recetas"
+             Shell.BackgroundColor="BlueViolet">
     <ContentPage.Content>
-        <StackLayout>
-            <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                <StackLayout>
-                    <Label Text="¿Quieres generar una receta?" FontSize="Large" HorizontalOptions="Center" />
-                    <Button Text="Aceptar" HorizontalOptions="Center">
-                        <Button.GestureRecognizers>
-                            <TapGestureRecognizer Command="{ Binding BindingContext.Button_Clicked, Source={x:Reference Name=IngredientsView}}" />
-                        </Button.GestureRecognizers>
-                    </Button>
-                </StackLayout>
-            </Frame>
+         <StackLayout BackgroundColor="BlueViolet" Opacity="0.5" >
+            <Grid Margin="20,35,20,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="300" />
+                    <RowDefinition Height="100" />
+                </Grid.RowDefinitions>
+                <Frame CornerRadius="10" Padding="10" VerticalOptions="End" Grid.Row="1" HeightRequest="200">
+                    <StackLayout>
+                        <Label Text="¿Quieres generar una receta?" FontSize="Large" HorizontalOptions="Center" Margin="10" />
+                        <Button Text="Aceptar" HorizontalOptions="Center" Margin="50">
+                            <Button.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Button_Clicked" />
+                            </Button.GestureRecognizers>
+                        </Button>
+                    </StackLayout>
+                </Frame>
+
+            </Grid>
         </StackLayout>
+
     </ContentPage.Content>
 
 </ContentPage>

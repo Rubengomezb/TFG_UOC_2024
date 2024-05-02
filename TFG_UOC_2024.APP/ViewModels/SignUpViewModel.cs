@@ -36,6 +36,12 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private string _lastName;
 
+        [ObservableProperty]
+        private string _image;
+
+        [ObservableProperty]
+        private string _phoneNumber;
+
         private readonly IAuthService _authService;
 
         public SignUpViewModel(IAuthService authService)
@@ -90,6 +96,12 @@ namespace TFG_UOC_2024.APP.ViewModels
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Ok");
             }
+        }
+
+        [RelayCommand]
+        public async Task Login()
+        {
+            await Shell.Current.GoToAsync("..");
         }
     }
 }

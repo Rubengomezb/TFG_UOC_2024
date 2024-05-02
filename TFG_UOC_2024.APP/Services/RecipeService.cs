@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -47,7 +48,7 @@ namespace TFG_UOC_2024.APP.Services
                 UserId = userId
             };
 
-            var httpClient = _httpClientFactory.CreateClient("Client");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
             var response = await httpClient.PostAsJsonAsync("api/Recipe/addFavorite", favourite);
 
             var content = await response.Content.ReadAsStringAsync();
@@ -68,7 +69,8 @@ namespace TFG_UOC_2024.APP.Services
                 UserId = userId
             };
 
-            var httpClient = _httpClientFactory.CreateClient("Client");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
+
             var response = await httpClient.PostAsJsonAsync("api/Recipe/removeFavorite", favourite);
 
             var content = await response.Content.ReadAsStringAsync();
@@ -83,9 +85,8 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<List<CategoryDTO>> GetCategories()
         {
-            var httpClient = _httpClientFactory.CreateClient("Client");
-
-            var response = await httpClient.GetAsync($"api/recipe/categories");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
+            var response = await httpClient.GetAsync($"api/Recipe/categories");
 
             var content = await response.Content.ReadAsStringAsync();
             ServiceResponse<List<CategoryDTO>> authResponse =
@@ -106,9 +107,9 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<List<IngredientDTO>> GetIngredients(string categoryId)
         {
-            var httpClient = _httpClientFactory.CreateClient("Client");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
-            var response = await httpClient.GetAsync($"api/recipe/ingredients/{categoryId}");
+            var response = await httpClient.GetAsync($"api/Recipe/ingredients/{categoryId}");
 
             var content = await response.Content.ReadAsStringAsync();
             ServiceResponse<List<IngredientDTO>> authResponse =
@@ -129,7 +130,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<RecipeDTO> GetRecipeByIdAsync(Guid recipeId)
         {
-            var httpClient = _httpClientFactory.CreateClient("Client");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
             var response = await httpClient.GetAsync($"api/Recipe/recipe?recipeId={recipeId}");
 
@@ -152,7 +153,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<List<RecipeDTO>> GetRecipeByIngredientsAsync(List<string> ingredients, int from, int to)
         {
-            var httpClient = _httpClientFactory.CreateClient("Client");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
             var response = await httpClient.GetAsync($"api/Recipe/recipe?recipesByIngredients={string.Join(",", ingredients)}&from={from}&to={to}");
 
@@ -175,7 +176,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<List<RecipeDTO>> GetRecipesAsync()
         {
-            var httpClient = _httpClientFactory.CreateClient("Client");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
             var response = await httpClient.GetAsync("api/Recipe/recipes");
 
@@ -198,7 +199,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<bool> IsFavourite(Guid recipeId, Guid userId)
         {
-            var httpClient = _httpClientFactory.CreateClient("Client");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
             var response = await httpClient.GetAsync($"api/Recipe/favorite?userId={userId}&recipeId={recipeId}");
 
@@ -210,6 +211,18 @@ namespace TFG_UOC_2024.APP.Services
                 });
 
             return authResponse.Data;
+        }
+
+        public async Task<HttpClient> GetAuthenticatedHttpClientAsync()
+        {
+            var httpClient = _httpClientFactory.CreateClient("Client");
+
+            var authenticatedUser = App.user;
+
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", authenticatedUser.Token);
+
+            return httpClient;
         }
     }
 }

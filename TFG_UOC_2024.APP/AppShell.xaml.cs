@@ -15,6 +15,17 @@ namespace TFG_UOC_2024.APP
             Routing.RegisterRoute(nameof(IngredientsView), typeof(IngredientsView));
             Routing.RegisterRoute(nameof(CategoryView), typeof(CategoryView));
             Routing.RegisterRoute(nameof(UserProfileView), typeof(UserProfileView));
+
+            if (App.user == null)
+            {
+                CurrentItem = MenuRoot_tab;
+                MenuRoot_tab.CurrentItem = Recipe_tab;
+            }
+            else
+            {
+                CurrentItem = LoginRoot_tab;
+                LoginRoot_tab.CurrentItem = Login_tab;
+            }
         }
     }
 }

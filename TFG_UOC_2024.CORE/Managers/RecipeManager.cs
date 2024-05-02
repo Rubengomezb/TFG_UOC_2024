@@ -24,6 +24,7 @@ namespace TFG_UOC_2024.CORE.Managers
         {
             _recipeService = recipeService;
             _m = m;
+            AddIngredients();
         }
 
         public async Task<GenericResponse> AddFavorite(RecipeFavorite recipeFavorite)
