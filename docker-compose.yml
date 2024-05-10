@@ -1,5 +1,24 @@
 version: '3.8'
+networks:
+  dev:
+    driver: bridge
 services:
+  app:
+    image: docker.io/library/tfg_uoc_2024
+    depends_on:
+     - "db"
+    container_name: TFG_UOC_2024
+    ports:
+      - "443:80"
+    build:
+      context: .
+      dockerfile: TFG_UOC_2024.API/Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=server=db;database=DietIA;user=admin;password=admin;
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - dev
+
   db:
     image: mysql:8.0
     cap_add:
@@ -15,6 +34,8 @@ services:
     volumes:
       - db:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - dev
 volumes:
   db:
     driver: local

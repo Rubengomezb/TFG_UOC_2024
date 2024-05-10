@@ -14,34 +14,85 @@ using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Networking;
 using Microsoft.Maui.ApplicationModel.Communication;
 using System.Collections.ObjectModel;
+using TFG_UOC_2024.APP.Model;
+using System.ComponentModel;
 
 namespace TFG_UOC_2024.APP.ViewModels
 {
-    public partial class UserProfileViewModel : ObservableObject
+    public partial class UserProfileViewModel : ObservableObject, INotifyPropertyChanged
     {
         [ObservableProperty]
         private string _email;
 
-        [ObservableProperty]
         private string _firstName;
+        public string FirstName
+        {
+            get { return _firstName; }
+            set
+            {
+                _firstName = value;
+                RaisePropertyChanged("FirstName");
+            }
+        }
 
-        [ObservableProperty]
         private string _lastName;
+        public string LastName
+        {
+            get { return _lastName; }
+            set
+            {
+                _lastName = value;
+                RaisePropertyChanged("LastName");
+            }
+        }
 
-        [ObservableProperty]
         private string _phoneNumber;
+        public string PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set
+            {
+                _phoneNumber = value;
+                RaisePropertyChanged("PhoneNumber");
+            }
+        }
 
-        [ObservableProperty]
         private string _image;
+        public string Image
+        {
+            get { return _image; }
+            set
+            {
+                _image = value;
+                RaisePropertyChanged("Image");
+            }
+        }
 
-        [ObservableProperty]
-        private string _id;
+        private string Id;
 
         private readonly IAuthService _authService;
+
+        private Command<object> _updateUserCommand;
+
+        public Command<object> UpdateUserCommand
+        {
+            get { return _updateUserCommand; }
+            set { _updateUserCommand = value; }
+        }
 
         public UserProfileViewModel(IAuthService authService)
         {
             _authService = authService;
+            _userFoodModel = new ObservableCollection<UserFoodModel>()
+            {
+                new UserFoodModel { Id = 1, Name = "Vegetarian" },
+                new UserFoodModel { Id = 2, Name = "Vegan" },
+                new UserFoodModel { Id = 3, Name = "Mediterranean" },
+                new UserFoodModel { Id = 4, Name = "Muslim" },
+                new UserFoodModel { Id = 5, Name = "Jewish" },
+                new UserFoodModel { Id = 6, Name = "Diet" },
+            };
+            _updateUserCommand = new Command<object>(UpdateUser);
         }
 
         private bool _isInitialized = false;
@@ -60,12 +111,11 @@ namespace TFG_UOC_2024.APP.ViewModels
             LoadUser();
         }
 
-        [RelayCommand]
-        public async Task UpdateUser()
+        public async void UpdateUser(object obj)
         {
             try
             {
-                var dto = new UserSimpleDTO() { Id = Guid.Parse(Id), FirstName = FirstName, LastName = LastName, PhoneNumber = PhoneNumber, Email = Email };
+                var dto = new UserSimpleDTO() { Id = Guid.Parse(Id), FirstName = FirstName, LastName = LastName, PhoneNumber = PhoneNumber };
                 if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
                 {
                     /*var user = _m.Map<UserDTO>(await _authService.UpdateUserAsync(_id.ToString(), dto));
@@ -87,7 +137,29 @@ namespace TFG_UOC_2024.APP.ViewModels
                 await App.Current.MainPage.DisplayAlert("Error", "Error al registrar el usuario", "Ok");
             }
         }
-        
+
+        public ObservableCollection<UserFoodModel> _userFoodModel = new ();
+        public ObservableCollection<UserFoodModel> UserFoodModel
+        {
+            get { return _userFoodModel; }
+            set
+            {
+                _userFoodModel = value;
+                RaisePropertyChanged("UserFoodModel");
+            }
+        }
+
+        private ObservableCollection<UserFoodModel> selectedItem = new ObservableCollection<UserFoodModel>();
+        public ObservableCollection<UserFoodModel> SelectedItem
+        {
+            get { return selectedItem; }
+            set
+            {
+                selectedItem = value;
+                RaisePropertyChanged("SelectedItem");
+            }
+        }
+
         private void LoadUser()
         {
             FirstName = App.user.FirstName;
@@ -95,6 +167,15 @@ namespace TFG_UOC_2024.APP.ViewModels
             PhoneNumber = App.user.PhoneNumber;
             Email = App.user.Email;
             Id = App.user.Id.ToString();
+            Image = "user.png";
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void RaisePropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
     }
 }

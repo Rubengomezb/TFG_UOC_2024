@@ -18,7 +18,6 @@ namespace TFG_UOC_2024.DB.Models
 
         public Menu Menu {  get; set; }
 
-        [InverseProperty("RecipeNavigation")]
-        public virtual ICollection<Ingredient> Ingredients { get; set; }
+        public string IngredientNames { get; set; }
     }
 }

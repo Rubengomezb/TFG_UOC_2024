@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Maui.Core.Extensions;
+using Syncfusion.Maui.Picker;
 using Syncfusion.Maui.Scheduler;
 using TFG_UOC_2024.APP.ViewModels;
 using TFG_UOC_2024.APP.Views;
 
 namespace TFG_UOC_2024.APP.Behaviours
 {
-    internal class MenuBehaviour : Behavior<MenuView>
+    public class MenuBehaviour : Behavior<ContentPage>
     {
         /// <summary>
         /// The no events label.
@@ -26,18 +28,29 @@ namespace TFG_UOC_2024.APP.Behaviours
         /// </summary>
         private SfScheduler? scheduler;
 
-        protected override void OnAttachedTo(MenuView bindable)
+ 
+        protected override void OnAttachedTo(ContentPage bindable)
         {
             base.OnAttachedTo(bindable);
-            this.scheduler = bindable.Content.FindByName<SfScheduler>("Scheduler");
-            this.noEventsLabel = bindable.Content.FindByName<Label>("noEventsLabel");
-            this.appointmentListView = bindable.Content.FindByName<ListView>("appointmentListView");
+
+            this.scheduler = bindable.FindByName<SfScheduler>("Scheduler");
+            this.noEventsLabel = bindable.FindByName<Label>("noEventsLabel");
+            this.appointmentListView = bindable.FindByName<ListView>("appointmentListView");
             if (scheduler != null)
             {
                 scheduler.ViewChanged += this.OnSchedulerViewChanged;
                 scheduler.Tapped += Scheduler_Tapped;
                 scheduler.SelectionChanged += Scheduler_SelectionChanged;
+                scheduler.QueryAppointments += Scheduler_QueryAppointments;
             }
+
+
+        }
+
+        private async void Scheduler_QueryAppointments(object sender, SchedulerQueryAppointmentsEventArgs e)
+        {
+            var viewModel = this.scheduler.BindingContext as MenuViewModel;
+            viewModel.QueryAppointments(e.VisibleDates.ToList());
         }
 
         private async void Scheduler_SelectionChanged(object? sender, SchedulerSelectionChangedEventArgs e)
@@ -96,30 +109,14 @@ namespace TFG_UOC_2024.APP.Behaviours
 
             if (appointments != null && appointments.Any())
             {
-                viewModel.selectedDateMenus = appointments;
-                if (DeviceInfo.Platform != DevicePlatform.Android)
-                {
-                    this.appointmentListView.IsVisible = true;
-                    this.noEventsLabel.IsVisible = false;
-                }
-                else
-                {
-                    this.appointmentListView.WidthRequest = this.scheduler.Width * 0.8;
-                    this.noEventsLabel.WidthRequest = 0;
-                }
+                viewModel.SelectedDateMenus = appointments.Where(x => !viewModel.SelectedDateMenus.Any(y => y.Id == x.Id && y.Name == x.Name)).ToObservableCollection();
+                this.appointmentListView.IsVisible = true;
+                this.noEventsLabel.IsVisible = false;
             }
             else
             {
-                if (DeviceInfo.Platform != DevicePlatform.Android)
-                {
-                    this.appointmentListView.IsVisible = false;
-                    this.noEventsLabel.IsVisible = true;
-                }
-                else
-                {
-                    this.appointmentListView.WidthRequest = 0;
-                    this.noEventsLabel.WidthRequest = this.scheduler.Width * 0.8;
-                }
+                this.appointmentListView.IsVisible = false;
+                this.noEventsLabel.IsVisible = true;
             }
         }
 
@@ -137,7 +134,7 @@ namespace TFG_UOC_2024.APP.Behaviours
             }
         }
 
-        protected override void OnDetachingFrom(MenuView bindable)
+        protected override void OnDetachingFrom(ContentPage bindable)
         {
             base.OnDetachingFrom(bindable);
 

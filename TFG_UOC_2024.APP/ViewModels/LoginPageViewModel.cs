@@ -58,8 +58,8 @@ namespace TFG_UOC_2024.APP.ViewModels
                         string userDetails = JsonConvert.SerializeObject(user);
                         Preferences.Set(nameof(App.user), userDetails);
                         App.user = user;
-                        AppShell.Current.FlyoutHeader = new HeaderControl();
-                        await Shell.Current.GoToAsync($"{nameof(MainRecipeView)}");
+                        //AppShell.Current.FlyoutHeader = new HeaderControl();
+                        await Shell.Current.GoToAsync("//MainRecipeView");
                     }
                     else
                     {

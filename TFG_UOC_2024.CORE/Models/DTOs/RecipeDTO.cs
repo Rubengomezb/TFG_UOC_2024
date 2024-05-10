@@ -18,6 +18,8 @@ namespace TFG_UOC_2024.CORE.Models.DTOs
         public string ImageUrl { get; set; }
 
         public List<IngredientDTO> Ingredients { get; set; }
+
+        public string IngredientNames { get; set; }
     }
 
     public class  RecipeFavorite

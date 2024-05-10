@@ -3,7 +3,11 @@ using Android.Runtime;
 
 namespace TFG_UOC_2024.APP
 {
-    [Application]
+#if DEBUG
+    [Application(AllowBackup = false, Debuggable = true, UsesCleartextTraffic = true)]
+#else
+[Application]
+#endif
     public class MainApplication : MauiApplication
     {
         public MainApplication(IntPtr handle, JniHandleOwnership ownership)

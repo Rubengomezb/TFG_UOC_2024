@@ -270,6 +270,10 @@ namespace TFG_UOC_2024.API
             {
                 endpoints.MapControllers();
             });
+
+/*#if !DEBUG
+app.UseHttpsRedirection();
+#endif*/
         }
     }
 }

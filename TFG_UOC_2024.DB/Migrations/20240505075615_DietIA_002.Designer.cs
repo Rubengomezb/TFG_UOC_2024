@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TFG_UOC_2024.DB.Context;
 
@@ -10,9 +11,11 @@ using TFG_UOC_2024.DB.Context;
 namespace TFG_UOC_2024.DB.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240505075615_DietIA_002")]
+    partial class DietIA_002
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,6 +336,9 @@ namespace TFG_UOC_2024.DB.Migrations
                     b.Property<Guid>("Recipe")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid?>("RecipeNavigationId")
+                        .HasColumnType("char(36)");
+
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("char(36)");
 
@@ -342,6 +348,8 @@ namespace TFG_UOC_2024.DB.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Category");
+
+                    b.HasIndex("RecipeNavigationId");
 
                     b.ToTable("Ingredient");
                 });
@@ -527,7 +535,14 @@ namespace TFG_UOC_2024.DB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TFG_UOC_2024.DB.Models.Recipe", "RecipeNavigation")
+                        .WithMany("Ingredients")
+                        .HasForeignKey("RecipeNavigationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("CategoryNavigation");
+
+                    b.Navigation("RecipeNavigation");
                 });
 
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Menu", b =>
@@ -564,6 +579,8 @@ namespace TFG_UOC_2024.DB.Migrations
 
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Recipe", b =>
                 {
+                    b.Navigation("Ingredients");
+
                     b.Navigation("Menu");
                 });
 #pragma warning restore 612, 618

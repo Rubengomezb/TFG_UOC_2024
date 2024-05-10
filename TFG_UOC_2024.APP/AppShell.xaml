@@ -11,20 +11,29 @@
     Shell.TabBarIsVisible="False">
 
     <Shell.FlyoutHeader>
-        <Image Source="splashdietia.svg"/>
+        <Image Source="splashia.png"/>
     </Shell.FlyoutHeader>
 
-    <FlyoutItem Title="Menu" x:Name="MenuRoot_tab" FlyoutDisplayOptions="AsMultipleItems">
+    <ShellItem>
+        <ShellContent
+            FlyoutItemIsVisible="False"
+            x:Name="loginpage"
+            Icon="home.png"
+            Title="Login"
+            ContentTemplate="{DataTemplate views:LoginPage}"
+            Route="LoginPage"/>
+    </ShellItem>
+    <FlyoutItem Title="mainpage" x:Name="MenuRoot_tab" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent
                 x:Name="Recipe_tab"
                 Title="Recipe"
-                Icon="home.png"
+                Icon="recipe.svg"
                 ContentTemplate="{DataTemplate views:MainRecipeView}"
                 Route="MainRecipeView" />
         <ShellContent
                 x:Name="Menu_tab"
                 Title="Menu"
-                Icon="home.png"
+                Icon="calendar.svg"
                 ContentTemplate="{DataTemplate views:MenuView}"
                 Route="MenuView" />
         <ShellContent
@@ -32,15 +41,13 @@
                 Title="Profile"
                 ContentTemplate="{DataTemplate views:UserProfileView}"
                 Route="UserProfileView"
-                Icon="home.png"/>
-        
-    </FlyoutItem>
-    <FlyoutItem x:Name="LoginRoot_tab" FlyoutItemIsVisible="False">
+                Icon="usermenu.svg"/>
         <ShellContent
-        x:Name="Login_tab"
-        Title="Login"
-        ContentTemplate="{DataTemplate views:LoginPage}"
-        Route="LoginPage"/>
+                x:Name="Favourite_tab"
+                Title="Favs"
+                ContentTemplate="{DataTemplate views:FavouriteView}"
+                Route="FavouriteView"
+                Icon="favorite_24dp.svg"/>
     </FlyoutItem>
 
     <Shell.ItemTemplate>

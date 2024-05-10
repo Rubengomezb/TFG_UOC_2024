@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TFG_UOC_2024.APP.Views.FavouriteView"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="TFG_UOC_2024.APP.Views.IngredientsView"
-             Title="Ingredients"
+             Title="Favs"
+             Shell.NavBarIsVisible="True"
              xmlns:local="clr-namespace:TFG_UOC_2024.APP.Behaviours" 
+            xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView" 
+            xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
              xmlns:model="clr-namespace:TFG_UOC_2024.APP.Model"
-             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
-             xmlns:chip="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+            x:DataType="viewmodels:FavouriteViewModel"
              Shell.BackgroundColor="BlueViolet"
              Shell.TabBarIsVisible="True">
-
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
-        <local:CategoryBehaviour/>
+        <local:FavouriteBehaviour/>
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <Grid Margin="10" RowSpacing="10" Background="#fbe8fc">
+        <Grid Margin="0" RowSpacing="0" Background="#fbe8fc">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="350" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="400" />
             </Grid.RowDefinitions>
             <Grid x:Name="headerGrid" Grid.Row="0" HeightRequest="60" ColumnSpacing="0" RowSpacing="0" HorizontalOptions="Center">
                 <Border Stroke="#9B5DB0"
-             StrokeThickness="1"
-             StrokeShape="RoundRectangle 20,20,20,20"
-             WidthRequest="350"
-             Padding="2,8"
-             HorizontalOptions="Center">
+                     StrokeThickness="1"
+                     StrokeShape="RoundRectangle 20,20,20,20"
+                     WidthRequest="350"
+                     Padding="2,8"
+                     HorizontalOptions="Center">
 
                     <SearchBar x:Name="filterText" BackgroundColor="White"
-                          Grid.Row="0"
-                          Grid.Column="0"
+                      Grid.Row="0"
+                      Grid.Column="0"
                            Margin='{OnPlatform Default="100,5,100,0",iOS="10,5,10,0", WinUI="10,5,10,0", MacCatalyst="0,5,0,0"}'                               
                            FontSize="18"
                            IsVisible="true"
@@ -43,22 +42,10 @@
                     </SearchBar>
                 </Border>
             </Grid>
-            <Grid x:Name="ChipLayer" Grid.Row="1">
-                <chip:SfChipGroup 
-			        ItemsSource="{Binding SelectedIngredients}" 
-			        ChipPadding="8,8,0,0" 
-			        DisplayMemberPath="Name"
-			        ChipBackground="#edecd5"
-			        ChipTextColor="Black"
-			        HorizontalOptions="Start" 
-			        VerticalOptions="Center"
-                    ChipCornerRadius="15">
-                </chip:SfChipGroup>
-            </Grid>
-            <Grid Grid.Row="2" VerticalOptions="Start" Padding="0,0,0,0" HeightRequest="400">
-                <syncfusion:SfListView x:Name="listIngredientView" ItemSize="80" ItemsSource="{Binding Ingredients}" ItemSpacing="0,0,5,0" SelectionMode="Single">
+            <Grid Grid.Row="1" VerticalOptions="Start" Padding="0,0,0,0" HeightRequest="400">
+                <syncfusion:SfListView x:Name="listView" ItemSize="80" ItemsSource="{Binding Recipes}" ItemSpacing="0,0,5,0" SelectionMode="Single">
                     <syncfusion:SfListView.ItemTemplate>
-                        <DataTemplate x:Name="ItemTemplate" x:DataType="model:IngredientModel">
+                        <DataTemplate x:Name="ItemTemplate" x:DataType="model:RecipeModel">
                             <ViewCell>
                                 <ViewCell.View>
                                     <Grid x:Name="grid" RowSpacing="1">
@@ -80,37 +67,40 @@
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Image Source="{Binding ImageUrl}"
-                                                   VerticalOptions="Center"
-                                                   HorizontalOptions="Center"
-                                                   HeightRequest="90"/>
+                                                       VerticalOptions="Center"
+                                                       HorizontalOptions="Center"
+                                                       HeightRequest="50"/>
                                                 <Grid Grid.Column="1"
-                                                  RowSpacing="1"
-                                                  Padding="25,0,0,0"
-                                                  VerticalOptions="Center">
+                                                      RowSpacing="1"
+                                                      Padding="10,0,0,0"
+                                                      VerticalOptions="Center">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="*" />
                                                         <RowDefinition Height="*" />
                                                     </Grid.RowDefinitions>
                                                     <Label LineBreakMode="NoWrap"
-                                                            TextColor="#9B5DB0"
-                                                            FontAttributes="Bold"
-                                                            Text="{Binding Name}"
-                                                            FontSize="16">
+                                                             TextColor="#9B5DB0"
+                                                             Text="{Binding Name}"
+                                                           FontSize="16">
+                                                    </Label>
+                                                    <Label Grid.Row="1"
+                                                                Grid.Column="0"
+                                                               LineBreakMode="NoWrap"
+                                                             TextColor="Black"
+                                                             Text="{Binding Description}"
+                                                           FontSize="10">
                                                     </Label>
                                                 </Grid>
                                                 <Grid Grid.Row="0"
-                                                  x:Name="temp"
-                                                  Grid.Column="2"
-                                                  RowSpacing="0"
-                                                  HorizontalOptions="End"
-                                                  Padding="0,0,10,0">
-                                                    <Image Source="add.png" HeightRequest="50" x:Name="SelectIngredient">
+                                                      x:Name="temp"
+                                                      Grid.Column="2"
+                                                      RowSpacing="0"
+                                                      HorizontalOptions="End"
+                                                      Padding="0,10,10,0">
+                                                    <Image Source="navigate.png" HeightRequest="50" x:Name="SelectRecipe">
                                                         <Image.GestureRecognizers>
-                                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.TapCommand, Source = {x:Reference listIngredientView}}" CommandParameter="{Binding}" />
+                                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.TapCommand, Source = {x:Reference listView}}" CommandParameter="{Binding}" />
                                                         </Image.GestureRecognizers>
-                                                        <Image.Behaviors>
-                                                            <toolkit:IconTintColorBehavior TintColor="#9B5DB0" />
-                                                        </Image.Behaviors>
                                                     </Image>
                                                 </Grid>
                                             </Grid>
@@ -121,13 +111,6 @@
                         </DataTemplate>
                     </syncfusion:SfListView.ItemTemplate>
                 </syncfusion:SfListView>
-            </Grid>
-            <Grid Grid.Row="3" VerticalOptions="Center" Padding="0,0,0,0" HeightRequest="50">
-                <Button x:Name="GenerateRecipeButton" Text="Generate recipe" FontAttributes="Bold" FontSize="20" VerticalOptions="Start" Margin="30,0,30,0" Background="#9B5DB0">
-                    <Button.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding Path=BindingContext.GenerateRecipeCommand, Source = {x:Reference GenerateRecipeButton}}" CommandParameter="{Binding}" />
-                    </Button.GestureRecognizers>
-                </Button>
             </Grid>
         </Grid>
     </ContentPage.Content>

@@ -11,7 +11,7 @@ using TFG_UOC_2024.DB.Context;
 namespace TFG_UOC_2024.DB.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240423061646_DietIA_001")]
+    [Migration("20240503155032_DietIA_001")]
     partial class DietIA_001
     {
         /// <inheritdoc />
@@ -25,7 +25,6 @@ namespace TFG_UOC_2024.DB.Migrations
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Category", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("CreatedBy")
@@ -265,7 +264,6 @@ namespace TFG_UOC_2024.DB.Migrations
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Identity.Contact", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("CreatedBy")
@@ -315,7 +313,6 @@ namespace TFG_UOC_2024.DB.Migrations
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Ingredient", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("Category")
@@ -339,6 +336,9 @@ namespace TFG_UOC_2024.DB.Migrations
                     b.Property<Guid>("Recipe")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid?>("RecipeNavigationId")
+                        .HasColumnType("char(36)");
+
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("char(36)");
 
@@ -349,7 +349,7 @@ namespace TFG_UOC_2024.DB.Migrations
 
                     b.HasIndex("Category");
 
-                    b.HasIndex("Recipe");
+                    b.HasIndex("RecipeNavigationId");
 
                     b.ToTable("Ingredient");
                 });
@@ -357,7 +357,6 @@ namespace TFG_UOC_2024.DB.Migrations
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Menu", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("CreatedBy")
@@ -395,7 +394,6 @@ namespace TFG_UOC_2024.DB.Migrations
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Recipe", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("CreatedBy")
@@ -427,7 +425,6 @@ namespace TFG_UOC_2024.DB.Migrations
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.UserFavorite", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("CreatedBy")
@@ -537,9 +534,8 @@ namespace TFG_UOC_2024.DB.Migrations
 
                     b.HasOne("TFG_UOC_2024.DB.Models.Recipe", "RecipeNavigation")
                         .WithMany("Ingredients")
-                        .HasForeignKey("Recipe")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RecipeNavigationId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("CategoryNavigation");
 

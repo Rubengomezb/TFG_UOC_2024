@@ -38,8 +38,8 @@ namespace TFG_UOC_2024.CORE.Managers
             {
                 var user = await _userService.GetSelf();
                 var re = _menuService.GetMenu(startTime,endTime, user.Data.Id);
-                if (!re.Any())
-                    return r.NotFound("recipe not found");
+                //if (!re.Any())
+                //    return r.NotFound("recipe not found");
 
                 var menuDto = _m.Map<IEnumerable<MenuDTO>>(re);
                 return r.Ok(menuDto);
@@ -50,9 +50,9 @@ namespace TFG_UOC_2024.CORE.Managers
             }
         }
 
-        public async Task<GenericResponse> CreateMenu(DateTime startTime, DateTime endTime)
+        public async Task<ServiceResponse<bool>> CreateMenu(DateTime startTime, DateTime endTime)
         {
-            var r = new GenericResponse();
+            var r = new ServiceResponse<bool>();
             var menuList = new List<MenuDTO>();
             try
             {
@@ -63,6 +63,7 @@ namespace TFG_UOC_2024.CORE.Managers
                     foreach (var eatTime in Enum.GetValues(typeof(EatTime)))
                     {
                         var recipe = await _recipeService.GetRecipe();
+
                         var menuDto = new MenuDTO()
                         {
                             EatTime = (EatTime)eatTime,
@@ -71,16 +72,23 @@ namespace TFG_UOC_2024.CORE.Managers
                             Recipe = _m.Map<RecipeDTO>(recipe.hits.FirstOrDefault().recipe)
                         };
 
+                        menuDto.Recipe.IngredientNames = string.Join(";", recipe.hits.FirstOrDefault().recipe.ingredientLines);                   
+
                         menuList.Add(menuDto);
                     }
                    
                     startTime = startTime.AddDays(1);
                 }
                 
-
                 var menus = _m.Map<List<DB.Models.Menu>>(menuList);
+                foreach (var m in menus)
+                {
+                    m.Recipe.Menu = m;
+                    //m.Recipe.Ingredients.Clear();
+                }
+
                 await _menuService.CreateWeeklyMenu(menus);
-                return r.Ok();
+                return r.Ok(true);
             }
             catch (Exception ex)
             {

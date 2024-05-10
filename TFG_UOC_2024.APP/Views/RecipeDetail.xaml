@@ -2,33 +2,69 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:converters="clr-namespace:TFG_UOC_2024.APP.Converters;assembly=TFG_UOC_2024.APP"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             xmlns:model="clr-namespace:TFG_UOC_2024.APP.Model"
              x:Class="TFG_UOC_2024.APP.Views.RecipeDetail"
-             Title="RecipeDetail">
+             Title="Recipe detail"
+             Shell.BackgroundColor="BlueViolet"
+             Shell.TabBarIsVisible="True">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
     </ContentPage.Behaviors>
-    <VerticalStackLayout>
-        <Frame CornerRadius="50" WidthRequest="120" HeightRequest="120"  Margin="0,20,0,0" Padding="0" BorderColor="Green">
-            <Image Source="{Binding Image}" WidthRequest="80" HeightRequest="80" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BoolToIconConverter x:Key="BoolToIconConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <VerticalStackLayout Background="#fbe8fc">
+        <ImageButton Source="back.svg" x:Name="backButton" BackgroundColor="Transparent" HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin="20,20,0,0">
+            <ImageButton.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Path=BindingContext.BackCommand, Source = {x:Reference backButton}}" CommandParameter="{Binding}" />
+            </ImageButton.GestureRecognizers>
+            <ImageButton.Behaviors>
+                <toolkit:IconTintColorBehavior TintColor="#9B5DB0" />
+            </ImageButton.Behaviors>
+        </ImageButton>
+        <Frame Opacity="1" CornerRadius="0" WidthRequest="150" HeightRequest="150"  Margin="0,20,0,0" Padding="0" BorderColor="#9B5DB0">
+            <Image Opacity="1" Source="{Binding Image}" WidthRequest="150" HeightRequest="150" VerticalOptions="Center" HorizontalOptions="Center"></Image>
         </Frame>
 
-        <ImageButton Source="{Binding IsFavourite, Converter={StaticResource BoolToIconConverter}}" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="15" WidthRequest="15" Command="{Binding MakeFavourite}">
+        <ImageButton Opacity="1" x:Name="favouriteButton" Source="{Binding IsFavourite, Converter={StaticResource BoolToIconConverter}}" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin =" 0,20,20,0">
             <ImageButton.Behaviors>
                 <toolkit:IconTintColorBehavior TintColor="Red" />
             </ImageButton.Behaviors>
+            <ImageButton.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Path=BindingContext.IsFavouriteCommand, Source = {x:Reference favouriteButton}}" CommandParameter="{Binding}" />
+            </ImageButton.GestureRecognizers>
         </ImageButton>
         
-        <Label Text="{Binding Name}" FontSize="Title" FontAttributes="Bold" />
-        <Label Text="{Binding Description}" FontSize="Subtitle" />
-        <CollectionView ItemsSource="{Binding Ingredients}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout>
-                        <Label Text="{Binding Name}" FontSize="Subtitle" />
-                        <Label Text="{Binding Description}" FontSize="Caption" />
-                    </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <Grid Margin="10" Opacity="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Text="{Binding Name}" FontSize="Title" FontAttributes="Bold" TextColor="#9B5DB0" Margin="10"/>
+            <Label Grid.Row="1" Text="{Binding Description}" TextColor="#9B5DB0" FontSize="Subtitle" Margin="10"/>
+            <syncfusion:SfListView Grid.Row="2" x:Name="detailView" ItemSize="30" ItemsSource="{Binding Ingredients}" ItemSpacing="0,0,5,0" Margin="10" SelectionMode="Single">
+                <syncfusion:SfListView.ItemTemplate>
+                    <DataTemplate x:Name="ItemTemplate" x:DataType="model:IngredientItemModel">
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Grid x:Name="grid" RowSpacing="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid RowSpacing="5" Padding="10,0,0,0">
+                                        <Label Text="{Binding Name}" FontSize="Subtitle" TextColor="#9B5DB0"/>
+                                    </Grid>
+                                </Grid>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </syncfusion:SfListView.ItemTemplate>
+            </syncfusion:SfListView>
+        </Grid>
     </VerticalStackLayout>
 </ContentPage>

@@ -2,41 +2,100 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:inputLayout="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              x:Class="TFG_UOC_2024.APP.Views.UserProfileView"
-             Title="UserProfileView"
+             Title="User"
              xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
-            x:DataType="viewmodels:UserProfileViewModel">
-
+            x:DataType="viewmodels:UserProfileViewModel"
+             Shell.TabBarIsVisible="True"
+             Shell.BackgroundColor="BlueViolet">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout>
-            <Image Source="{Binding Image}" Aspect="AspectFill" HeightRequest="200" WidthRequest="200" HorizontalOptions="Center" VerticalOptions="Center"/>
-            <Grid>
+        <Grid Background="#fbe8fc">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Frame CornerRadius="50" WidthRequest="210" HeightRequest="210"  Margin="0,20,0,30" Padding="0" BorderColor="#9B5DB0">
+                <Image Grid.Row="0" Source="{Binding Image}" Aspect="AspectFill" HeightRequest="180" WidthRequest="180" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Frame>
+            <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" Text="First Name" VerticalOptions="Center"/>
-                <Entry Grid.Row="0" Grid.Column="1" Text="{Binding FirstName}" VerticalOptions="Center"/>
-                <Label Grid.Row="1" Grid.Column="0" Text="Last Name" VerticalOptions="Center"/>
-                <Entry Grid.Row="1" Grid.Column="1" Text="{Binding LastName}" VerticalOptions="Center"/>
-                <Label Grid.Row="2" Grid.Column="0" Text="Email" VerticalOptions="Center"/>
-                <Entry Grid.Row="2" Grid.Column="1" Text="{Binding Email}" VerticalOptions="Center"/>
-                <Label Grid.Row="3" Grid.Column="0" Text="Phone Number" VerticalOptions="Center"/>
-                <Entry Grid.Row="3" Grid.Column="1" Text="{Binding PhoneNumber}" VerticalOptions="Center"/>
-                <Label Grid.Row="3" Grid.Column="0" Text="E-mail" VerticalOptions="Center"/>
-                <Entry Grid.Row="3" Grid.Column="1" Text="{Binding Email}" VerticalOptions="Center"/>
+                <inputLayout:SfTextInputLayout Grid.Row="0"
+                        Margin="20,0,20,0"
+                        Hint="FirstName" 
+                        HeightRequest="80" 
+                        WidthRequest="350"
+                        IsHintAlwaysFloated="true" 
+                        ContainerType="Outlined"
+                        OutlineCornerRadius="8"
+                        ContainerBackground="White"
+                        Stroke="#9B5DB0">
+                    <Entry Placeholder="First Name"
+                Text="{Binding FirstName}"/>
+                    <inputLayout:SfTextInputLayout.HintLabelStyle>
+                        <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                    </inputLayout:SfTextInputLayout.HintLabelStyle>
+                </inputLayout:SfTextInputLayout>
+                <inputLayout:SfTextInputLayout Grid.Row="1"
+                        Margin="20,0,20,0"
+                        Hint="LastName" 
+                        HeightRequest="80" 
+                        WidthRequest="350"
+                        IsHintAlwaysFloated="true" 
+                        ContainerType="Outlined"
+                        OutlineCornerRadius="8"
+                        ContainerBackground="White"
+                        Stroke="#9B5DB0">
+                    <Entry Placeholder="Last Name"
+                            Text="{Binding LastName}"/>
+                    <inputLayout:SfTextInputLayout.HintLabelStyle>
+                        <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                    </inputLayout:SfTextInputLayout.HintLabelStyle>
+                </inputLayout:SfTextInputLayout>
+                <inputLayout:SfTextInputLayout Grid.Row="2"
+                        Margin="20,0,20,0"
+                        Hint="PhoneNumber" 
+                        HeightRequest="80"
+                        WidthRequest="350"
+                        IsHintAlwaysFloated="true" 
+                        ContainerType="Outlined"
+                        OutlineCornerRadius="8"
+                        ContainerBackground="White"
+                        Stroke="#9B5DB0">
+                    <Entry Placeholder="PhoneNumber"
+                           Text="{Binding PhoneNumber}"/>
+                    <inputLayout:SfTextInputLayout.HintLabelStyle>
+                        <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                    </inputLayout:SfTextInputLayout.HintLabelStyle>
+                </inputLayout:SfTextInputLayout>
             </Grid>
-            <Button Text="Actualizar" HorizontalOptions="Center" Command="{ Binding UpdateUserCommand }" />
-        </StackLayout>
+            <Label Grid.Row="2" Text="Food Types" TextColor="#9B5DB0" Margin=" 20, 0, 20, 10" FontAttributes="Bold"></Label>
+            <editors:SfComboBox x:Name="comboBox" Grid.Row="3" Margin=" 20, 0, 20, 30"
+                    IsEditable="True"
+                    WidthRequest="350"
+                    SelectionMode="Multiple"
+                    ItemsSource="{Binding UserFoodModel}"
+                    DisplayMemberPath="FoodType"
+                    TextMemberPath="FoodType" 
+                    SelectedItems="{Binding SelectedItem}"
+                    Placeholder="Select your food types"
+                    PlaceholderColor="#9B5DB0"/>
+            <Button Grid.Row="4" Text="Update Settings" Command="{ Binding UpdateUserCommand }" Background="#9B5DB0" Margin=" 20, 0, 20, 0" WidthRequest="350"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

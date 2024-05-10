@@ -11,11 +11,13 @@ namespace TFG_UOC_2024.CORE.Managers.Interfaces
 {
     public interface IRecipeManager
     {
-        Task<GenericResponse> AddFavorite(RecipeFavorite recipeFavorite);
+        Task<ServiceResponse<bool>> AddFavorite(RecipeFavorite recipeFavorite);
 
-        Task<GenericResponse> RemoveFavorite(RecipeFavorite recipeFavorite);
+        Task<ServiceResponse<bool>> RemoveFavorite(RecipeFavorite recipeFavorite);
 
         Task<ServiceResponse<bool>> IsFavorite(Guid userId, Guid recipeId);
+
+        Task<ServiceResponse<List<RecipeDTO>>> GetFavourites(string userId);
 
         Task<ServiceResponse<RecipeDTO>> GetRecipe(Guid recipeId);
 
@@ -23,10 +25,10 @@ namespace TFG_UOC_2024.CORE.Managers.Interfaces
 
         Task<ServiceResponse<List<CategoryDTO>>> GetCategories();
 
-        Task<ServiceResponse<List<IngredientCategoryDTO>>> GetIngredientsByCategory(Guid categoryId);
+        Task<ServiceResponse<List<IngredientDTO>>> GetIngredientsByCategory(Guid categoryId);
 
         Task<ServiceResponse<List<RecipeDTO>>> GetRecipes();
 
-        Task<GenericResponse> AddIngredients();
+        //Task<GenericResponse> AddIngredients();
     }
 }

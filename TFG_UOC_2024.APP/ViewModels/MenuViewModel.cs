@@ -4,14 +4,19 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AndroidX.Lifecycle;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Syncfusion.Maui.Scheduler;
 using TFG_UOC_2024.APP.Model;
 using TFG_UOC_2024.APP.Services;
+using TFG_UOC_2024.APP.Views;
 using TFG_UOC_2024.CORE.Models.DTOs;
+using TFG_UOC_2024.DB.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static TFG_UOC_2024.DB.Components.Enums;
 
@@ -19,22 +24,8 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class MenuViewModel : INotifyPropertyChanged
     {
-        //[ObservableProperty]
-        //private string _name;
-
-        //[ObservableProperty]
-        //private string _description;
-
-        //[ObservableProperty]
-        //private List<MenuDTO> _events;
-
-        //[ObservableProperty]
-        //private DateTime _menuDate;
-
-        //private bool isVisible = false;
-
         private readonly IMenuService _menuService;
-        //public event PropertyChangedEventHandler PropertyChanged;
+        private ListView listView; 
 
         public MenuViewModel(IMenuService menuService)
         {
@@ -42,31 +33,117 @@ namespace TFG_UOC_2024.APP.ViewModels
             this.subjects = new List<string>();
             this.colors = new List<Brush>();
             this.notes = new List<string>();
-            this.selectedDateMenus = new ObservableCollection<AdvancedEventModel>();
             this.CreateColors();
             this.IntializeAppoitments();
-            //this.selectedDateMenus = this.GetSelectedDateAppointments(this.selectedDate);
             this.DisplayDate = DateTime.Now.Date;
-            IsOpenCommand = new Command(OpenCommand);
+            _isOpenCommand = new Command<object>(OpenCommand);
+            _addMenuCommand = new Command<object>(AddMenu);
         }
 
-        public ICommand IsOpenCommand { private set; get; }
-
-        public bool IsOpen { get; set;  }
-
-        private void OpenCommand(object obj)
+        public Command<object> _isOpenCommand;
+        public Command<object> IsOpenCommand
         {
-            IsOpen = !IsOpen;
+            get { return _isOpenCommand; }
+            set { _isOpenCommand = value; }
+ 
         }
 
-        /*[RelayCommand]
-        private async Task DatePickedCommand(DateTime date)
+        public Command<object> _addMenuCommand;
+        public Command<object> AddMenuCommand
         {
-            var monday = GetFirstWeekDay(date);
-            var sunday = monday.AddDays(7);
-            await _menuService.CreateWeeklyMenuAsync(monday, sunday);
-            isVisible = false;
-        }*/
+            get { return _addMenuCommand; }
+            set { _addMenuCommand = value; }
+
+        }
+
+        private bool _isOpen { get; set;  }
+
+        public bool IsOpen
+        {
+            get { return _isOpen; }
+            set
+            {
+                _isOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isVisible { get; set; }
+
+        public bool IsVisible
+        {
+            get { return _isVisible; }
+            set
+            {
+                _isVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IMenuService getServiceInstance()
+        {
+            return _menuService;
+        }
+
+        private async void OpenCommand(object obj)
+        {
+            if (obj is AdvancedEventModel)
+            {
+                await Shell.Current.GoToAsync($"{nameof(RecipeDetail)}?Id={((AdvancedEventModel)obj).Id}");
+            }
+            //IsOpen = true;
+        }
+
+        private async void AddMenu(object obj)
+        {
+            IsOpen = true;
+            await _menuService.CreateWeeklyMenuAsync(this.selectedDate, this.selectedDate);
+            var newRecipes = await _menuService.GetWeeklyMenuAsync(this.selectedDate, this.selectedDate);
+            foreach (var re in newRecipes)
+            {
+                this._events.Add(this.ParseMenuResponse(re));
+            }
+
+            var visiblesDates = new List<DateTime>();
+            visiblesDates.Add(this.selectedDate);
+            this.QueryAppointments(visiblesDates);
+            this._selectedDateMenus = this.GetSelectedDateAppointments(this.selectedDate);
+        }
+
+        public async void QueryAppointments(List<DateTime> visibleDates)
+        {
+            var newRecipes = await _menuService.GetWeeklyMenuAsync(visibleDates.First(), visibleDates.Last());
+            foreach (var re in newRecipes)
+            {
+                this._events.Add(this.ParseMenuResponse(re));
+            }
+        }
+
+        public AdvancedEventModel ParseMenuResponse(MenuDTO menu)
+        {
+            var recipe = new AdvancedEventModel()
+            {
+                Starting = menu.Date,
+                Name = menu.Recipe.Name,
+                Id = menu.Recipe.Id,
+                Background = this.colors[new Random().Next(this.colors.Count())]
+            };
+
+            switch (menu.EatTime)
+            {
+                case EatTime.Breakfast:
+                    recipe.Starting = menu.Date.AddHours(8);
+                    break;
+                case EatTime.Lunch:
+                    recipe.Starting = menu.Date.AddHours(13);
+                    break;
+                case EatTime.Dinner:
+                    recipe.Starting = menu.Date.AddHours(20);
+                    break;
+            }
+
+            return recipe;
+        }
 
         private DateTime GetFirstWeekDay(DateTime dateSelected)
         {
@@ -106,23 +183,29 @@ namespace TFG_UOC_2024.APP.ViewModels
         /// <summary>
         /// The selected date meetings.
         /// </summary>
-        public ObservableCollection<AdvancedEventModel>? selectedDateMenus;
+        private ObservableCollection<AdvancedEventModel> _selectedDateMenus = new();
+
+        public ObservableCollection<AdvancedEventModel> SelectedDateMenus
+        {
+            get { return _selectedDateMenus; }
+            set
+            {
+                _selectedDateMenus = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Gets or sets appointments.
         /// </summary>
-        public ObservableCollection<AdvancedEventModel>? Events { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selected date meetings.
-        /// </summary>
-        public ObservableCollection<AdvancedEventModel>? SelectedDateMeetings
+        private ObservableCollection<AdvancedEventModel> _events = new ObservableCollection<AdvancedEventModel>();
+        public ObservableCollection<AdvancedEventModel> Events
         {
-            get { return selectedDateMenus; }
+            get { return _events; }
             set
             {
-                selectedDateMenus = value;
-                RaiseOnPropertyChanged("SelectedDateMeetings");
+                _events = value;
+                OnPropertyChanged();
             }
         }
 
@@ -174,34 +257,32 @@ namespace TFG_UOC_2024.APP.ViewModels
             var firstDayOfMonth = new DateTime(actualDate.Year, actualDate.Month, 1);
             var lastDayOfMonth = new DateTime(actualDate.Year, actualDate.Month, DateTime.DaysInMonth(actualDate.Year, actualDate.Month));
 
-            /*var menuList = await _menuService.GetWeeklyMenuAsync(firstDayOfMonth, lastDayOfMonth);
+
+            var menuList = await _menuService.GetWeeklyMenuAsync(firstDayOfMonth, lastDayOfMonth);
 
             foreach (var menu in menuList)
             {
-                foreach (var item in Enum.GetValues(typeof(EatTime)))
+                var meeting = new AdvancedEventModel();
+                meeting.Starting = menu.Date;
+                meeting.Name = menu.Recipe.Name;
+                meeting.Id = menu.Recipe.Id;
+                meeting.Background = this.colors[rand.Next(this.colors.Count())];
+
+                switch (menu.EatTime)
                 {
-                    var meeting = new AdvancedEventModel();
-                    meeting.Starting = menu.Date;
-                    meeting.Name = menu.Recipe.Name;
-                    meeting.Id = menu.Recipe.Id;
-                    meeting.Background = this.colors[rand.Next(this.colors.Count())];
-
-                    switch (item)
-                    {
-                        case EatTime.Breakfast:
-                            meeting.Starting = menu.Date.AddHours(8);
-                            break;
-                        case EatTime.Lunch:
-                            meeting.Starting = menu.Date.AddHours(13);
-                            break;
-                        case EatTime.Dinner:
-                            meeting.Starting = menu.Date.AddHours(20);
-                            break;
-                    }
-
-                    this.Events.Add(meeting);
+                    case EatTime.Breakfast:
+                        meeting.Starting = menu.Date.AddHours(8);
+                        break;
+                    case EatTime.Lunch:
+                        meeting.Starting = menu.Date.AddHours(13);
+                        break;
+                    case EatTime.Dinner:
+                        meeting.Starting = menu.Date.AddHours(20);
+                        break;
                 }
-            }*/
+
+                this._events.Add(meeting);
+            }
         }
 
         /// <summary>
@@ -219,7 +300,10 @@ namespace TFG_UOC_2024.APP.ViewModels
 
                 if (date.Day == startTime.Day && date.Month == startTime.Month && date.Year == startTime.Year)
                 {
-                    selectedAppiointments.Add(this.Events[i]);
+                    if (!selectedAppiointments.Any(x => x.Id == this.Events[i].Id || x.Name == this.Events[i].Name))
+                    {
+                        selectedAppiointments.Add(this.Events[i]);
+                    } 
                 }
             }
 
@@ -252,6 +336,21 @@ namespace TFG_UOC_2024.APP.ViewModels
         private void RaiseOnPropertyChanged(string propertyName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public async Task<bool> CreateWeeklyMenuAsync(DateTime a, DateTime b)
+        {
+            return await _menuService.CreateWeeklyMenuAsync(a, b);
+        }
+
+        public async Task<bool> GetWeeklyMenuAsync(DateTime a, DateTime b)
+        {
+            return await _menuService.CreateWeeklyMenuAsync(a, b);
         }
     }
 }

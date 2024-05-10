@@ -52,7 +52,8 @@ namespace TFG_UOC_2024.CORE.Helpers
             CreateMap<CategoryDTO, Category>();
             CreateMap<RecipeApi, RecipeDTO>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.label))
-                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.image));
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.image))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.url));
 
             CreateMap<IngredientApi, IngredientDTO>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.text))

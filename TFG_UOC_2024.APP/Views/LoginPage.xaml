@@ -9,8 +9,8 @@
              x:DataType="viewmodels:LoginPageViewModel">
 
     <VerticalStackLayout>
-        <Frame CornerRadius="50" WidthRequest="120" HeightRequest="120"  Margin="0,20,0,0" Padding="0" BorderColor="#9B5DB0">
-            <Image Source="user.png" WidthRequest="80" HeightRequest="80" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+        <Frame WidthRequest="120" HeightRequest="120"  Margin="0,20,0,0" Padding="0" BorderColor="#9B5DB0">
+            <Image Source="splashia.png" WidthRequest="100" HeightRequest="100" VerticalOptions="Center" HorizontalOptions="Center"></Image>
         </Frame>
 
         <Label Text="Sign In to continue" TextColor="#9B5DB0" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center" Margin="0,60,0,0"></Label>
@@ -54,12 +54,6 @@
                         <inputLayout:LabelStyle TextColor="#9B5DB0"/>
                     </inputLayout:SfTextInputLayout.HintLabelStyle>
                 </inputLayout:SfTextInputLayout>
-            </StackLayout>
-
-            <StackLayout Grid.Row="2" Margin="35,0,0,0" Orientation="Horizontal">
-                <CheckBox IsChecked="False"></CheckBox>
-                <Label Text="Remember Me" FontAttributes="Bold" Margin="-10,13,0,0"></Label>
-                <Button Text="Forgot Password" BackgroundColor="Transparent" TextColor="#9B5DB0" FontAttributes="Bold" BorderWidth="0" Margin="50,0,0,0"></Button>
             </StackLayout>
 
         </Grid>

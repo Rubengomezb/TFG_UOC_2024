@@ -5,7 +5,6 @@ using TFG_UOC_2024.APP.Interfaces;
 using TFG_UOC_2024.APP.Services;
 using TFG_UOC_2024.APP.ViewModels;
 using TFG_UOC_2024.APP.Views;
-using Microsoft.Maui.Devices;
 using Syncfusion.Maui.Core.Hosting;
 using TFG_UOC_2024.APP.Helper;
 
@@ -24,6 +23,15 @@ namespace TFG_UOC_2024.APP
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+            /*builder.Services.AddScoped<IPlatformHttpMessageHandler>(_ =>
+            {
+#if ANDROID
+                return new AndroidHttpMessageHandler();
+#else
+                    return new Platforms.iOS.IosHttpMessageHandler();
+#endif
+
+            });*/
 
             builder.ConfigureSyncfusionCore();
             builder.Services.AddCustomApiHttpClient();
@@ -31,6 +39,16 @@ namespace TFG_UOC_2024.APP
             builder.Services.AddSingleton<IAuthService, AuthService>();
             builder.Services.AddSingleton<IRecipeService, RecipeService>();
             builder.Services.AddSingleton<IMenuService, MenuService>();
+
+            builder.Services.AddSingleton<LoginPageViewModel>();
+            builder.Services.AddSingleton<SignUpViewModel>();
+            builder.Services.AddSingleton<CategoryViewModel>();
+            builder.Services.AddSingleton<IngredientsViewModel>();
+            builder.Services.AddSingleton<MenuViewModel>();
+            builder.Services.AddSingleton<RecipeDetailViewModel>();
+            builder.Services.AddSingleton<SearchRecipesViewModel>();
+            builder.Services.AddSingleton<UserProfileViewModel>();
+            builder.Services.AddSingleton<FavouriteViewModel>();
 
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddTransient<LoginPage>();
@@ -41,15 +59,9 @@ namespace TFG_UOC_2024.APP
             builder.Services.AddTransient<RecipeDetail>();
             builder.Services.AddTransient<SearchRecipesView>();
             builder.Services.AddTransient<UserProfileView>();
+            builder.Services.AddTransient<FavouriteView>();
 
-            builder.Services.AddSingleton<LoginPageViewModel>();
-            builder.Services.AddSingleton<SignUpViewModel>();
-            builder.Services.AddSingleton<CategoryViewModel>();
-            builder.Services.AddSingleton<IngredientsViewModel>();
-            builder.Services.AddSingleton<MenuViewModel>();
-            builder.Services.AddSingleton<RecipeDetailViewModel>();
-            builder.Services.AddSingleton<SearchRecipesViewModel>();
-            builder.Services.AddSingleton<UserProfileViewModel>();
+
 
 #if DEBUG
             builder.Logging.AddDebug();
@@ -66,10 +78,13 @@ namespace TFG_UOC_2024.APP
             {
                 var baseAddress =
                         DeviceInfo.Platform == DevicePlatform.Android
-                            ? "https://10.0.2.2:44318"
-                            : "https://localhost:44318";
+                            ? "https://10.0.2.2:5011"
+                            : "https://localhost:5011";
 
                 httpClient.BaseAddress = new Uri(baseAddress);
+            }).ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
             });
 
             return services;

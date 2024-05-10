@@ -27,7 +27,7 @@ namespace TFG_UOC_2024.DB.Repository.Interfaces
 
         void UpdateRange(IEnumerable<TEntity> entity, bool saveChanges = true);
 
-        Task Delete(TEntity entity, bool saveChanges = true);
+        void Delete(TEntity entity, bool saveChanges = true);
 
         Task SaveChanges();
 

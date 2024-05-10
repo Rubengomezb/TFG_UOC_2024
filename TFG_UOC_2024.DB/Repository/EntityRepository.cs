@@ -95,12 +95,12 @@ namespace TFG_UOC_2024.DB.Repository
             }
         }
 
-        public async Task Delete(TEntity entity, bool saveChanges = true)
+        public async void Delete(TEntity entity, bool saveChanges = true)
         {
             DbContext.Set<TEntity>().Remove(entity);
             if (saveChanges)
             {
-                await DbContext.SaveChangesAsync();
+                DbContext.SaveChanges();
             }
         }
 

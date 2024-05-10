@@ -21,7 +21,7 @@ namespace TFG_UOC_2024.API.Controllers
         }
 
         [HttpGet("menu")]
-        public async Task<ActionResult> GetWeeklyMenu([FromQuery] DateTime startDate, [FromQuery] DateTime endDate) =>
+        public async Task<ActionResult> GetWeeklyMenu(DateTime startDate, DateTime endDate) =>
             Respond(await _menuManager.GetMenu(startDate, endDate));
 
         [HttpPost("menu")]

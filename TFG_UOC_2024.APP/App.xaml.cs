@@ -1,6 +1,7 @@
 ﻿using TFG_UOC_2024.APP.Helper;
 using TFG_UOC_2024.APP.Services;
 using TFG_UOC_2024.APP.ViewModels;
+using TFG_UOC_2024.APP.Views;
 using TFG_UOC_2024.CORE.Models.DTOs;
 
 namespace TFG_UOC_2024.APP
@@ -18,18 +19,15 @@ namespace TFG_UOC_2024.APP
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzI1Mjc2NkAzMjM1MmUzMDJlMzBqSGR4amQwRUlaVzYvemt2VUh2NlZ6T05kSGpXaFVVdGQ1YXY5QzNsRVlVPQ==");
 
             InitializeComponent();
-
-            /*if (App.user != null)
-            {
-                MainPage = new AppShell();
-            }
-            else
-            {
-                var authService = ServiceHelper.GetService<IAuthService>();
-                var loginviewmodel = new LoginPageViewModel(authService);
-                MainPage = new LoginPage(loginviewmodel);
-            }*/
             MainPage = new AppShell();
+        }
+
+        protected override async void OnStart()
+        {
+            if (user != null)
+                await Shell.Current.GoToAsync($"//MainRecipeView");
+            else
+                await Shell.Current.GoToAsync($"//LoginPage");
         }
     }
 }

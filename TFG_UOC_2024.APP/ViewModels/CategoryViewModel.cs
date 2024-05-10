@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -25,7 +26,20 @@ namespace TFG_UOC_2024.APP.ViewModels
             set { tapCommand = value; }
         }
 
-        public ObservableCollection<CategoryModel> Categories { get; set; } = new();
+        public ObservableCollection<CategoryModel> _categories { get; set; } = new();
+
+        public ObservableCollection<CategoryModel> Categories
+        {
+            get { return _categories; }
+            set
+            {
+                if (_categories == value)
+                    return;
+
+                _categories = value;
+                OnPropertyChanged();
+            }
+        }
 
         private readonly IRecipeService _recipeService;
 
@@ -58,17 +72,16 @@ namespace TFG_UOC_2024.APP.ViewModels
             if (obj is CategoryModel category)
             {
                 var cat = (obj as CategoryModel);
-                await CategorySelectedCommand(int.Parse(cat.Id));
+                await CategorySelectedCommand(cat.Id);
             }
         }
 
         public async void GetCategories()
         {
-            Categories = new ObservableCollection<CategoryModel>();
             var categoriesDTO = await _recipeService.GetCategories();
             foreach (var category in categoriesDTO)
             {
-                Categories.Add(new CategoryModel
+                _categories.Add(new CategoryModel
                 {
                     Id = category.Id,
                     Name = category.Name,
@@ -77,9 +90,14 @@ namespace TFG_UOC_2024.APP.ViewModels
             } 
         }
 
-        public async Task CategorySelectedCommand(int Id)
+        public async Task CategorySelectedCommand(string Id)
         {
             await Shell.Current.GoToAsync($"{nameof(IngredientsView)}?Id={Id}");
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

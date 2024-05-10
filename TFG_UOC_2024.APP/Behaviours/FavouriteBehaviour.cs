@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Syncfusion.Maui.ListView;
 using TFG_UOC_2024.APP.Model;
-using TFG_UOC_2024.CORE.Models.DTOs;
 
 namespace TFG_UOC_2024.APP.Behaviours
 {
-    public class IngredientsBehaviour : Behavior<ContentPage>
+    public class FavouriteBehaviour : Behavior<ContentPage>
     {
         #region Fields
 
@@ -51,9 +50,21 @@ namespace TFG_UOC_2024.APP.Behaviours
         {
             if (SearchBar == null || SearchBar.Text == null)
                 return true;
-            var ing = obj as IngredientModel;
-            return (ing.Name.ToLower().Contains(SearchBar.Text.ToLower()));
+
+            if (obj != null)
+            {
+                if (obj is RecipeModel)
+                {
+                    var recipe = obj as RecipeModel;
+                    return (recipe.Name.ToLower().Contains(SearchBar.Text.ToLower()));
+                }
+            }
+            {
+                return true;
+            }
+
         }
+
         #endregion
     }
 }

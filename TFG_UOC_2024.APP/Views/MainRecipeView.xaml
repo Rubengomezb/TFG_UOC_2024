@@ -2,8 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TFG_UOC_2024.APP.Views.MainRecipeView"
-             Title="Recetas"
-             Shell.BackgroundColor="BlueViolet">
+             Title="New recipe"
+             Shell.BackgroundColor="BlueViolet"
+             Shell.TabBarIsVisible="True">
     <ContentPage.Content>
          <StackLayout BackgroundColor="BlueViolet" Opacity="0.5" >
             <Grid Margin="20,35,20,20">

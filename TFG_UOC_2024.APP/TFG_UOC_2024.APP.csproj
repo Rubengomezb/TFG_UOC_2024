@@ -36,13 +36,13 @@
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-		<MauiSplashScreen Include="Resources\Images\splashdietia.svg">
+		<MauiSplashScreen Include="Resources\Images\splashia.png">
 		  <Color>#512BD4</Color>
 		  <BaseSize>128,128</BaseSize>
 		</MauiSplashScreen>
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splashdietia.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiImage Include="Resources\Splash\splashia.png" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -75,22 +75,35 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\back.svg" />
+	  <None Remove="Resources\Images\calendar.svg" />
 	  <None Remove="Resources\Images\home.png" />
 	  <None Remove="Resources\Images\navigate.png" />
 	  <None Remove="Resources\Images\navigate.svg" />
+	  <None Remove="Resources\Images\recipe.svg" />
 	  <None Remove="Resources\Images\splashdietia.svg" />
+	  <None Remove="Resources\Images\splashIA.png" />
+	  <None Remove="Resources\Images\userMenu.svg" />
 	  <None Remove="Resources\Splash\Captura_de_pantalla_2024-03-03_a_las_12.41.13-removebg-preview.svg" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="Resources\Splash\splashdietia.svg" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="ViewModels\" />
-	</ItemGroup>
-	<ItemGroup>
 	  <ProjectReference Include="..\TFG_UOC_2024.CORE\TFG_UOC_2024.CORE.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Compile Update="Platform\Android\AndroidHttpMessageHandler.cs">
+	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+	  </Compile>
+	  <Compile Update="Platform\iOS\IosHttpMessageHandler.cs">
+	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiXaml Update="Views\FavouriteView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

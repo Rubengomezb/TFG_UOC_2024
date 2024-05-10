@@ -41,31 +41,31 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.PostAsJsonAsync("api/Menu/menu", requestDates);
 
             var content = await response.Content.ReadAsStringAsync();
-            ServiceResponse<bool> authResponse =
-                JsonSerializer.Deserialize<ServiceResponse<bool>>(content, new JsonSerializerOptions
+
+            bool authResponse =
+                JsonSerializer.Deserialize<bool>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-            return authResponse.Data;
+            return authResponse;
         }
 
         public async Task<List<MenuDTO>> GetWeeklyMenuAsync(DateTime monday, DateTime sunday)
         {
             var httpClient = await GetAuthenticatedHttpClientAsync();
-
-            var response = await httpClient.GetAsync($"api/Menu/menu");
+            var response = await httpClient.GetAsync($"api/Menu/menu?startDate={monday}&endDate={sunday}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false); ;
 
             var content = await response.Content.ReadAsStringAsync();
-            ServiceResponse<List<MenuDTO>> authResponse =
-                JsonSerializer.Deserialize<ServiceResponse<List<MenuDTO>>>(content, new JsonSerializerOptions
+            List<MenuDTO> authResponse =
+                JsonSerializer.Deserialize<List<MenuDTO>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-            if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return authResponse.Data;
+                return authResponse;
             }
             else
             {

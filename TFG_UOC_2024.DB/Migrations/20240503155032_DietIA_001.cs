@@ -201,6 +201,7 @@ namespace TFG_UOC_2024.DB.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Recipe = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Category = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    RecipeNavigationId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CategoryId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -217,8 +218,8 @@ namespace TFG_UOC_2024.DB.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Ingredient_Recipe_Recipe",
-                        column: x => x.Recipe,
+                        name: "FK_Ingredient_Recipe_RecipeNavigationId",
+                        column: x => x.RecipeNavigationId,
                         principalTable: "Recipe",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -397,9 +398,9 @@ namespace TFG_UOC_2024.DB.Migrations
                 column: "Category");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ingredient_Recipe",
+                name: "IX_Ingredient_RecipeNavigationId",
                 table: "Ingredient",
-                column: "Recipe");
+                column: "RecipeNavigationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Menu_RecipeId",
