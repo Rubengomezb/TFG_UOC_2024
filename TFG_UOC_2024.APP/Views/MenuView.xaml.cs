@@ -2,7 +2,6 @@ using System.Runtime.CompilerServices;
 using Syncfusion.Maui.Scheduler;
 using TFG_UOC_2024.APP.ViewModels;
 using Syncfusion.Maui.Picker;
-using Android.Nfc.Tech;
 
 namespace TFG_UOC_2024.APP.Views;
 
