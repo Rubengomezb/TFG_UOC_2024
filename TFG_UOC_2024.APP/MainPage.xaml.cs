@@ -16,14 +16,7 @@ namespace TFG_UOC_2024.APP
         protected override async void OnNavigatedTo(NavigatedToEventArgs args)
         {
             base.OnNavigatedTo(args);
-            if (await _authService.IsUserAuthenticated())
-            {
-                await Shell.Current.GoToAsync(nameof(MainRecipeView));
-            }
-            else
-            {
-                await Shell.Current.GoToAsync(nameof(LoginPage));
-            }
+            
         }
     }
 

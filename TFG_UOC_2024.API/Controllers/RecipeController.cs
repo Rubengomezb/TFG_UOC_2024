@@ -29,8 +29,8 @@ namespace TFG_UOC_2024.API.Controllers
             Respond(await _recipeManager.GetRecipe(recipeId));
 
         [HttpGet("recipes")]
-        public async Task<ActionResult> GetRecipes() =>
-            Respond(await _recipeManager.GetRecipes());
+        public async Task<ActionResult> GetRecipes(string health) =>
+            Respond(await _recipeManager.GetRecipes(health));
 
         [HttpGet("recipesByIngredients")]
         public async Task<ActionResult> GetRecipes(string ingredients, int from, int to) =>
@@ -41,8 +41,8 @@ namespace TFG_UOC_2024.API.Controllers
             Respond(await _recipeManager.GetCategories());
 
         [HttpGet("ingredients/{categoryId}")]
-        public async Task<ActionResult> GetIngredientsByCategory(Guid categoryId) =>
-            Respond(await _recipeManager.GetIngredientsByCategory(categoryId));
+        public async Task<ActionResult> GetIngredientsByCategory(string categoryId) =>
+            Respond(await _recipeManager.GetIngredientsByCategory(Guid.Parse(categoryId)));
 
         [HttpPost("addFavorite")]
         public async Task<ActionResult>AddFavority([FromBody] RecipeFavorite recipeFavorite) =>
@@ -52,13 +52,17 @@ namespace TFG_UOC_2024.API.Controllers
         public async Task<ActionResult> IsFavorite(Guid userId, Guid recipeId) =>
             Respond(await _recipeManager.IsFavorite(userId, recipeId));
 
-        [HttpPost("ingredients")]
+        /*[HttpPost("ingredients")]
         public async Task<ActionResult> AddIngredients() =>
-            Respond(await _recipeManager.AddIngredients());
+            Respond(await _recipeManager.AddIngredients());*/
 
         [HttpPost("removeFavorite")]
         public async Task<ActionResult> RemoveFavority([FromBody] RecipeFavorite recipeFavorite) =>
             Respond(await _recipeManager.RemoveFavorite(recipeFavorite));
+
+        [HttpGet("favourites")]
+        public async Task<ActionResult> GetFavourites(string userId) =>
+            Respond(await _recipeManager.GetFavourites(userId));
         #endregion
     }
 }

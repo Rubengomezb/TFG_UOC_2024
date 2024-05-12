@@ -7,7 +7,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using TFG_UOC_2024.CORE.Models.DTOs;
-using Microsoft.AspNetCore.Identity.Data;
 using static TFG_UOC_2024.CORE.Models.DTOs.ContactPropertyDTO;
 using TFG_UOC_2024.CORE.Models;
 using System.Text.Json;

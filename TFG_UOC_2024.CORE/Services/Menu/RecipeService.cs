@@ -55,6 +55,7 @@ namespace TFG_UOC_2024.CORE.Services.Menu
         public async Task<bool> AddFavorite(UserFavorite recipeFavorite)
         {
             _userFavoriteRepository.Create(recipeFavorite);
+
             return true;
         }
 
@@ -79,9 +80,14 @@ namespace TFG_UOC_2024.CORE.Services.Menu
             return _categoryRepository.GetIngredientByCategoryId(categoryId);
         }
 
-        public async Task<RecipeResponse> GetRecipe()
+        public async Task<RecipeResponse> GetRecipe(string health)
         {
-            return await _httpRecipeClient.GetRecipe(this.GetRandomIngredient());
+            return await _httpRecipeClient.GetRecipe(this.GetRandomIngredient(), health);
+        }
+
+        public async Task<RecipeResponse> GetBreakfastRecipe(string health)
+        {
+            return await _httpRecipeClient.GetBreakfastRecipe(this.GetRandomIngredient(), health);
         }
 
         public async Task<List<RecipeResponse>> GetRecipesByIngredient(int from, int to)
@@ -122,6 +128,7 @@ namespace TFG_UOC_2024.CORE.Services.Menu
         public async Task<bool> AddCategories(List<Category> category)
         {
             _categoryRepository.UpsertRange(category);
+            _categoryRepository.SaveChanges();
             return true;
         }
 
@@ -141,6 +148,28 @@ namespace TFG_UOC_2024.CORE.Services.Menu
             }
         }
 
+        public async Task<bool> IsFavourite(UserFavorite recipeFavorite)
+        {
+            return _userFavoriteRepository.Find(x => x.UserId == recipeFavorite.UserId && x.RecipeId == recipeFavorite.RecipeId).Any();
+        }
+
+        public async Task<bool> AddRecipe(Recipe recipe)
+        {
+            _recipeRepository.Create(recipe);
+            return true;
+        }
+
+        public Recipe GetRecipeByName(string name)
+        {
+            return _recipeRepository.Find(x => x.Name == name).FirstOrDefault();
+        }
+
+        public async Task<bool> AddIngredient(Ingredient ingredient)
+        {
+            _ingredientRepository.Create(ingredient);
+            return true;
+        }
+
         public string GetRandomIngredient()
         {
             var maxRandom = this.ingredientList.Length - 1;
@@ -149,9 +178,15 @@ namespace TFG_UOC_2024.CORE.Services.Menu
             return this.ingredientsDict.GetValueOrDefault(num);
         }
 
-        public async Task<bool> IsFavourite(UserFavorite recipeFavorite)
+        public async Task<IEnumerable<UserFavorite>> GetUserFavourite(Guid userId)
         {
-            return _userFavoriteRepository.Find(x => x.UserId == recipeFavorite.UserId && x.RecipeId == recipeFavorite.RecipeId).Any();
+            return _userFavoriteRepository.Find(x => x.UserId == userId);
+        }
+
+        public async Task<IEnumerable<Recipe>> GetFavourite(Guid userId)
+        {
+            var recipeIds = await this.GetUserFavourite(userId);
+            return _recipeRepository.Find(x => recipeIds.Select(y => y.RecipeId).Contains(x.Id));
         }
     }
 }

@@ -37,8 +37,8 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             try
             {
-                if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
-                {
+                //if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+                //{
                     if (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password))
                     {
                         var loginDto = new Login();
@@ -58,20 +58,21 @@ namespace TFG_UOC_2024.APP.ViewModels
                         string userDetails = JsonConvert.SerializeObject(user);
                         Preferences.Set(nameof(App.user), userDetails);
                         App.user = user;
-                        AppShell.Current.FlyoutHeader = new HeaderControl();
-                        await Shell.Current.GoToAsync($"{nameof(MainRecipeView)}");
+                        //App.Current.MainPage = new AppShell();
+                        //AppShell.Current.FlyoutHeader = new HeaderControl();
+                        await Shell.Current.GoToAsync("//MainRecipeView");
                     }
                     else
                     {
                         await Shell.Current.DisplayAlert("Error", "All fields required", "Ok");
                         return;
                     }
-                }
+                /*}
                 else
                 {
                     await Shell.Current.DisplayAlert("Error", "No Internet Access", "Ok");
                     return;
-                }
+                }*/
 
             }
             catch (Exception ex)
@@ -83,5 +84,10 @@ namespace TFG_UOC_2024.APP.ViewModels
 
         }
 
+        [RelayCommand]
+        public async Task SignUp()
+        {
+            await Shell.Current.GoToAsync($"{nameof(SignUpPage)}");
+        }
     }
 }

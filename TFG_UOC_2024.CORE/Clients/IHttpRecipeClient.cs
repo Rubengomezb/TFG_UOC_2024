@@ -9,7 +9,9 @@ namespace TFG_UOC_2024.CORE.Clients
 {
     public interface IHttpRecipeClient
     {
-        Task<RecipeResponse> GetRecipe(string filter);
+        Task<RecipeResponse> GetRecipe(string filter, string health);
+
+        Task<RecipeResponse> GetBreakfastRecipe(string filter, string health);
 
         Task<RecipeResponse> GetRecipePaginated(string filter, int from, int to);
     }

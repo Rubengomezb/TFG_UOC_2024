@@ -11,5 +11,7 @@ namespace TFG_UOC_2024.CORE.Models.ApiModels
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
+
+        public int? FoodType { get; set; }
     }
 }

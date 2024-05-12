@@ -119,11 +119,6 @@ namespace TFG_UOC_2024.DB.Context
 
             modelBuilder.Entity<Ingredient>(b =>
             {
-                b.HasOne(e => e.RecipeNavigation)
-                .WithMany(e => e.Ingredients)
-                .HasForeignKey(rc => rc.Recipe)
-                .OnDelete(DeleteBehavior.Cascade);
-
                 b.HasOne(e => e.CategoryNavigation)
                 .WithMany(e => e.Ingredients)
                 .HasForeignKey(rc => rc.Category)

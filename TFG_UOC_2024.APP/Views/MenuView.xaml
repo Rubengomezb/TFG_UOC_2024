@@ -1,39 +1,145 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:cal="clr-namespace:Plugin.Maui.Calendar.Controls;assembly=Plugin.Maui.Calendar"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TFG_UOC_2024.APP.Views.MenuView"
-             Title="MenuView"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+             xmlns:converter="clr-namespace:Syncfusion.Maui.Core.Converters;assembly=Syncfusion.Maui.Core"
+             xmlns:sfPopup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             xmlns:local="clr-namespace:TFG_UOC_2024.APP.Behaviours"
+             xmlns:model="clr-namespace:TFG_UOC_2024.APP.Model"
+             Title="Menu Semanal"
+             Shell.BackgroundColor="BlueViolet"
              xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
-             x:DataType="viewmodels:MenuViewModel">
-    <VerticalStackLayout>
-        <cal:Calendar Events="{Binding Events}" EventsScrollViewVisible="True" SelectedDayBackgroundColor="Red"
-                  CalendarLayout="Month">
-            <cal:Calendar.EventTemplate>
-                <DataTemplate>
-                    <VerticalStackLayout>
-                        <Label Text="{Binding Name}" FontSize="25" FontAttributes="Bold"/>
-                        <Label Text="{Binding Description}"/>
-                    </VerticalStackLayout>
-                </DataTemplate>
-            </cal:Calendar.EventTemplate>
-            <cal:Calendar.EmptyTemplate>
-                <DataTemplate>
-                    <StackLayout>
-                        <Label Text="NO MENUS FOR THE SELECTED DATE" HorizontalTextAlignment="Center" Margin="0,5,0,5" />
-                        <Button Text="Add Weekly Menu" Command="{Binding AddWeeklyMenuCommand}"/>
-                        <DatePicker Margin="10" x:Name="MyDatePicker" IsVisible="{Binding Path=IsVisible}" Date = "{Binding MenuDate}" >
-                            <DatePicker.Behaviors>
-                                <toolkit:EventToCommandBehavior
-                                    Command="{Binding DatePickedCommand}"
-                                    CommandParameter="{Binding Date, Source={x:Reference MyDatePicker}}"
-                                    EventName="DateSelected" />
-                            </DatePicker.Behaviors>
-                        </DatePicker>
+             x:DataType="viewmodels:MenuViewModel"
+             Shell.TabBarIsVisible="False">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <local:MenuBehaviour/>
+    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <converter:InvertedBoolConverter x:Key="invertedBoolConverter"/>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid Background="#9B5DB0" Opacity="0.5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.4*"/>
+                    <RowDefinition Height="0.55*"/>
+                    <RowDefinition Height="0.08*"/>
+                </Grid.RowDefinitions>
+                <syncfusion:SfScheduler Grid.Row="0" x:Name="Scheduler" View="Month" BackgroundColor="#ffffff" SelectedDate="{Binding SelectedDate}"
+                                          AppointmentsSource="{Binding Events}">
+                    <syncfusion:SfScheduler.MonthView>
+                        <syncfusion:SchedulerMonthView AppointmentDisplayMode="Text" 
+                                                            AppointmentIndicatorCount="3"
+                                                           ShowLeadingAndTrailingDates="True"
+                                                           NumberOfVisibleWeeks="4">
+                            <syncfusion:SchedulerMonthView.ViewHeaderTemplate>
+                                <DataTemplate>
+                                    <Grid Background = "MediumPurple" >
+                                        <Label x:Name="label" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding StringFormat='{0:ddd}'}" TextColor="White" FontSize="Subtitle" FontFamily="Bold" />
+                                    </Grid>
+                                </DataTemplate>
+                            </syncfusion:SchedulerMonthView.ViewHeaderTemplate>
+                        </syncfusion:SchedulerMonthView>
+                    </syncfusion:SfScheduler.MonthView>
+                </syncfusion:SfScheduler>
+                <Grid Grid.Row="1" BackgroundColor="#9B5DB0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackLayout Grid.Column="0" Margin="3" >
+                        <Label Text="{Binding SelectedDate, StringFormat='{}{0:ddd}'}"
+                               TextTransform="Uppercase"
+                               FontSize="14" 
+                                   Padding="0,5,0,0"
+                               Margin="0,10,0,0"
+                               HorizontalTextAlignment="Center"
+                               TextColor="White" />
+                        <AbsoluteLayout
+                                    Margin="0"
+                                    Grid.Row="1"
+                                    Padding="0">
+                            <BoxView Color="White" IsVisible="{Binding IsToday}"
+                                     CornerRadius="18"
+                                     WidthRequest="36"   
+                                     HeightRequest="36"
+                                     AbsoluteLayout.LayoutBounds="0.5,0.1,36,36"
+                                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center" />
+                            <Label HorizontalTextAlignment="Center" x:Name="todayLabel" IsVisible="{Binding IsToday}"
+                                    VerticalTextAlignment="Center"
+                                    TextColor="{DynamicResource SfSchedulerNormalTodayTextColor}"
+                                    AbsoluteLayout.LayoutBounds="0.5,0.3,36,36"
+                                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                                    Text="{Binding SelectedDate, StringFormat='{}{0:dd}'}"/>
+                            <Label HorizontalTextAlignment="Center"
+                               IsVisible="{Binding IsToday, Converter={StaticResource invertedBoolConverter}}"
+                               VerticalTextAlignment="Center"
+                               TextColor="White"
+                               AbsoluteLayout.LayoutBounds="0.5,0.3,36,36"
+                               AbsoluteLayout.LayoutFlags="PositionProportional"
+                               Text="{Binding SelectedDate, StringFormat='{}{0:dd}'}"/>
+                        </AbsoluteLayout>
                     </StackLayout>
-                </DataTemplate>
-            </cal:Calendar.EmptyTemplate>
-        </cal:Calendar>
-    </VerticalStackLayout>
+                    <Grid Grid.Column="1" Margin="0,5,20,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Label Text="No menu scheduled" x:Name="noEventsLabel" Padding="95,10,10,0" FontSize="14" FontAttributes="Bold" TextColor="White"/>
+                        <sfPopup:SfPopup x:Name="sfPopup"
+                             IsOpen="{Binding IsOpen}">
+                            <sfPopup:SfPopup.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackLayout Background="#9B5DB0">
+                                        <Label Text="Daily Menu Created" HorizontalTextAlignment="Center" Margin="20" TextColor="White" FontAttributes="Bold" FontSize="18"/>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </sfPopup:SfPopup.HeaderTemplate>
+                            <sfPopup:SfPopup.ContentTemplate>
+                                <DataTemplate>
+                                    <StackLayout Background="#9B5DB0" Opacity="0.4">
+                                        <Label Text="The menu has been created succesfully" VerticalOptions="Center" Margin="20" TextColor="White" FontSize="14"/>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </sfPopup:SfPopup.ContentTemplate>
+                        </sfPopup:SfPopup>
+                    </Grid>
+                    <Grid x:Name="appointmentList" Grid.Column="1" BackgroundColor="#9B5DB0">
+                        <ListView x:Name="appointmentListView"
+                              Grid.Column="1"
+                              RowHeight="44"
+                              ItemsSource="{Binding SelectedDateMenus}"
+                              SelectionMode="Single"
+                                  Background="#9B5DB0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="model:AdvancedEventModel">
+                                    <ViewCell>
+                                        <Grid Margin="0,0,0,4" Background="{Binding Background}">
+                                            <StackLayout Padding="5,5,10,0" Orientation="Vertical">
+                                                <StackLayout.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.IsOpenCommand, Source = {x:Reference appointmentList}}" CommandParameter="{Binding}"/>
+                                                </StackLayout.GestureRecognizers>
+                                                <Label Text = "{Binding Name}" FontSize="{OnIdiom Desktop = 12, Phone = 10, Default = 12}" FontAttributes="Bold" TextColor="White" />
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="{Binding Starting, StringFormat='{}{0:hh:mm tt}'}" FontSize="{OnIdiom Desktop = 12, Phone = 10, Default = 12}" TextColor="White" />
+                                                    <Label Text=" - " TextColor="White" FontSize="{OnIdiom Desktop = 12, Phone = 10, Default = 12}" VerticalOptions="Center" HorizontalOptions="Center" />
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </Grid>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Grid>
+                <Button Grid.Row="2" x:Name="noEventsButton" ImageSource="add.png" HeightRequest="30" VerticalOptions="Start" Clicked="OnButtonClicked"/>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

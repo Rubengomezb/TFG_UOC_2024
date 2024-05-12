@@ -7,7 +7,7 @@ public partial class MainRecipeView : ContentPage
 		InitializeComponent();
 	}
 
-    private async Task Button_Clicked()
+    private async void Button_Clicked(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(CategoryView)}");
     }

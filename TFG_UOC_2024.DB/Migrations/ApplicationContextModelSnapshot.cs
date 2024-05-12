@@ -279,6 +279,9 @@ namespace TFG_UOC_2024.DB.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<int>("FoodType")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -346,8 +349,6 @@ namespace TFG_UOC_2024.DB.Migrations
 
                     b.HasIndex("Category");
 
-                    b.HasIndex("Recipe");
-
                     b.ToTable("Ingredient");
                 });
 
@@ -405,6 +406,9 @@ namespace TFG_UOC_2024.DB.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ImageUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IngredientNames")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -532,15 +536,7 @@ namespace TFG_UOC_2024.DB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TFG_UOC_2024.DB.Models.Recipe", "RecipeNavigation")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("Recipe")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("CategoryNavigation");
-
-                    b.Navigation("RecipeNavigation");
                 });
 
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Menu", b =>
@@ -577,8 +573,6 @@ namespace TFG_UOC_2024.DB.Migrations
 
             modelBuilder.Entity("TFG_UOC_2024.DB.Models.Recipe", b =>
                 {
-                    b.Navigation("Ingredients");
-
                     b.Navigation("Menu");
                 });
 #pragma warning restore 612, 618

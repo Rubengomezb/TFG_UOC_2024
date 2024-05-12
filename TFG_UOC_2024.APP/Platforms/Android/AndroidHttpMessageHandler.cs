@@ -14,7 +14,7 @@ namespace TFG_UOC_2024.APP.Platforms.Android
         public HttpMessageHandler GetHttpMessageHandler() =>
             new AndroidMessageHandler
             {
-                ServerCertificateCustomValidationCallback = (httpRequestMessage, certificate, chain, sslPolicyErrors) => certificate?.Issuer == "CN=localhost" || sslPolicyErrors == SslPolicyErrors.None
+                ServerCertificateCustomValidationCallback = (httpRequestMessage, certificate, chain, sslPolicyErrors) => true,
             };
     }
 }

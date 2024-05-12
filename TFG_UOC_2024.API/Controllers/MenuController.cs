@@ -21,11 +21,11 @@ namespace TFG_UOC_2024.API.Controllers
         }
 
         [HttpGet("menu")]
-        public async Task<ActionResult> GetWeeklyMenu([FromQuery] DateTime startDate, [FromQuery] DateTime endDate) =>
+        public async Task<ActionResult> GetWeeklyMenu(string startDate, string endDate) =>
             Respond(await _menuManager.GetMenu(startDate, endDate));
 
         [HttpPost("menu")]
         public async Task<ActionResult> CreateMenu([FromBody] CreateMenuRequest createMenuRequest) =>
-            Respond(await _menuManager.CreateMenu(createMenuRequest.StartDate, createMenuRequest.EndDate));
+            Respond(await _menuManager.CreateMenu(createMenuRequest.StartDate, createMenuRequest.EndDate, createMenuRequest.FoodType));
     }
 }

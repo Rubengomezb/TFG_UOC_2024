@@ -31,5 +31,16 @@ namespace TFG_UOC_2024.DB.Components
             Lunch,
             Dinner
         }
+
+        public enum FoodType
+        {
+            Vegetarian = 1,
+            Vegan,
+            Mediterranean,
+            Muslim,
+            Celiac,
+            Diet,
+            Diabetic,
+        }
     }
 }

@@ -5,31 +5,71 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:TFG_UOC_2024.APP"
     xmlns:views="clr-namespace:TFG_UOC_2024.APP.Views"
-    Shell.FlyoutBehavior="Flyout">
-    
-    <FlyoutItem 
-        Title="Menu">
-        <Tab 
-            Title="Recipe">
-            <ShellContent
-                Title="Recipe"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    FlyoutIcon="home.png"
+    FlyoutBackgroundColor="BlueViolet"
+    Shell.TabBarIsVisible="False">
+
+    <Shell.FlyoutHeader>
+        <Image Source="splashia.png" HeightRequest="150" WidthRequest="150"/>
+    </Shell.FlyoutHeader>
+
+    <ShellItem Route="LoginPage" FlyoutItemIsVisible="False">
+        <ShellContent 
+            ContentTemplate="{DataTemplate views:LoginPage}"/>
+    </ShellItem>
+
+    <FlyoutItem Title="Recipe" Icon="recipe.png">
+        <ShellContent
                 ContentTemplate="{DataTemplate views:MainRecipeView}"
-                Route="MainRecipeView" />
-        </Tab>
-        <Tab 
-            Title="Menu">
-            <ShellContent
-                Title="Menu"
+                Route="MainRecipeView"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Menu" Icon="calendar.png">
+        <ShellContent
                 ContentTemplate="{DataTemplate views:MenuView}"
-                Route="Menu" />
-        </Tab>
+                Route="MenuView"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Profile" Icon="usermenu.png">
+        <ShellContent
+                ContentTemplate="{DataTemplate views:UserProfileView}"
+                Route="UserProfileView"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Favs" Icon="favorite_24dp.png">
+        <ShellContent
+                ContentTemplate="{DataTemplate views:FavouriteView}"
+                Route="FavouriteView"/>
     </FlyoutItem>
 
-    <FlyoutItem 
-        Title="Profile">
-        <ShellContent
-            Title="Profile"
-            ContentTemplate="{DataTemplate views:UserProfileView}"
-            Route="UserProfileView" />
-    </FlyoutItem>
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid Grid.Row="0" RowSpacing="100">
+                <Grid.ColumnDefinitions>
+                    <!-- Icon -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Title-->
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <!-- Icon -->
+                <Image Source="{Binding FlyoutIcon}"
+                       Margin="5"
+                       HeightRequest="25">
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="White" />
+                    </Image.Behaviors>
+                </Image>
+                <!-- Label -->
+                <Label Grid.Column="1" 
+                       Text="{Binding Title}" 
+                       FontSize="23" 
+                       VerticalOptions="Center"
+                       VerticalTextAlignment="Center"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Start"  />
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
 </Shell>

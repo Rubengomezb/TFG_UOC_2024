@@ -36,6 +36,12 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private string _lastName;
 
+        [ObservableProperty]
+        private string _image;
+
+        [ObservableProperty]
+        private string _phoneNumber;
+
         private readonly IAuthService _authService;
 
         public SignUpViewModel(IAuthService authService)
@@ -48,48 +54,56 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             try
             {
-                if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+                if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName) && !string.IsNullOrWhiteSpace(PhoneNumber))
                 {
-                    if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(ConfirmPassword) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))
+                    var signUpDto = new UserInput();
+                    signUpDto.UserName = Username;
+                    signUpDto.Password = Password;
+                    signUpDto.Email = Email;
+                    signUpDto.FirstName = FirstName;
+                    signUpDto.LastName = LastName;
+                    signUpDto.PhoneNumber = PhoneNumber;
+
+                    var user = await _authService.SignUpAsync(signUpDto);
+                    if (user == Guid.Empty)
                     {
-                        var signUpDto = new UserInput();
-                        signUpDto.UserName = Username;
-                        signUpDto.Password = Password;
-                        signUpDto.Email = Email;
-                        signUpDto.FirstName = FirstName;
-                        signUpDto.LastName = LastName;
-
-                        var user = await _authService.SignUpAsync(signUpDto);
-                        if (user == Guid.Empty)
-                        {
-                            await Shell.Current.DisplayAlert("Error", "Username/Password is incorrect", "Ok");
-                            return;
-                        }
-
-                        var loginDto = new Login();
-                        loginDto.Username = Username;
-                        loginDto.Password = Password;
-
-                        var userLogged = await _authService.LoginAsync(loginDto);
-                        if (userLogged != null)
-                        {
-                            if (Preferences.ContainsKey(nameof(App.user)))
-                            {
-                                Preferences.Remove(nameof(App.user));
-                            }
-                            string userDetails = JsonConvert.SerializeObject(user);
-                            Preferences.Set(nameof(App.user), userDetails);
-                            App.user = userLogged;
-                            AppShell.Current.FlyoutHeader = new HeaderControl();
-                            await Shell.Current.GoToAsync($"{nameof(MainRecipeView)}");
-                        }
+                        await Shell.Current.DisplayAlert("Error", "Username/Password is incorrect", "Ok");
+                        return;
                     }
+
+                    var loginDto = new Login();
+                    loginDto.Username = Username;
+                    loginDto.Password = Password;
+
+                    var userLogged = await _authService.LoginAsync(loginDto);
+                    if (userLogged != null)
+                    {
+                        if (Preferences.ContainsKey(nameof(App.user)))
+                        {
+                            Preferences.Remove(nameof(App.user));
+                        }
+                        string userDetails = JsonConvert.SerializeObject(user);
+                        Preferences.Set(nameof(App.user), userDetails);
+                        App.user = userLogged;
+                        //AppShell.Current.FlyoutHeader = new HeaderControl();
+                        await Shell.Current.GoToAsync("//MainRecipeView");
+                    }
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Error", "Please fill all the fields", "Ok");
                 }
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Ok");
             }
+        }
+
+        [RelayCommand]
+        public async Task Login()
+        {
+            await Shell.Current.GoToAsync("..");
         }
     }
 }
