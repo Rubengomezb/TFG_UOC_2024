@@ -8,7 +8,7 @@
              Title="User"
              xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
             x:DataType="viewmodels:UserProfileViewModel"
-             Shell.TabBarIsVisible="True"
+             Shell.TabBarIsVisible="False"
              Shell.BackgroundColor="BlueViolet">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
@@ -22,8 +22,17 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Frame CornerRadius="50" WidthRequest="210" HeightRequest="210"  Margin="0,20,0,30" Padding="0" BorderColor="#9B5DB0">
-                <Image Grid.Row="0" Source="{Binding Image}" Aspect="AspectFill" HeightRequest="180" WidthRequest="180" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+            <ImageButton x:Name="logoutButton" Source="logout.png" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin="0,20,20,0">
+                <ImageButton.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LogoutCommand}" />
+                </ImageButton.GestureRecognizers>
+                <ImageButton.Behaviors>
+                    <toolkit:IconTintColorBehavior TintColor="#9B5DB0" />
+                </ImageButton.Behaviors>
+            </ImageButton>
+            <Frame CornerRadius="50" WidthRequest="180" HeightRequest="180"  Margin="0,20,0,30" Padding="0" BorderColor="#9B5DB0">
+                <Image Grid.Row="0" Source="{Binding Image}" Aspect="AspectFill" HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" VerticalOptions="Center"/>
             </Frame>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
@@ -84,17 +93,21 @@
                     </inputLayout:SfTextInputLayout.HintLabelStyle>
                 </inputLayout:SfTextInputLayout>
             </Grid>
-            <Label Grid.Row="2" Text="Food Types" TextColor="#9B5DB0" Margin=" 20, 0, 20, 10" FontAttributes="Bold"></Label>
+            <Label Grid.Row="2" Text="Food Type" TextColor="#9B5DB0" Margin=" 20, 0, 20, 10" FontAttributes="Bold"></Label>
             <editors:SfComboBox x:Name="comboBox" Grid.Row="3" Margin=" 20, 0, 20, 30"
                     IsEditable="True"
                     WidthRequest="350"
-                    SelectionMode="Multiple"
+                    SelectionMode="Single"
                     ItemsSource="{Binding UserFoodModel}"
-                    DisplayMemberPath="FoodType"
-                    TextMemberPath="FoodType" 
-                    SelectedItems="{Binding SelectedItem}"
+                    DisplayMemberPath="Name"
+                    TextMemberPath="Name" 
+                    SelectedItem="{Binding SelectedItem}"
                     Placeholder="Select your food types"
-                    PlaceholderColor="#9B5DB0"/>
+                    PlaceholderColor="#9B5DB0"
+                    SelectionTextHighlightColor="Transparent"
+                    Padding="5,0,5,0"
+                    BackgroundColor="Transparent"
+                                DropDownBackground="#ebd3f2"/>
             <Button Grid.Row="4" Text="Update Settings" Command="{ Binding UpdateUserCommand }" Background="#9B5DB0" Margin=" 20, 0, 20, 0" WidthRequest="350"/>
         </Grid>
     </ContentPage.Content>

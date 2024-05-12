@@ -58,7 +58,7 @@ namespace TFG_UOC_2024.TEST.Manager
             menuServiceMock.Setup(x => x.GetMenu(startTime, endTime, user.Id)).Returns(menu);
 
             //Act
-            var result = await menuManager.GetMenu(startTime, endTime);
+            var result = await menuManager.GetMenu(startTime.ToString("yyyy-MM-dd"), endTime.ToString("yyyy-MM-dd"));
 
             //Assert
             Assert.That(result.Data.Any(), Is.EqualTo(true));

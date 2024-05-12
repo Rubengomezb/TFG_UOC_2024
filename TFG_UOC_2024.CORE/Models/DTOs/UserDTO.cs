@@ -20,6 +20,7 @@ namespace TFG_UOC_2024.CORE.Models.DTOs
         public string ThumbnailUrl { get; set; }
         public DateTime CreatedOn { get; set; }
         public bool IsDeleted { get; set; }
+        public int FoodType { get; set; }
     }
 
     public class UserDTO : UserSimpleDTO

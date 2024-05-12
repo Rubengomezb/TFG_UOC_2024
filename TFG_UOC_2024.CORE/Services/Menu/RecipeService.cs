@@ -80,9 +80,14 @@ namespace TFG_UOC_2024.CORE.Services.Menu
             return _categoryRepository.GetIngredientByCategoryId(categoryId);
         }
 
-        public async Task<RecipeResponse> GetRecipe()
+        public async Task<RecipeResponse> GetRecipe(string health)
         {
-            return await _httpRecipeClient.GetRecipe(this.GetRandomIngredient());
+            return await _httpRecipeClient.GetRecipe(this.GetRandomIngredient(), health);
+        }
+
+        public async Task<RecipeResponse> GetBreakfastRecipe(string health)
+        {
+            return await _httpRecipeClient.GetBreakfastRecipe(this.GetRandomIngredient(), health);
         }
 
         public async Task<List<RecipeResponse>> GetRecipesByIngredient(int from, int to)

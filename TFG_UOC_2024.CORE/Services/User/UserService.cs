@@ -193,14 +193,19 @@ namespace TFG_UOC_2024.CORE.Services.User
                 if (needsPassword)
                     dto.Password = SecurityHelper.GeneratePassword();
 
+                if (userManager.FindByEmailAsync(dto.Email).Result != null)
+                {
+                    return r.BadRequest("Email already exists");
+                }
+
                 var res = await userManager.CreateAsync(u, dto.Password);
 
                 if (!res.Succeeded)
                     return r.BadRequest(res.Errors);
 
-                _userRepository.SaveChanges();
-
-                return r.Ok();
+                await _userRepository.SaveChanges();
+                u = await userManager.FindByEmailAsync(dto.Email);
+                return r.Ok(u.Id);
             }
             catch (Exception ex)
             {
@@ -208,7 +213,6 @@ namespace TFG_UOC_2024.CORE.Services.User
                 return r.BadRequest(ex.Message);
             }
         }
-
 
         public async Task<ServiceResponse<UserSimpleDTO>> UpdateUser(string id, UserSimpleDTO dto)
         {
@@ -230,12 +234,12 @@ namespace TFG_UOC_2024.CORE.Services.User
                     return r.BadRequest(unRes.Errors);
 
                 // update fields
-                u.Contact.FirstName = dto.FirstName;
-                u.Contact.LastName = dto.LastName;
-                u.Contact.Email = dto.Email;
-                u.PhoneNumber = dto.PhoneNumber.ToPhone();
-                u.Email = dto.Email;
-
+                u.Contact.FirstName = u.Contact.FirstName == dto.FirstName ? u.Contact.FirstName : dto.FirstName;
+                u.Contact.LastName = u.Contact.LastName == dto.LastName ? u.Contact.LastName : dto.LastName;
+                u.Contact.Email = u.Contact.Email == dto.Email ? u.Contact.Email : dto.Email;
+                u.PhoneNumber = u.Contact.PhoneNumber.ToPhone() == dto.PhoneNumber.ToPhone() ? u.Contact.PhoneNumber.ToPhone() : dto.PhoneNumber.ToPhone();
+                u.Email = u.Contact.Email == dto.Email ? u.Contact.Email : dto.Email;
+                u.Contact.FoodType = dto.FoodType != u.Contact.FoodType ? dto.FoodType : u.Contact.FoodType;
 
                 // save user
                 var res = await userManager.UpdateAsync(u);

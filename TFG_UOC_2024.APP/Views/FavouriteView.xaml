@@ -11,7 +11,7 @@
              xmlns:model="clr-namespace:TFG_UOC_2024.APP.Model"
             x:DataType="viewmodels:FavouriteViewModel"
              Shell.BackgroundColor="BlueViolet"
-             Shell.TabBarIsVisible="True">
+             Shell.TabBarIsVisible="False">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <local:FavouriteBehaviour/>
@@ -37,7 +37,7 @@
                            FontSize="18"
                            IsVisible="true"
                            HeightRequest="50" WidthRequest='{OnPlatform Android="350"}'
-                            Placeholder="Search here to filter"
+                           Placeholder="Search here to filter"
                            HorizontalOptions="Center">
                     </SearchBar>
                 </Border>

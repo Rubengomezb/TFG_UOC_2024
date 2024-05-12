@@ -33,7 +33,8 @@ namespace TFG_UOC_2024.APP.Services
             var requestDates = new CreateMenuRequest()
             {
                 StartDate = monday,
-                EndDate = sunday
+                EndDate = sunday,
+                FoodType = App.user.FoodType,
             };
 
             var httpClient = await GetAuthenticatedHttpClientAsync();
@@ -54,7 +55,7 @@ namespace TFG_UOC_2024.APP.Services
         public async Task<List<MenuDTO>> GetWeeklyMenuAsync(DateTime monday, DateTime sunday)
         {
             var httpClient = await GetAuthenticatedHttpClientAsync();
-            var response = await httpClient.GetAsync($"api/Menu/menu?startDate={monday}&endDate={sunday}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false); ;
+            var response = await httpClient.GetAsync($"api/Menu/menu?startDate={monday.ToString("yyy-MM-dd")}&endDate={sunday.ToString("yyy-MM-dd")}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false); ;
 
             var content = await response.Content.ReadAsStringAsync();
             List<MenuDTO> authResponse =

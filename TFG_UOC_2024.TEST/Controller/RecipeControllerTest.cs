@@ -149,7 +149,7 @@ namespace TFG_UOC_2024.TEST.Controller
                 UserId = Guid.NewGuid(),
             };
 
-            var genericResp = new GenericResponse()
+            var genericResp = new ServiceResponse<bool>()
             {
                 Status = ServiceStatus.Ok
             };
@@ -193,7 +193,7 @@ namespace TFG_UOC_2024.TEST.Controller
                 UserId = Guid.NewGuid(),
             };
 
-            var genericResp = new GenericResponse()
+            var genericResp = new ServiceResponse<bool>()
             {
                 Status = ServiceStatus.Ok
             };

@@ -29,8 +29,8 @@ namespace TFG_UOC_2024.API.Controllers
             Respond(await _recipeManager.GetRecipe(recipeId));
 
         [HttpGet("recipes")]
-        public async Task<ActionResult> GetRecipes() =>
-            Respond(await _recipeManager.GetRecipes());
+        public async Task<ActionResult> GetRecipes(string health) =>
+            Respond(await _recipeManager.GetRecipes(health));
 
         [HttpGet("recipesByIngredients")]
         public async Task<ActionResult> GetRecipes(string ingredients, int from, int to) =>

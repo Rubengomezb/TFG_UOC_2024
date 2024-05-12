@@ -19,14 +19,17 @@ namespace TFG_UOC_2024.CORE.Helpers
         {
             CreateMap<ApplicationUser, UserDTO>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Contact.FirstName))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Contact.LastName));
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Contact.LastName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Contact.Email))
+                .ForMember(dest => dest.FoodType, opt => opt.MapFrom(src => src.Contact.FoodType));
             CreateMap<ApplicationUser, UserSimpleDTO>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Contact.FirstName))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Contact.LastName));
-
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Contact.LastName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Contact.Email))
+                .ForMember(dest => dest.FoodType, opt => opt.MapFrom(src => src.Contact.FoodType));
             CreateMap<UserDTO, ApplicationUser>();
             CreateMap<UserInput, ApplicationUser>()
-                .ForMember(dest => dest.Contact, opt => opt.MapFrom(src => new Contact() { FirstName = src.FirstName, LastName = src.LastName, Email = src.Email, PhoneNumber = src.PhoneNumber}));
+                .ForMember(dest => dest.Contact, opt => opt.MapFrom(src => new Contact() { FirstName = src.FirstName, LastName = src.LastName, Email = src.Email, PhoneNumber = src.PhoneNumber, FoodType = src.FoodType}));
 
             CreateMap<UserSimpleDTO, UserDTO>();
 

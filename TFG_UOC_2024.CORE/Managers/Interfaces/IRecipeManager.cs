@@ -27,7 +27,7 @@ namespace TFG_UOC_2024.CORE.Managers.Interfaces
 
         Task<ServiceResponse<List<IngredientDTO>>> GetIngredientsByCategory(Guid categoryId);
 
-        Task<ServiceResponse<List<RecipeDTO>>> GetRecipes();
+        Task<ServiceResponse<List<RecipeDTO>>> GetRecipes(string health);
 
         //Task<GenericResponse> AddIngredients();
     }

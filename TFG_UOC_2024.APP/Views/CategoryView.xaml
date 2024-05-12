@@ -10,7 +10,7 @@
              xmlns:model="clr-namespace:TFG_UOC_2024.APP.Model"
              x:DataType="viewmodels:CategoryViewModel"
              Shell.BackgroundColor="BlueViolet"
-             Shell.TabBarIsVisible="True">
+             Shell.TabBarIsVisible="False">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <local:CategoryBehaviour/>
@@ -36,12 +36,12 @@
                                FontSize="18"
                                IsVisible="true"
                                HeightRequest="50" WidthRequest='{OnPlatform Android="350"}'
-                          Placeholder="Search here to filter"
+                               Placeholder="Search here to filter"
                                HorizontalOptions="Center">
                     </SearchBar>
                 </Border>
             </Grid>
-            <Grid Grid.Row="1" VerticalOptions="Start" Padding="5,0,5,0" HeightRequest="600">
+            <Grid Grid.Row="1" VerticalOptions="Start" Padding="0,0,0,0">
                 <syncfusion:SfListView x:Name="listView" ItemSize="80" ItemsSource="{Binding Categories}" SelectionMode="Single">
                     <syncfusion:SfListView.ItemTemplate>
                         <DataTemplate x:Name="ItemTemplate" x:DataType="model:CategoryModel">
@@ -61,14 +61,13 @@
                                             Stroke="#9B5DB0">
                                             <Grid RowSpacing="10" Padding="20,0,20,0">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="90" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                    <ColumnDefinition Width="8*" />
+                                                    <ColumnDefinition Width="2*" />
                                                 </Grid.ColumnDefinitions>
-                                                <Image Source="{Binding ImageUrl}"
+                                                <Image Grid.Column="0" Source="{Binding ImageUrl}" HeightRequest="70" WidthRequest="70"
                                                        VerticalOptions="Center"
-                                                       HorizontalOptions="Center"
-                                                       HeightRequest="90"/>
+                                                       HorizontalOptions="Center"/>
                                                 <Grid Grid.Column="1"
                                                       RowSpacing="1"
                                                       Padding="10,0,0,0"
@@ -84,8 +83,7 @@
                                                        FontSize="16">
                                                     </Label>
                                                 </Grid>
-                                                <Grid Grid.Row="0"
-                                                      x:Name="temp"
+                                                <Grid x:Name="temp"
                                                       Grid.Column="2"
                                                       RowSpacing="0"
                                                       HorizontalOptions="End"

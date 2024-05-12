@@ -8,7 +8,7 @@
              x:Class="TFG_UOC_2024.APP.Views.RecipeDetail"
              Title="Recipe detail"
              Shell.BackgroundColor="BlueViolet"
-             Shell.TabBarIsVisible="True">
+             Shell.TabBarIsVisible="False">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
     </ContentPage.Behaviors>
@@ -18,7 +18,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <VerticalStackLayout Background="#fbe8fc">
-        <ImageButton Source="back.svg" x:Name="backButton" BackgroundColor="Transparent" HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin="20,20,0,0">
+        <ImageButton Source="back.png" x:Name="backButton" HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin="20,20,0,0">
             <ImageButton.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding Path=BindingContext.BackCommand, Source = {x:Reference backButton}}" CommandParameter="{Binding}" />
             </ImageButton.GestureRecognizers>
@@ -30,7 +30,7 @@
             <Image Opacity="1" Source="{Binding Image}" WidthRequest="150" HeightRequest="150" VerticalOptions="Center" HorizontalOptions="Center"></Image>
         </Frame>
 
-        <ImageButton Opacity="1" x:Name="favouriteButton" Source="{Binding IsFavourite, Converter={StaticResource BoolToIconConverter}}" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin =" 0,20,20,0">
+        <ImageButton x:Name="favouriteButton" Source="{Binding IsFavourite, Converter={StaticResource BoolToIconConverter}}" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin =" 0,20,20,0">
             <ImageButton.Behaviors>
                 <toolkit:IconTintColorBehavior TintColor="Red" />
             </ImageButton.Behaviors>
@@ -39,7 +39,7 @@
             </ImageButton.GestureRecognizers>
         </ImageButton>
         
-        <Grid Margin="10" Opacity="1">
+        <Grid Margin="10, 10, 30,10" Opacity="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
@@ -47,7 +47,7 @@
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Text="{Binding Name}" FontSize="Title" FontAttributes="Bold" TextColor="#9B5DB0" Margin="10"/>
             <Label Grid.Row="1" Text="{Binding Description}" TextColor="#9B5DB0" FontSize="Subtitle" Margin="10"/>
-            <syncfusion:SfListView Grid.Row="2" x:Name="detailView" ItemSize="30" ItemsSource="{Binding Ingredients}" ItemSpacing="0,0,5,0" Margin="10" SelectionMode="Single">
+            <syncfusion:SfListView Grid.Row="2" x:Name="detailView" ItemSize="30" ItemsSource="{Binding Ingredients}" ItemSpacing="0,0,5,0" Margin="10, 10, 30,10">
                 <syncfusion:SfListView.ItemTemplate>
                     <DataTemplate x:Name="ItemTemplate" x:DataType="model:IngredientItemModel">
                         <ViewCell>

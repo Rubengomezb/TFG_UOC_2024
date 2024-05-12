@@ -61,18 +61,18 @@ namespace TFG_UOC_2024.APP.Services
         {
             var httpClient = _httpClientFactory.CreateClient("Client");
 
-            var response = await httpClient.PostAsJsonAsync<UserInput>("api/User/Post", dto);
+            var response = await httpClient.PostAsJsonAsync<UserInput>("api/User", dto);
 
-            var content = await response.Content.ReadAsStringAsync();
-            ServiceResponse<Guid> authResponse =
-                JsonSerializer.Deserialize<ServiceResponse<Guid>>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-            if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return authResponse.Data;
+                var content = await response.Content.ReadAsStringAsync();
+                Guid authResponse =
+                    JsonSerializer.Deserialize<Guid>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                return authResponse;
             }
             else
             {
@@ -91,7 +91,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<HttpClient> GetAuthenticatedHttpClientAsync()
         {
-            var httpClient = _httpClientFactory.CreateClient(AppConstants.HttpClientName);
+            var httpClient = _httpClientFactory.CreateClient("Client");
 
             var authenticatedUser = App.user;
 
@@ -103,20 +103,20 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<UserSimpleDTO> UpdateUserAsync(string id, UserSimpleDTO dto)
         {
-            var httpClient = _httpClientFactory.CreateClient("Client");
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
-            var response = await httpClient.PutAsJsonAsync<UserSimpleDTO>($"api/user/{id}", dto);
+            var response = await httpClient.PutAsJsonAsync<UserSimpleDTO>($"api/User/{id}", dto);
 
-            var content = await response.Content.ReadAsStringAsync();
-            ServiceResponse<UserSimpleDTO> authResponse =
-                JsonSerializer.Deserialize<ServiceResponse<UserSimpleDTO>>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-            if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return authResponse.Data;
+                var content = await response.Content.ReadAsStringAsync();
+                UserSimpleDTO authResponse =
+                    JsonSerializer.Deserialize<UserSimpleDTO>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    return authResponse;
             }
             else
             {

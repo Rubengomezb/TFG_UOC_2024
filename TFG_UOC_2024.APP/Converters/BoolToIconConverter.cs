@@ -15,11 +15,11 @@ namespace TFG_UOC_2024.APP.Converters
             {
                 bool isFavourite = (bool)value;
                 if (isFavourite)
-                    return "favorite_24dp.svg";
+                    return "favorite_24dp.png";
                 else
-                    return "favorite_border_24dp.svg";
+                    return "favorite_border_24dp.png";
         }
-            return "favorite_border_24dp.svg";
+            return "favorite_border_24dp.png";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

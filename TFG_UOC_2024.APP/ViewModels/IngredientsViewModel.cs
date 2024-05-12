@@ -136,8 +136,15 @@ namespace TFG_UOC_2024.APP.ViewModels
 
         public async void OnGenerateRecipe(object obj)
         {
-            var selectIngredientsNames = string.Join(",", SelectedIngredients.Select(x => x.Name).ToList());
-            await Shell.Current.GoToAsync($"{nameof(SearchRecipesView)}?selectedIngredients={selectIngredientsNames}");
+            if (SelectedIngredients.Any())
+            {
+                var selectIngredientsNames = string.Join(",", SelectedIngredients.Select(x => x.Name).ToList());
+                await Shell.Current.GoToAsync($"{nameof(SearchRecipesView)}?selectedIngredients={selectIngredientsNames}");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Error", "Please select at least one ingredient", "OK");
+            }
         }
         
         private void LoadIngredients()

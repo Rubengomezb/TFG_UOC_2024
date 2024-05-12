@@ -41,7 +41,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://*:5011;http://*:5010"
+      "applicationUrl": "http://*:5010"
     }
   },
   "iisSettings": {

@@ -24,7 +24,8 @@ namespace TFG_UOC_2024.APP.ViewModels
     public partial class MenuViewModel : INotifyPropertyChanged
     {
         private readonly IMenuService _menuService;
-        private ListView listView; 
+        private ListView listView;
+        private UserDTO actualUser;
 
         public MenuViewModel(IMenuService menuService)
         {
@@ -33,10 +34,24 @@ namespace TFG_UOC_2024.APP.ViewModels
             this.colors = new List<Brush>();
             this.notes = new List<string>();
             this.CreateColors();
-            this.IntializeAppoitments();
+            //this.IntializeAppoitments();
             this.DisplayDate = DateTime.Now.Date;
             _isOpenCommand = new Command<object>(OpenCommand);
             _addMenuCommand = new Command<object>(AddMenu);
+        }
+
+        private bool _isInitialized = false;
+        [RelayCommand]
+        async Task AppearingAsync()
+        {
+            _isInitialized = true;
+            await RefreshAsync();
+        }
+
+        [RelayCommand]
+        async Task RefreshAsync()
+        {
+            this.IntializeAppoitments();
         }
 
         public Command<object> _isOpenCommand;
@@ -249,6 +264,19 @@ namespace TFG_UOC_2024.APP.ViewModels
 
         private async void IntializeAppoitments()
         {
+            /*if (actualUser == null)
+            {
+                actualUser = App.user;
+            }
+            else
+            {
+                if (actualUser.Id != App.user.Id)
+                {
+                    actualUser = App.user;
+                    this.Events.Clear();
+                }
+            }*/
+
             var rand = new Random();
             this.Events = new ObservableCollection<AdvancedEventModel>();
 

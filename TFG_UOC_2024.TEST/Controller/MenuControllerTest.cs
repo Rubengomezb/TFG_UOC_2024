@@ -52,12 +52,12 @@ namespace TFG_UOC_2024.TEST.Controller
             };
 
              // Asume que Menu es la clase que retorna GetMenu
-            mockMenuManager.Setup(m => m.GetMenu(startDate, endDate)).ReturnsAsync(serviceResponse);
+            mockMenuManager.Setup(m => m.GetMenu(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(serviceResponse);
 
             var controller = new MenuController(mockUserManager, mockDbContext.Object, mockMapper.Object, mockMenuManager.Object, mockLogger.Object, mockConfiguration.Object);
 
             // Act
-            ActionResult? actionResult = await controller.GetWeeklyMenu(startDate, endDate);
+            ActionResult? actionResult = await controller.GetWeeklyMenu(startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"));
 
             // Assert
             var result = ((OkObjectResult)actionResult).Value as IEnumerable<MenuDTO>; ;
@@ -86,7 +86,7 @@ namespace TFG_UOC_2024.TEST.Controller
 
             var startDate = new DateTime(2024, 4, 1);
             var endDate = new DateTime(2024, 4, 7);
-            var genericResp = new GenericResponse()
+            var genericResp = new ServiceResponse<bool>()
             {
                 Status = ServiceStatus.Ok
             };

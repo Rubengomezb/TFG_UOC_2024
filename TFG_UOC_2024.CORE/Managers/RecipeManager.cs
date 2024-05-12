@@ -80,13 +80,13 @@ namespace TFG_UOC_2024.CORE.Managers
             }
         }
 
-        public async Task<ServiceResponse<List<RecipeDTO>>> GetRecipes()
+        public async Task<ServiceResponse<List<RecipeDTO>>> GetRecipes(string health)
         {
             var r = new ServiceResponse<List<RecipeDTO>>();
             var result = new List<RecipeDTO>();
             try
             {
-                var re = await _recipeService.GetRecipe();
+                var re = await _recipeService.GetRecipe(health);
                 if (re == null)
                     return r.NotFound("recipe not found");
 

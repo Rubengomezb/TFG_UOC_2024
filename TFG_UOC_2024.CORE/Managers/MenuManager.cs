@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using static TFG_UOC_2024.DB.Components.Enums;
 using TFG_UOC_2024.CORE.Services.Menu;
+using System.Globalization;
+using TFG_UOC_2024.DB.Repository;
+using TFG_UOC_2024.CORE.Models.ApiModels;
 
 namespace TFG_UOC_2024.CORE.Managers
 {
@@ -31,13 +34,15 @@ namespace TFG_UOC_2024.CORE.Managers
             _m = m;
         }
 
-        public async Task<ServiceResponse<IEnumerable<MenuDTO>>> GetMenu(DateTime startTime, DateTime endTime)
+        public async Task<ServiceResponse<IEnumerable<MenuDTO>>> GetMenu(string startTime, string endTime)
         {
+            var start = DateTime.ParseExact(startTime, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var end = DateTime.ParseExact(endTime, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             var r = new ServiceResponse<IEnumerable<MenuDTO>>();
             try
             {
                 var user = await _userService.GetSelf();
-                var re = _menuService.GetMenu(startTime,endTime, user.Data.Id);
+                var re = _menuService.GetMenu(start,end, user.Data.Id);
                 //if (!re.Any())
                 //    return r.NotFound("recipe not found");
 
@@ -50,26 +55,42 @@ namespace TFG_UOC_2024.CORE.Managers
             }
         }
 
-        public async Task<ServiceResponse<bool>> CreateMenu(DateTime startTime, DateTime endTime)
+        public async Task<ServiceResponse<bool>> CreateMenu(DateTime startTime, DateTime endTime, int? foodType)
         {
+            var rand = new Random();
             var r = new ServiceResponse<bool>();
             var menuList = new List<MenuDTO>();
             try
             {
+                var foodTypeDescription = string.Empty;
+                if (foodType.HasValue)
+                {
+                    foodTypeDescription = GetRestriction((FoodType)foodType.Value);
+                }
+
                 var user = await _userService.GetSelf();
 
                 while(startTime <= endTime)
                 {
                     foreach (var eatTime in Enum.GetValues(typeof(EatTime)))
                     {
-                        var recipe = await _recipeService.GetRecipe();
+                        var recipe = new RecipeResponse();
+                        if ((EatTime)eatTime == EatTime.Breakfast)
+                        {
+                            recipe = await _recipeService.GetBreakfastRecipe(foodTypeDescription);
+                        }
+                        else
+                        {
+                            recipe = await _recipeService.GetRecipe(foodTypeDescription);
+                        }
 
+                        var recipeIndex = rand.Next(recipe.hits.Count());
                         var menuDto = new MenuDTO()
                         {
                             EatTime = (EatTime)eatTime,
                             Date = startTime,
                             userId = user.Data.Id,
-                            Recipe = _m.Map<RecipeDTO>(recipe.hits.FirstOrDefault().recipe)
+                            Recipe = _m.Map<RecipeDTO>(recipe.hits[recipeIndex].recipe)
                         };
 
                         menuDto.Recipe.IngredientNames = string.Join(";", recipe.hits.FirstOrDefault().recipe.ingredientLines);                   
@@ -84,7 +105,6 @@ namespace TFG_UOC_2024.CORE.Managers
                 foreach (var m in menus)
                 {
                     m.Recipe.Menu = m;
-                    //m.Recipe.Ingredients.Clear();
                 }
 
                 await _menuService.CreateWeeklyMenu(menus);
@@ -95,5 +115,17 @@ namespace TFG_UOC_2024.CORE.Managers
                 return r.BadRequest(ex.Message);
             }
         }
+
+        private string GetRestriction(FoodType type) => type switch
+        {
+            FoodType.Vegetarian => "vegetarian",
+            FoodType.Vegan => "vegan",
+            FoodType.Celiac => "gluten-free",
+            FoodType.Mediterranean => "Mediterranean",
+            FoodType.Muslim => "pork-free",
+            FoodType.Diet => "low-sugar",
+            FoodType.Diabetic => "low-sugar",
+            _ => ""
+        };
     }
 }

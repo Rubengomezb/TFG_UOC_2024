@@ -13,6 +13,8 @@ namespace TFG_UOC_2024.APP
             Routing.RegisterRoute(nameof(IngredientsView), typeof(IngredientsView));
             Routing.RegisterRoute(nameof(CategoryView), typeof(CategoryView));
             Routing.RegisterRoute(nameof(UserProfileView), typeof(UserProfileView));
+            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+            //Routing.RegisterRoute(nameof(MainRecipeView), typeof(MainRecipeView));
         }
     }
 }

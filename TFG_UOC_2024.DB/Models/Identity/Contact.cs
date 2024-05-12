@@ -23,6 +23,8 @@ namespace TFG_UOC_2024.DB.Models.Identity
         [MaxLength(30)]
         public string PhoneNumber { get; set; }
 
+        public int FoodType { get; set; }
+
         public bool IsDeleted { get; set; }
     }
 }

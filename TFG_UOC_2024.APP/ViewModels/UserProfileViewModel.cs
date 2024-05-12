@@ -21,9 +21,6 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class UserProfileViewModel : ObservableObject, INotifyPropertyChanged
     {
-        [ObservableProperty]
-        private string _email;
-
         private string _firstName;
         public string FirstName
         {
@@ -68,9 +65,26 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
-        private string Id;
-
+        private string _id;
+        public string Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                RaisePropertyChanged("Id");
+            }
+        }
+        
         private readonly IAuthService _authService;
+
+        private Command<object> _logoutCommand;
+
+        public Command<object> LogoutCommand
+        {
+            get { return _logoutCommand; }
+            set { _logoutCommand = value; }
+        }
 
         private Command<object> _updateUserCommand;
 
@@ -89,10 +103,12 @@ namespace TFG_UOC_2024.APP.ViewModels
                 new UserFoodModel { Id = 2, Name = "Vegan" },
                 new UserFoodModel { Id = 3, Name = "Mediterranean" },
                 new UserFoodModel { Id = 4, Name = "Muslim" },
-                new UserFoodModel { Id = 5, Name = "Jewish" },
+                new UserFoodModel { Id = 5, Name = "Celiac" },
                 new UserFoodModel { Id = 6, Name = "Diet" },
+                new UserFoodModel { Id = 7, Name = "Diabetic" },
             };
             _updateUserCommand = new Command<object>(UpdateUser);
+            _logoutCommand = new Command<object>(Logout);
         }
 
         private bool _isInitialized = false;
@@ -100,8 +116,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         [RelayCommand]
         async Task AppearingAsync()
         {
-            if (_isInitialized) return;
-            _isInitialized = true;
             await RefreshAsync();
         }
 
@@ -115,27 +129,36 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             try
             {
-                var dto = new UserSimpleDTO() { Id = Guid.Parse(Id), FirstName = FirstName, LastName = LastName, PhoneNumber = PhoneNumber };
-                if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
-                {
-                    /*var user = _m.Map<UserDTO>(await _authService.UpdateUserAsync(_id.ToString(), dto));
-                    App.user = user;
-                    if (Preferences.ContainsKey(nameof(App.user)))
-                    {
-                        Preferences.Remove(nameof(App.user));
-                    }
-                    string userDetails = JsonConvert.SerializeObject(user);
-                    Preferences.Set(nameof(App.user), userDetails);*/
-                }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "No hay conexión a internet", "Ok");
-                }
+                var dto = new UserSimpleDTO() { Id = Guid.Parse(Id), FirstName = FirstName, LastName = LastName, PhoneNumber = PhoneNumber, UserName = App.user.UserName, ContactId = App.user.ContactId, Email = App.user.Email, CreatedOn = DateTime.UtcNow, FoodType = this.SelectedItem.Id };
+
+                var simpleUser = await _authService.UpdateUserAsync(_id.ToString(), dto);
+
+                var user = new UserDTO();
+                user = App.user;
+                user.FirstName = simpleUser.FirstName;
+                user.LastName = simpleUser.LastName;
+                user.PhoneNumber = simpleUser.PhoneNumber;
+                user.Id = simpleUser.Id;
+                user.Email = simpleUser.Email;
+                user.CreatedOn = simpleUser.CreatedOn;
+                user.IsDeleted = simpleUser.IsDeleted;
+                user.FoodType = simpleUser.FoodType;
+
+                App.user = user;
+                LoadUser();
+                string userDetails = JsonConvert.SerializeObject(user);
+                Preferences.Set(nameof(App.user), userDetails);
             }
             catch (Exception ex)
             {
                 await App.Current.MainPage.DisplayAlert("Error", "Error al registrar el usuario", "Ok");
             }
+        }
+
+        public async void Logout(object obj)
+        {
+            App.user = null;
+            await Shell.Current.GoToAsync("//LoginPage");
         }
 
         public ObservableCollection<UserFoodModel> _userFoodModel = new ();
@@ -149,13 +172,13 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
-        private ObservableCollection<UserFoodModel> selectedItem = new ObservableCollection<UserFoodModel>();
-        public ObservableCollection<UserFoodModel> SelectedItem
+        private UserFoodModel _selectedItem = new UserFoodModel();
+        public UserFoodModel SelectedItem
         {
-            get { return selectedItem; }
+            get { return _selectedItem; }
             set
             {
-                selectedItem = value;
+                _selectedItem = value;
                 RaisePropertyChanged("SelectedItem");
             }
         }
@@ -165,9 +188,16 @@ namespace TFG_UOC_2024.APP.ViewModels
             FirstName = App.user.FirstName;
             LastName = App.user.LastName;
             PhoneNumber = App.user.PhoneNumber;
-            Email = App.user.Email;
             Id = App.user.Id.ToString();
             Image = "user.png";
+
+            if (_userFoodModel.Count > 0 && App.user.FoodType > 0)
+            {
+                if (App.user.FoodType != 0)
+                {
+                    SelectedItem = new UserFoodModel { Id = App.user.FoodType, Name = _userFoodModel.FirstOrDefault(x => x.Id == App.user.FoodType).Name };
+                }
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

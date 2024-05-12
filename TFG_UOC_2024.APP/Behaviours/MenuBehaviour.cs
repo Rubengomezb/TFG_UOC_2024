@@ -18,6 +18,7 @@ namespace TFG_UOC_2024.APP.Behaviours
         /// </summary>
         private Label? noEventsLabel;
 
+        private Button? noEventsButton;
         /// <summary>
         /// The appointment list view
         /// </summary>
@@ -35,6 +36,7 @@ namespace TFG_UOC_2024.APP.Behaviours
 
             this.scheduler = bindable.FindByName<SfScheduler>("Scheduler");
             this.noEventsLabel = bindable.FindByName<Label>("noEventsLabel");
+            this.noEventsButton = bindable.FindByName<Button>("noEventsButton");
             this.appointmentListView = bindable.FindByName<ListView>("appointmentListView");
             if (scheduler != null)
             {
@@ -112,11 +114,13 @@ namespace TFG_UOC_2024.APP.Behaviours
                 viewModel.SelectedDateMenus = appointments.Where(x => !viewModel.SelectedDateMenus.Any(y => y.Id == x.Id && y.Name == x.Name)).ToObservableCollection();
                 this.appointmentListView.IsVisible = true;
                 this.noEventsLabel.IsVisible = false;
+                this.noEventsButton.IsVisible = false;
             }
             else
             {
                 this.appointmentListView.IsVisible = false;
                 this.noEventsLabel.IsVisible = true;
+                this.noEventsButton.IsVisible = true;
             }
         }
 

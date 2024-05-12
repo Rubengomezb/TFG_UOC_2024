@@ -35,10 +35,24 @@ namespace TFG_UOC_2024.CORE.Clients
             this.baseApiId = appSettings.RecipeApiId;
         }
 
-        public async Task<RecipeResponse> GetRecipe(string filter)
+        public async Task<RecipeResponse> GetRecipe(string filter, string health)
         {
-            var parameters = string.Format("?q={0}&app_id={1}&app_key={2}&from=0&to=50", filter, this.baseApiId, this.token);
+            var filters = "?q={0}&app_id={1}&app_key={2}&from=0&to=50";
+            filters = health == string.Empty ? filters : filters + $"&health={health}";
+            var parameters = string.Format(filters, filter, this.baseApiId, this.token);
             var requestUrl = string.Format("{0}{1}", this.baseApiUrl, parameters);
+
+            return await this.Get<RecipeResponse>(requestUrl);
+        }
+
+        public async Task<RecipeResponse> GetBreakfastRecipe(string filter, string health)
+        {
+
+            var filters = "?q={0}&app_id={1}&app_key={2}&from=0&to=50&mealType=Breakfast";
+            var parameters = string.Format(filters, filter, this.baseApiId, this.token);
+
+            var requestUrl = string.Format("{0}{1}", this.baseApiUrl, parameters);
+
 
             return await this.Get<RecipeResponse>(requestUrl);
         }

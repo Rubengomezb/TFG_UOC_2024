@@ -30,7 +30,7 @@ namespace TFG_UOC_2024.CORE.Services.Interfaces
 
         IEnumerable<Category> GetIngredientsByCategory(Guid categoryId);
 
-        Task<RecipeResponse> GetRecipe();
+        Task<RecipeResponse> GetRecipe(string health);
 
         Task<List<RecipeResponse>> GetRecipesByIngredient(int from, int to);
 
@@ -49,6 +49,8 @@ namespace TFG_UOC_2024.CORE.Services.Interfaces
         Task<bool> AddIngredient(Ingredient ingredient);
 
         Recipe GetRecipeByName(string name);
+
+        Task<RecipeResponse> GetBreakfastRecipe(string health);
 
         string GetRandomIngredient();
     }
