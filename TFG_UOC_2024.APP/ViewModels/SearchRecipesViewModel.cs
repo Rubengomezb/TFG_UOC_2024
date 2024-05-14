@@ -56,9 +56,9 @@ namespace TFG_UOC_2024.APP.ViewModels
 
         private List<string> selectedIngredients;
 
-        private int from = 0;
+        public int from = 0;
 
-        private int to = 5;
+        public int to = 5;
 
         public async void OnGenerateAlternatives(object obj)
         {
@@ -79,23 +79,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         [RelayCommand]
         async Task RefreshAsync()
         {
-            /*if (App.recipes == null)
-            {
-                Recipes = new ObservableCollection<RecipeModel>(GetRecipes().Result);
-            }
-            else
-            {
-                foreach (var recipe in App.recipes)
-                {
-                    Recipes.Add(new RecipeModel()
-                    {
-                        Name = recipe.Name,
-                        Description = recipe.Description,
-                        ImageUrl = recipe.ImageUrl,
-                        Id = recipe.Id.ToString(),
-                    });
-                }
-            }*/
         }
 
         private async void OnTapped(object obj)
@@ -115,25 +98,23 @@ namespace TFG_UOC_2024.APP.ViewModels
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
-        { 
+        {
+            selectedIngredients = query["selectedIngredients"].ToString().Split(',').ToList();
+            this.LoadRecipes();
+        }
+
+        public void LoadRecipes()
+        {
             if (_recipes != null && _recipes.Count > 0)
             {
                 _recipes.Clear();
             }
 
-            var rand = new Random();   
-            selectedIngredients = query["selectedIngredients"].ToString().Split(',').ToList();
+            var rand = new Random();
 
-            try
-            {
-                var randomIndex = rand.Next(15);
-                from = randomIndex;
-                to = from + 5;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            var randomIndex = rand.Next(15);
+            from = randomIndex;
+            to = from + 5;
 
             foreach (var ingredient in GetRecipes().Result)
             {

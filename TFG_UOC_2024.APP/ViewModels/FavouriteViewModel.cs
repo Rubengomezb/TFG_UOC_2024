@@ -71,7 +71,11 @@ namespace TFG_UOC_2024.APP.ViewModels
 
         public async void GetFavouriteRecipes()
         {
-            _recipes.Clear();
+            if (_recipes != null && _recipes.Any())
+            {
+                _recipes.Clear();
+            }
+
             var recipesDTO = await _recipeService.GetFavouritesAsync(App.user.Id).ConfigureAwait(false);
             foreach (var recipe in recipesDTO)
             {

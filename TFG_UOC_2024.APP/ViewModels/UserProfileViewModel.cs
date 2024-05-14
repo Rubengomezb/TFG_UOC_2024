@@ -146,8 +146,8 @@ namespace TFG_UOC_2024.APP.ViewModels
 
                 App.user = user;
                 LoadUser();
-                string userDetails = JsonConvert.SerializeObject(user);
-                Preferences.Set(nameof(App.user), userDetails);
+                /*string userDetails = JsonConvert.SerializeObject(user);
+                Preferences.Set(nameof(App.user), userDetails);*/
             }
             catch (Exception ex)
             {
@@ -183,7 +183,7 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
-        private void LoadUser()
+        public void LoadUser()
         {
             FirstName = App.user.FirstName;
             LastName = App.user.LastName;

@@ -21,7 +21,7 @@ namespace TFG_UOC_2024.INTEGRATION.TEST.Controllers
         public async Task GetWeeklyMenu()
         {
             this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
-            var request = $"api/menu/menu?startDate={DateTime.Now}&endDate={DateTime.Now.AddDays(7)}";
+            var request = $"api/menu/menu?startDate={DateTime.Now.ToString("yyyy-MM-dd")}&endDate={DateTime.Now.AddDays(7).ToString("yyyy-MM-dd")}";
             var response = await client.GetAsync(request);
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();

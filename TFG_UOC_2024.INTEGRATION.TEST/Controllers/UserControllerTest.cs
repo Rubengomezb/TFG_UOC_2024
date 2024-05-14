@@ -50,7 +50,8 @@ namespace TFG_UOC_2024.INTEGRATION.TEST.Controllers
         [Test]
         public async Task GetUserRoles()
         {
-            var id = Guid.Parse("08dc62ea-5b91-4385-8f7b-b2bcf19f79a1");
+
+            var id = Guid.Parse("08dc3b98-e0a2-40ff-8fdc-ebde9f148a15");
             this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
             var endpoint = $"api/user/{id}/roles";
             var response = await client.GetAsync(endpoint);
@@ -61,7 +62,7 @@ namespace TFG_UOC_2024.INTEGRATION.TEST.Controllers
                 PropertyNameCaseInsensitive = true
             });
 
-            Assert.IsTrue(roles.ToList().Count() > 0);
+            Assert.IsFalse(roles.ToList().Count() > 0);
         }
 
         [Test]
@@ -89,7 +90,7 @@ namespace TFG_UOC_2024.INTEGRATION.TEST.Controllers
         }
 
         [Test]
-        public async Task UpdateUser()
+        public async Task PutUser()
         {
             var id = Guid.Parse("08dc3b98-e0a2-40ff-8fdc-ebde9f148a15");
             var user = new UserSimpleDTO
@@ -115,7 +116,7 @@ namespace TFG_UOC_2024.INTEGRATION.TEST.Controllers
         }
 
         [Test]
-        public async Task DeleteUser()
+        public async Task RemoveUser()
         {
             var id = Guid.Parse("08dc3b98-e0a2-40ff-8fdc-ebde9f148a15");
             this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);

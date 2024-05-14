@@ -49,16 +49,7 @@ namespace TFG_UOC_2024.APP.ViewModels
         [RelayCommand]
         async Task RefreshAsync()
         {
-            //GetCategories();
         }
-
-        /*private Command<object> _chipAction;
-
-        public Command<object> ChipAction
-        {
-            get { return _chipAction; }
-            set { _chipAction = value; }
-        }*/
 
         public ObservableCollection<IngredientModel> _ingredients { get; set; } = new();
 
@@ -97,7 +88,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             _recipeService = recipeService;
             _generateRecipeCommand = new Command<object>(OnGenerateRecipe);
-            //_chipAction = new Command<object>(OnRemoveChip);
             _tapCommand = new Command<object>(OnTapped);
         }
 
@@ -147,7 +137,7 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
         
-        private void LoadIngredients()
+        public void LoadIngredients()
         {
             var ingredientDTOs = _recipeService.GetIngredients(CategoryId).Result;
 

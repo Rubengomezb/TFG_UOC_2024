@@ -133,21 +133,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         [RelayCommand]
         async Task RefreshAsync()
         {
-            /*if (RecipeId != null)
-            {
-                recipe = _recipeService.GetRecipeByIdAsync(Guid.Parse(RecipeId)).Result;
-                Description = recipe.Description;
-                Name = recipe.Name;
-                Image = recipe.ImageUrl;
-                IsFavourite = _recipeService.IsFavourite(Guid.Parse(RecipeId), App.user.Id).Result;
-                foreach (var item in recipe.IngredientNames.Split(';'))
-                {
-                    Ingredients.Add(new IngredientItemModel()
-                    {
-                        Name = item,
-                    });
-                }
-            }*/
         }
 
         public async void MakeFavourite(object obj)
@@ -174,6 +159,11 @@ namespace TFG_UOC_2024.APP.ViewModels
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             RecipeId = query["Id"].ToString();
+            LoadRecipeDetail();
+        }
+
+        public void LoadRecipeDetail()
+        {
             recipe = _recipeService.GetRecipeByIdAsync(Guid.Parse(RecipeId)).Result;
             Description = recipe.Description;
             Name = recipe.Name;

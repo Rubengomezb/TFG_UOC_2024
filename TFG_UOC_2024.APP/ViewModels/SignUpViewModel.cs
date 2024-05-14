@@ -42,6 +42,8 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private string _phoneNumber;
 
+        public bool forTest = false;
+
         private readonly IAuthService _authService;
 
         public SignUpViewModel(IAuthService authService)
@@ -54,7 +56,12 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName) && !string.IsNullOrWhiteSpace(PhoneNumber))
+                if (!string.IsNullOrWhiteSpace(Username) && 
+                    !string.IsNullOrWhiteSpace(Password) && 
+                    !string.IsNullOrWhiteSpace(Email) && 
+                    !string.IsNullOrWhiteSpace(FirstName) && 
+                    !string.IsNullOrWhiteSpace(LastName) && 
+                    !string.IsNullOrWhiteSpace(PhoneNumber))
                 {
                     var signUpDto = new UserInput();
                     signUpDto.UserName = Username;
@@ -78,15 +85,18 @@ namespace TFG_UOC_2024.APP.ViewModels
                     var userLogged = await _authService.LoginAsync(loginDto);
                     if (userLogged != null)
                     {
-                        if (Preferences.ContainsKey(nameof(App.user)))
-                        {
-                            Preferences.Remove(nameof(App.user));
-                        }
-                        string userDetails = JsonConvert.SerializeObject(user);
-                        Preferences.Set(nameof(App.user), userDetails);
+                        //if (Preferences.ContainsKey(nameof(App.user)))
+                        //{
+                        //    Preferences.Remove(nameof(App.user));
+                        //}
+                        //string userDetails = JsonConvert.SerializeObject(user);
+                        //Preferences.Set(nameof(App.user), userDetails);
                         App.user = userLogged;
                         //AppShell.Current.FlyoutHeader = new HeaderControl();
-                        await Shell.Current.GoToAsync("//MainRecipeView");
+                        if (!forTest)
+                        {
+                            await Shell.Current.GoToAsync("//MainRecipeView");
+                        }
                     }
                 }
                 else

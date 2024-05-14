@@ -43,7 +43,6 @@ namespace TFG_UOC_2024.APP.Services
         public RecipeService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
-            httpClient = this.GetAuthenticatedHttpClientAsync().Result;
         }
 
         public async Task<bool> AddFavourite(Guid recipeId, Guid userId)
@@ -91,7 +90,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<List<CategoryDTO>> GetCategories()
         {
-            //var httpClient = await GetAuthenticatedHttpClientAsync();
+            var httpClient = await GetAuthenticatedHttpClientAsync();
             var response = await httpClient.GetAsync($"api/Recipe/categories", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync();
@@ -113,7 +112,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<List<IngredientDTO>> GetIngredients(string categoryId)
         {
-            //var httpClient = await GetAuthenticatedHttpClientAsync();
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
             try
             {
@@ -166,7 +165,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<List<RecipeDTO>> GetRecipeByIngredientsAsync(List<string> ingredients, int from, int to)
         {
-            //var httpClient = await GetAuthenticatedHttpClientAsync();
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
             var response = await httpClient.GetAsync($"api/Recipe/recipesByIngredients?ingredients={string.Join(",", ingredients)}&from={from}&to={to}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
@@ -189,7 +188,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<List<RecipeDTO>> GetRecipesAsync()
         {
-            //var httpClient = await GetAuthenticatedHttpClientAsync();
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
             var response = await httpClient.GetAsync("api/Recipe/recipes", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
@@ -212,7 +211,7 @@ namespace TFG_UOC_2024.APP.Services
 
         public async Task<bool> IsFavourite(Guid recipeId, Guid userId)
         {
-            //var httpClient = await GetAuthenticatedHttpClientAsync();
+            var httpClient = await GetAuthenticatedHttpClientAsync();
 
             try
             {

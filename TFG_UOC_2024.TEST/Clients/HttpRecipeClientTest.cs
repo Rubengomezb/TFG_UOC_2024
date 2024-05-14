@@ -37,7 +37,7 @@ namespace TFG_UOC_2024.TEST.Clients
             recipeResponse.hits.Append(new Hit { recipe = recipe });
             var recipeClient = new HttpRecipeClient(configuration);
             //Act
-            var result = await recipeClient.GetRecipe(filter);
+            var result = await recipeClient.GetRecipe(filter, string.Empty);
             //Assert
             Assert.NotNull(result);
             Assert.That(result.hits.Length, Is.EqualTo(50));

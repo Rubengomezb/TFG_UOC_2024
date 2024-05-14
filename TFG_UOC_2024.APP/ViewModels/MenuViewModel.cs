@@ -34,7 +34,6 @@ namespace TFG_UOC_2024.APP.ViewModels
             this.colors = new List<Brush>();
             this.notes = new List<string>();
             this.CreateColors();
-            //this.IntializeAppoitments();
             this.DisplayDate = DateTime.Now.Date;
             _isOpenCommand = new Command<object>(OpenCommand);
             _addMenuCommand = new Command<object>(AddMenu);
@@ -108,7 +107,7 @@ namespace TFG_UOC_2024.APP.ViewModels
             //IsOpen = true;
         }
 
-        private async void AddMenu(object obj)
+        public async void AddMenu(object obj)
         {
             IsOpen = true;
             await _menuService.CreateWeeklyMenuAsync(this.selectedDate, this.selectedDate);
@@ -157,11 +156,6 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
 
             return recipe;
-        }
-
-        private DateTime GetFirstWeekDay(DateTime dateSelected)
-        {
-            return DateTime.Today.AddDays(-(int)dateSelected.DayOfWeek + (int)DayOfWeek.Monday);
         }
 
         /// <summary>
@@ -262,21 +256,8 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
-        private async void IntializeAppoitments()
+        public async void IntializeAppoitments()
         {
-            /*if (actualUser == null)
-            {
-                actualUser = App.user;
-            }
-            else
-            {
-                if (actualUser.Id != App.user.Id)
-                {
-                    actualUser = App.user;
-                    this.Events.Clear();
-                }
-            }*/
-
             var rand = new Random();
             this.Events = new ObservableCollection<AdvancedEventModel>();
 

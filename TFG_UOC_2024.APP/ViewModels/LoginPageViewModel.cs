@@ -25,6 +25,8 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private string _password;
 
+        public bool forTest = false;
+
         private readonly IAuthService _authService;
 
         public LoginPageViewModel(IAuthService authService)
@@ -37,42 +39,31 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             try
             {
-                //if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
-                //{
-                    if (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password))
-                    {
-                        var loginDto = new Login();
-                        loginDto.Username = UserName;
-                        loginDto.Password = Password;
+                if (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password))
+                {
+                    var loginDto = new Login();
+                    loginDto.Username = UserName;
+                    loginDto.Password = Password;
 
-                        var user = await _authService.LoginAsync(loginDto);
-                        if (user == null)
-                        {
-                            await Shell.Current.DisplayAlert("Error", "Username/Password is incorrect", "Ok");
-                            return;
-                        }
-                        if (Preferences.ContainsKey(nameof(App.user)))
-                        {
-                            Preferences.Remove(nameof(App.user));
-                        }
-                        string userDetails = JsonConvert.SerializeObject(user);
-                        Preferences.Set(nameof(App.user), userDetails);
-                        App.user = user;
-                        //App.Current.MainPage = new AppShell();
-                        //AppShell.Current.FlyoutHeader = new HeaderControl();
-                        await Shell.Current.GoToAsync("//MainRecipeView");
-                    }
-                    else
+                    var user = await _authService.LoginAsync(loginDto);
+                    if (user == null)
                     {
-                        await Shell.Current.DisplayAlert("Error", "All fields required", "Ok");
+                        await Shell.Current.DisplayAlert("Error", "Username/Password is incorrect", "Ok");
                         return;
                     }
-                /*}
+
+                    App.user = user;
+
+                    if (!forTest)
+                    {
+                        await Shell.Current.GoToAsync("//MainRecipeView");
+                    }
+                }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Error", "No Internet Access", "Ok");
+                    await Shell.Current.DisplayAlert("Error", "All fields required", "Ok");
                     return;
-                }*/
+                }
 
             }
             catch (Exception ex)
@@ -80,8 +71,6 @@ namespace TFG_UOC_2024.APP.ViewModels
                 await Shell.Current.DisplayAlert("Error", ex.Message, "Ok");
                 return;
             }
-
-
         }
 
         [RelayCommand]
