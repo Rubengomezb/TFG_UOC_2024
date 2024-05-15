@@ -51,12 +51,10 @@ namespace TFG_UOC_2024.API
             AppEnvironment = env;
         }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Application Insights
-            //TODO: let's do this for prod and works only on windows app services
             services.AddApplicationInsightsTelemetry(Configuration);
 
             // enable caching
@@ -222,7 +220,7 @@ namespace TFG_UOC_2024.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseHttpsRedirection();
+                //app.UseHttpsRedirection();
             }
             else
             {

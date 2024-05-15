@@ -19,6 +19,7 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class LoginPageViewModel : ObservableObject
     {
+        #region Properties
         [ObservableProperty]
         private string _userName;
 
@@ -28,12 +29,16 @@ namespace TFG_UOC_2024.APP.ViewModels
         public bool forTest = false;
 
         private readonly IAuthService _authService;
+        #endregion
 
+        #region Constructor
         public LoginPageViewModel(IAuthService authService)
         {
             _authService = authService;
         }
+        #endregion
 
+        #region Methods
         [RelayCommand]
         public async Task Login()
         {
@@ -78,5 +83,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             await Shell.Current.GoToAsync($"{nameof(SignUpPage)}");
         }
+        #endregion
     }
 }

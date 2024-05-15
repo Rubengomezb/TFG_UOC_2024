@@ -57,13 +57,13 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.PostAsJsonAsync("api/Recipe/addFavorite", favourite);
 
             var content = await response.Content.ReadAsStringAsync();
-            bool authResponse =
+            bool result =
                 JsonSerializer.Deserialize<bool>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-            return authResponse;
+            return result;
         }
 
         public async Task<bool> DeleteFavourite(Guid recipeId, Guid userId)
@@ -79,13 +79,13 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.PostAsJsonAsync("api/Recipe/removeFavorite", favourite).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync();
-            bool authResponse =
+            bool result =
                 JsonSerializer.Deserialize<bool>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-            return authResponse;
+            return result;
         }
 
         public async Task<List<CategoryDTO>> GetCategories()
@@ -94,7 +94,7 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.GetAsync($"api/Recipe/categories", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync();
-            List<CategoryDTO> authResponse =
+            List<CategoryDTO> result =
                 JsonSerializer.Deserialize<List<CategoryDTO>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -102,7 +102,7 @@ namespace TFG_UOC_2024.APP.Services
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return authResponse;
+                return result;
             }
             else
             {
@@ -113,28 +113,20 @@ namespace TFG_UOC_2024.APP.Services
         public async Task<List<IngredientDTO>> GetIngredients(string categoryId)
         {
             var httpClient = await GetAuthenticatedHttpClientAsync();
+            var response = await httpClient.GetAsync($"api/Recipe/ingredients/{categoryId}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
-            try
+            var content = await response.Content.ReadAsStringAsync();
+            List<IngredientDTO> result =
+                JsonSerializer.Deserialize<List<IngredientDTO>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                var response = await httpClient.GetAsync($"api/Recipe/ingredients/{categoryId}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-
-                var content = await response.Content.ReadAsStringAsync();
-                List<IngredientDTO> authResponse =
-                    JsonSerializer.Deserialize<List<IngredientDTO>>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    return authResponse;
-                }
-                else
-                {
-                    return null;
-                }
+                return result;
             }
-            catch(Exception ex)
+            else
             {
                 return null;
             }
@@ -147,7 +139,7 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.GetAsync($"api/Recipe/recipe?recipeId={recipeId}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync();
-            RecipeDTO authResponse =
+            RecipeDTO result =
                 JsonSerializer.Deserialize<RecipeDTO>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -155,7 +147,7 @@ namespace TFG_UOC_2024.APP.Services
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return authResponse;
+                return result;
             }
             else
             {
@@ -170,7 +162,7 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.GetAsync($"api/Recipe/recipesByIngredients?ingredients={string.Join(",", ingredients)}&from={from}&to={to}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync();
-            List<RecipeDTO> authResponse =
+            List<RecipeDTO> result =
                 JsonSerializer.Deserialize<List<RecipeDTO>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -178,7 +170,7 @@ namespace TFG_UOC_2024.APP.Services
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return authResponse;
+                return result;
             }
             else
             {
@@ -193,15 +185,15 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.GetAsync("api/Recipe/recipes", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync();
-            ServiceResponse<List<RecipeDTO>> authResponse =
+            ServiceResponse<List<RecipeDTO>> result =
                 JsonSerializer.Deserialize<ServiceResponse<List<RecipeDTO>>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-            if (authResponse.Status == DB.Components.Enums.ServiceStatus.Ok)
+            if (result.Status == DB.Components.Enums.ServiceStatus.Ok)
             {
-                return authResponse.Data;
+                return result.Data;
             }
             else
             {
@@ -218,13 +210,13 @@ namespace TFG_UOC_2024.APP.Services
                 var response = await httpClient.GetAsync($"api/Recipe/favorite?userId={userId}&recipeId={recipeId}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
                 var content = await response.Content.ReadAsStringAsync();
-                bool authResponse =
+                bool result =
                     JsonSerializer.Deserialize<bool>(content, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     });
 
-                return authResponse;
+                return result;
             }
             catch(Exception ex)
             {
@@ -252,15 +244,14 @@ namespace TFG_UOC_2024.APP.Services
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-
                 var content = await response.Content.ReadAsStringAsync();
-                List<RecipeDTO> authResponse =
+                List<RecipeDTO> result =
                     JsonSerializer.Deserialize<List<RecipeDTO>>(content, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     });
 
-                return authResponse;
+                return result;
             }
             else
             {

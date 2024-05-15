@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TFG_UOC_2024.DB.Components
 {
+    /// <summary>
+    /// List of enums used in the application.
+    /// </summary>
     public class Enums
     {
         public enum Comparison

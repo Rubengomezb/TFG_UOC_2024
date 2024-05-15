@@ -20,6 +20,14 @@ namespace TFG_UOC_2024.CORE.Models.DTOs
         public List<IngredientDTO> Ingredients { get; set; }
 
         public string IngredientNames { get; set; }
+
+        public double? Calories { get; set; }
+
+        public double? Proteins { get; set; }
+
+        public double? Carbohydrates { get; set; }
+
+        public double? Fats { get; set; }
     }
 
     public class  RecipeFavorite

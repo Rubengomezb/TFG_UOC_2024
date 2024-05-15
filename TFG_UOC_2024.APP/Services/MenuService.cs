@@ -43,13 +43,13 @@ namespace TFG_UOC_2024.APP.Services
 
             var content = await response.Content.ReadAsStringAsync();
 
-            bool authResponse =
+            bool result =
                 JsonSerializer.Deserialize<bool>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-            return authResponse;
+            return result;
         }
 
         public async Task<List<MenuDTO>> GetWeeklyMenuAsync(DateTime monday, DateTime sunday)
@@ -58,7 +58,7 @@ namespace TFG_UOC_2024.APP.Services
             var response = await httpClient.GetAsync($"api/Menu/menu?startDate={monday.ToString("yyy-MM-dd")}&endDate={sunday.ToString("yyy-MM-dd")}", HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false); ;
 
             var content = await response.Content.ReadAsStringAsync();
-            List<MenuDTO> authResponse =
+            List<MenuDTO> result =
                 JsonSerializer.Deserialize<List<MenuDTO>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -66,7 +66,7 @@ namespace TFG_UOC_2024.APP.Services
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return authResponse;
+                return result;
             }
             else
             {

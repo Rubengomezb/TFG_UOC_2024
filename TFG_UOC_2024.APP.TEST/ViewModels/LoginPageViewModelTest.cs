@@ -3,6 +3,7 @@ using TFG_UOC_2024.APP.Services;
 using TFG_UOC_2024.APP.ViewModels;
 using TFG_UOC_2024.CORE.Models.DTOs;
 using static TFG_UOC_2024.CORE.Models.DTOs.ContactPropertyDTO;
+using NUnit.Framework;
 
 namespace TFG_UOC_2024.APP.TEST.ViewModels
 {

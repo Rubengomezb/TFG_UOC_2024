@@ -20,6 +20,7 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class SearchRecipesViewModel : ObservableObject, IQueryAttributable, INotifyPropertyChanged
     {
+        #region Properties
         public ObservableCollection<RecipeModel> _recipes { get; set; } = new();
 
         public ObservableCollection<RecipeModel> Recipes
@@ -51,6 +52,7 @@ namespace TFG_UOC_2024.APP.ViewModels
             set { _generateRecipeCommand = value; }
         }
 
+        private bool _isInitialized = false;
 
         private readonly IRecipeService _recipeService;
 
@@ -59,7 +61,18 @@ namespace TFG_UOC_2024.APP.ViewModels
         public int from = 0;
 
         public int to = 5;
+        #endregion
 
+        #region Constructor
+        public SearchRecipesViewModel(IRecipeService recipeService)
+        {
+            _recipeService = recipeService;
+            _generateRecipeCommand = new Command<object>(OnGenerateAlternatives);
+            _tapCommand = new Command<object>(OnTapped);
+        }
+        #endregion
+
+        #region Methods
         public async void OnGenerateAlternatives(object obj)
         {
             from += 5;
@@ -67,7 +80,7 @@ namespace TFG_UOC_2024.APP.ViewModels
             Recipes = new ObservableCollection<RecipeModel>(GetRecipes().Result);
         }
 
-        private bool _isInitialized = false;
+
         [RelayCommand]
         async Task AppearingAsync()
         {
@@ -88,13 +101,6 @@ namespace TFG_UOC_2024.APP.ViewModels
                 var rec = (recipe as RecipeModel);
                 await Shell.Current.GoToAsync($"{nameof(RecipeDetail)}?Id={rec.Id}");
             }
-        }
-
-        public SearchRecipesViewModel(IRecipeService recipeService)
-        {
-            _recipeService = recipeService;
-            _generateRecipeCommand = new Command<object>(OnGenerateAlternatives);
-            _tapCommand = new Command<object>(OnTapped);
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -129,7 +135,8 @@ namespace TFG_UOC_2024.APP.ViewModels
         }
 
         public async Task<List<RecipeModel>> GetRecipes()
-        {   var recipesDTO = await _recipeService.GetRecipeByIngredientsAsync(selectedIngredients, from, to).ConfigureAwait(false);
+        {
+            var recipesDTO = await _recipeService.GetRecipeByIngredientsAsync(selectedIngredients, from, to).ConfigureAwait(false);
             var recipesModels = new List<RecipeModel>();
             foreach (var recipe in recipesDTO)
             {
@@ -145,5 +152,6 @@ namespace TFG_UOC_2024.APP.ViewModels
 
             return recipesModels;
         }
+        #endregion
     }
 }

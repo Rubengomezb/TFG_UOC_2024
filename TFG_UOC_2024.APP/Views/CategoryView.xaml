@@ -41,7 +41,7 @@
                     </SearchBar>
                 </Border>
             </Grid>
-            <Grid Grid.Row="1" VerticalOptions="Start" Padding="0,0,0,0">
+            <Grid Grid.Row="1" VerticalOptions="Start" WidthRequest="400">
                 <syncfusion:SfListView x:Name="listView" ItemSize="80" ItemsSource="{Binding Categories}" SelectionMode="Single">
                     <syncfusion:SfListView.ItemTemplate>
                         <DataTemplate x:Name="ItemTemplate" x:DataType="model:CategoryModel">

@@ -66,13 +66,13 @@ namespace TFG_UOC_2024.APP.Services
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Guid authResponse =
+                Guid result =
                     JsonSerializer.Deserialize<Guid>(content, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     });
 
-                return authResponse;
+                return result;
             }
             else
             {
@@ -110,13 +110,13 @@ namespace TFG_UOC_2024.APP.Services
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                UserSimpleDTO authResponse =
+                UserSimpleDTO result =
                     JsonSerializer.Deserialize<UserSimpleDTO>(content, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     });
 
-                    return authResponse;
+                    return result;
             }
             else
             {

@@ -21,6 +21,8 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class UserProfileViewModel : ObservableObject, INotifyPropertyChanged
     {
+        #region Properties
+        private readonly IAuthService _authService;
         private string _firstName;
         public string FirstName
         {
@@ -75,11 +77,8 @@ namespace TFG_UOC_2024.APP.ViewModels
                 RaisePropertyChanged("Id");
             }
         }
-        
-        private readonly IAuthService _authService;
 
         private Command<object> _logoutCommand;
-
         public Command<object> LogoutCommand
         {
             get { return _logoutCommand; }
@@ -87,13 +86,38 @@ namespace TFG_UOC_2024.APP.ViewModels
         }
 
         private Command<object> _updateUserCommand;
-
         public Command<object> UpdateUserCommand
         {
             get { return _updateUserCommand; }
             set { _updateUserCommand = value; }
         }
 
+        private bool _isInitialized = false;
+
+        public ObservableCollection<UserFoodModel> _userFoodModel = new();
+        public ObservableCollection<UserFoodModel> UserFoodModel
+        {
+            get { return _userFoodModel; }
+            set
+            {
+                _userFoodModel = value;
+                RaisePropertyChanged("UserFoodModel");
+            }
+        }
+
+        private UserFoodModel _selectedItem = new UserFoodModel();
+        public UserFoodModel SelectedItem
+        {
+            get { return _selectedItem; }
+            set
+            {
+                _selectedItem = value;
+                RaisePropertyChanged("SelectedItem");
+            }
+        }
+        #endregion
+
+        #region Constructor
         public UserProfileViewModel(IAuthService authService)
         {
             _authService = authService;
@@ -110,9 +134,9 @@ namespace TFG_UOC_2024.APP.ViewModels
             _updateUserCommand = new Command<object>(UpdateUser);
             _logoutCommand = new Command<object>(Logout);
         }
+        #endregion
 
-        private bool _isInitialized = false;
-
+        #region Methods
         [RelayCommand]
         async Task AppearingAsync()
         {
@@ -161,28 +185,6 @@ namespace TFG_UOC_2024.APP.ViewModels
             await Shell.Current.GoToAsync("//LoginPage");
         }
 
-        public ObservableCollection<UserFoodModel> _userFoodModel = new ();
-        public ObservableCollection<UserFoodModel> UserFoodModel
-        {
-            get { return _userFoodModel; }
-            set
-            {
-                _userFoodModel = value;
-                RaisePropertyChanged("UserFoodModel");
-            }
-        }
-
-        private UserFoodModel _selectedItem = new UserFoodModel();
-        public UserFoodModel SelectedItem
-        {
-            get { return _selectedItem; }
-            set
-            {
-                _selectedItem = value;
-                RaisePropertyChanged("SelectedItem");
-            }
-        }
-
         public void LoadUser()
         {
             FirstName = App.user.FirstName;
@@ -207,5 +209,6 @@ namespace TFG_UOC_2024.APP.ViewModels
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
+        #endregion
     }
 }

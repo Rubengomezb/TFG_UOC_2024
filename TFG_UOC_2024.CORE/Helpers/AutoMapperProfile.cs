@@ -13,6 +13,9 @@ using TFG_UOC_2024.CORE.Models.ApiModels;
 
 namespace TFG_UOC_2024.CORE.Helpers
 {
+    /// <summary>
+    /// Auttomapper profile to map entities to DTOs and vice versa.
+    /// </summary>
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()

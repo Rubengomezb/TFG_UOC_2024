@@ -15,6 +15,7 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class FavouriteViewModel : ObservableObject, INotifyPropertyChanged
     {
+        #region Properties
         public ObservableCollection<RecipeModel> _recipes { get; set; } = new();
 
         public ObservableCollection<RecipeModel> Recipes
@@ -39,14 +40,18 @@ namespace TFG_UOC_2024.APP.ViewModels
         }
 
         private readonly IRecipeService _recipeService;
+        private bool _isInitialized = false;
+        #endregion
 
+        #region Constructor
         public FavouriteViewModel(IRecipeService recipeService)
         {
             _recipeService = recipeService;
             TapCommand = new Command<object>(OnTapped);
         }
+        #endregion
 
-        private bool _isInitialized = false;
+        #region Methods
         [RelayCommand]
         async Task AppearingAsync()
         {
@@ -89,5 +94,6 @@ namespace TFG_UOC_2024.APP.ViewModels
                 });
             }
         }
+        #endregion
     }
 }

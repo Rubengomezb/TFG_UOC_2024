@@ -17,11 +17,10 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class IngredientsViewModel : ObservableObject, IQueryAttributable, INotifyPropertyChanged
     {
-
+        #region Properties
         private string CategoryId;
 
         private Command<object> _tapCommand;
-
         public Command<object> TapCommand
         {
             get { return _tapCommand; }
@@ -29,30 +28,13 @@ namespace TFG_UOC_2024.APP.ViewModels
         }
 
         private Command<object> _generateRecipeCommand;
-
         public Command<object> GenerateRecipeCommand
         {
             get { return _generateRecipeCommand; }
             set { _generateRecipeCommand = value; }
         }
 
-        private bool _isInitialized = false;
-
-        [RelayCommand]
-        async Task AppearingAsync()
-        {
-            if (_isInitialized) return;
-            _isInitialized = true;
-            await RefreshAsync();
-        }
-
-        [RelayCommand]
-        async Task RefreshAsync()
-        {
-        }
-
         public ObservableCollection<IngredientModel> _ingredients { get; set; } = new();
-
         public ObservableCollection<IngredientModel> Ingredients
         {
             get { return _ingredients; }
@@ -66,9 +48,7 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
-
         public ObservableCollection<SelectedIngredientModel> _selectedIngredients { get; set; } = new();
-
         public ObservableCollection<SelectedIngredientModel> SelectedIngredients
         {
             get { return _selectedIngredients; }
@@ -82,16 +62,34 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
+        private bool _isInitialized = false;
         private readonly IRecipeService _recipeService;
+        #endregion
 
+        #region Constructor
         public IngredientsViewModel(IRecipeService recipeService)
         {
             _recipeService = recipeService;
             _generateRecipeCommand = new Command<object>(OnGenerateRecipe);
             _tapCommand = new Command<object>(OnTapped);
         }
+        #endregion
 
+        #region Methods
         public event PropertyChangedEventHandler PropertyChanged;
+
+        [RelayCommand]
+        async Task AppearingAsync()
+        {
+            if (_isInitialized) return;
+            _isInitialized = true;
+            await RefreshAsync();
+        }
+
+        [RelayCommand]
+        async Task RefreshAsync()
+        {
+        }
 
         private async void OnTapped(object obj)
         {
@@ -136,11 +134,11 @@ namespace TFG_UOC_2024.APP.ViewModels
                 await Shell.Current.DisplayAlert("Error", "Please select at least one ingredient", "OK");
             }
         }
-        
+
         public void LoadIngredients()
         {
             var ingredientDTOs = _recipeService.GetIngredients(CategoryId).Result;
-
+            if (ingredientDTOs == null) return;
             foreach (var ingredient in ingredientDTOs)
             {
                 _ingredients.Add(new IngredientModel
@@ -155,5 +153,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
     }
 }

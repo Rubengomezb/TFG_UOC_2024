@@ -43,8 +43,6 @@ namespace TFG_UOC_2024.CORE.Managers
             {
                 var user = await _userService.GetSelf();
                 var re = _menuService.GetMenu(start,end, user.Data.Id);
-                //if (!re.Any())
-                //    return r.NotFound("recipe not found");
 
                 var menuDto = _m.Map<IEnumerable<MenuDTO>>(re);
                 return r.Ok(menuDto);
@@ -69,7 +67,6 @@ namespace TFG_UOC_2024.CORE.Managers
                 }
 
                 var user = await _userService.GetSelf();
-
                 while(startTime <= endTime)
                 {
                     foreach (var eatTime in Enum.GetValues(typeof(EatTime)))

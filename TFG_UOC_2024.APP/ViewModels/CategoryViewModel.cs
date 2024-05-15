@@ -18,6 +18,7 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class CategoryViewModel: INotifyPropertyChanged
     {
+        #region Properties
         private Command<object> tapCommand;
 
         public Command<object> TapCommand
@@ -44,7 +45,17 @@ namespace TFG_UOC_2024.APP.ViewModels
         private readonly IRecipeService _recipeService;
 
         private bool _isInitialized = false;
+        #endregion
 
+        #region Constructor
+        public CategoryViewModel(IRecipeService recipeService)
+        {
+            _recipeService = recipeService;
+            tapCommand = new Command<object>(OnTapped);
+        }
+        #endregion
+
+        #region Methods
         public event PropertyChangedEventHandler PropertyChanged;
 
         [RelayCommand]
@@ -61,12 +72,6 @@ namespace TFG_UOC_2024.APP.ViewModels
             GetCategories();
         }
 
-        public CategoryViewModel(IRecipeService recipeService)
-        {
-            _recipeService = recipeService;
-            tapCommand = new Command<object>(OnTapped);
-        }
-
         private async void OnTapped(object obj)
         {
             if (obj is CategoryModel category)
@@ -79,6 +84,7 @@ namespace TFG_UOC_2024.APP.ViewModels
         public async void GetCategories()
         {
             var categoriesDTO = await _recipeService.GetCategories();
+            if (categoriesDTO == null) return;
             foreach (var category in categoriesDTO)
             {
                 _categories.Add(new CategoryModel
@@ -87,7 +93,7 @@ namespace TFG_UOC_2024.APP.ViewModels
                     Name = category.Name,
                     ImageUrl = category.ImageUrl
                 });
-            } 
+            }
         }
 
         public async Task CategorySelectedCommand(string Id)
@@ -99,5 +105,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
     }
 }

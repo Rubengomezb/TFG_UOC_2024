@@ -2,6 +2,7 @@
 using TFG_UOC_2024.APP.Services;
 using TFG_UOC_2024.APP.ViewModels;
 using TFG_UOC_2024.CORE.Models.DTOs;
+using NUnit.Framework;
 
 namespace TFG_UOC_2024.APP.TEST.Services
 {
