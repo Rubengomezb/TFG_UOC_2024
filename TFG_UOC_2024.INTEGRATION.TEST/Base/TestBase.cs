@@ -58,12 +58,6 @@ namespace TFG_UOC_2024.INTEGRATION.TEST.Base
                 PropertyNameCaseInsensitive = true
             });
 
-            /*ServiceResponse<UserDTO> authResponse =
-                JsonSerializer.Deserialize<ServiceResponse<UserDTO>>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });*/
-
             this.AccessToken = data.Token;
             this.UserId = data.Id;
         }
