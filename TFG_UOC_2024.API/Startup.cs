@@ -245,7 +245,7 @@ namespace TFG_UOC_2024.API
             {
                 var scopedServices = scope.ServiceProvider;
                 var context = scopedServices.GetRequiredService<ApplicationContext>();
-                context.Database.EnsureCreated();
+                //context.Database.EnsureCreated();
                 if (context.Database.GetPendingMigrations().Any())
                 {
                     context.Database.Migrate();
