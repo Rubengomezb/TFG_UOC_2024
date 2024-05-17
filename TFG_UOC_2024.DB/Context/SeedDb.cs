@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TFG_UOC_2024.DB.Models;
 using TFG_UOC_2024.DB.Models.Identity;
@@ -26,6 +27,7 @@ namespace TFG_UOC_2024.DB.Context
 
             var context = serviceProvider.GetRequiredService<ApplicationContext>();
             context.Database.EnsureCreated();
+            context.Database.GetPendingMigrations().Any();
 
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();

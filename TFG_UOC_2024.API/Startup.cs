@@ -238,20 +238,6 @@ namespace TFG_UOC_2024.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sweet System V1");
             });
 
-
-            var serviceProvider = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider;
-
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
-                var context = scopedServices.GetRequiredService<ApplicationContext>();
-                //context.Database.EnsureCreated();
-                if (context.Database.GetPendingMigrations().Any())
-                {
-                    context.Database.Migrate();
-                }
-            }
-
             // handle DB seeding
             SeedDb.Initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
 
