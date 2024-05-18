@@ -10,7 +10,7 @@ using TFG_UOC_2024.DB.Models.Identity;
 
 namespace TFG_UOC_2024.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     public class RecipeController : BaseController
     {

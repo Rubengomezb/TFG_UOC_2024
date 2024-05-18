@@ -14,18 +14,8 @@ namespace TFG_UOC_2024.API
     {
         public static void Main(string[] args)
         {
-            // CreateHostBuilder(args).Build().Run();
             CreateWebHostBuilder(args).Build().Run();
         }
-
-        /*
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-        */
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
            WebHost.CreateDefaultBuilder(args)
@@ -39,6 +29,5 @@ namespace TFG_UOC_2024.API
                     options.Limits.MaxRequestBodySize = 737280000;
                 })
                .UseStartup<Startup>();
-
     }
 }

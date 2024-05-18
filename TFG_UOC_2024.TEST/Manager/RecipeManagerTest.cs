@@ -145,46 +145,6 @@ namespace TFG_UOC_2024.TEST.Manager
             Assert.That(result.Data.FirstOrDefault().Name, Is.EqualTo(recipeDTO.Name));
         }
 
-        // Add nunit test for Task<GenericResponse> AddIngredients()
-        /*[Test]
-        public async Task AddIngredients_ReturnsGenericResponse()
-        {
-            // Arrange
-            var recipeServiceMock = new Mock<IRecipeService>();
-            var recipeManager = new RecipeManager(recipeServiceMock.Object, AutomapperSingleton.Mapper);
-
-            recipeServiceMock.Setup(x => x.GetRecipesByIngredient(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new List<RecipeResponse>()
-            {
-                new RecipeResponse()
-                {
-                    hits = new List<Hit>()
-                    {
-                        new Hit()
-                        {
-                            recipe = new RecipeApi()
-                            {
-                                label = "recipe",
-                                ingredientLines = new List<string>()
-                                {
-                                    "ingredient1",
-                                    "ingredient2",
-                                }.ToArray()
-                            }
-                        },
-                    }.ToArray()
-                }
-            });
-            recipeServiceMock.Setup(x => x.GetCategories()).Returns(new List<Category>() { new Category() { Id = Guid.NewGuid() } });
-            recipeServiceMock.Setup(x => x.GetIngredients()).Returns(new List<Ingredient>() { new Ingredient() { Id = Guid.NewGuid() } });
-
-            // Act
-            var result = recipeManager.AddIngredients();
-
-            // Assert
-            Assert.That(result.Status, Is.EqualTo(ServiceStatus.Ok));
-        }*/
-
-        // Add nunit test for Task<ServiceResponse<List<CategoryDTO>>> GetCategories()
         [Test]
         public async Task GetCategories_ReturnsListCategoryDTO()
         {

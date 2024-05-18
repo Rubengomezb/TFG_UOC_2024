@@ -165,25 +165,6 @@ namespace TFG_UOC_2024.TEST.Controller
             Assert.That(((OkObjectResult)actionResult).StatusCode, Is.EqualTo(200));
         }
 
-        /*[Test]
-        public async Task AddIngredients_returnsOK()
-        {
-            var genericResp = new GenericResponse()
-            {
-                Status = ServiceStatus.Ok
-            };
-
-            // Asume que Menu es la clase que retorna GetMenu
-            recipeManagerMock.Setup(m => m.AddIngredients()).ReturnsAsync(genericResp);
-
-            // Act
-            ActionResult? actionResult = await controller.AddIngredients();
-
-            // Assert
-            Assert.That(actionResult.GetType(), Is.EqualTo(typeof(OkResult)));
-            Assert.That(((OkResult)actionResult).StatusCode, Is.EqualTo(200));
-        }*/
-
         [Test]
         public async Task RemoveFavorite_returnsOK()
         {

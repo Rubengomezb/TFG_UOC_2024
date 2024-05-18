@@ -18,19 +18,7 @@ namespace TFG_UOC_2024.APP
         {
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzI1Mjc2NkAzMjM1MmUzMDJlMzBqSGR4amQwRUlaVzYvemt2VUh2NlZ6T05kSGpXaFVVdGQ1YXY5QzNsRVlVPQ==");
             InitializeComponent();
-
-            /*var _authService = (IAuthService)serviceProvider.GetService(typeof(IAuthService));
-            var viewModel = new LoginPageViewModel(_authService);
-            MainPage = new LoginPage(viewModel);*/
             MainPage = new AppShell();
         }
-
-        /*protected override async void OnStart()
-        {
-            if (user != null)
-                await Shell.Current.GoToAsync($"//MainRecipeView");
-            else
-                await Shell.Current.GoToAsync($"//LoginPage");
-        }*/
     }
 }
