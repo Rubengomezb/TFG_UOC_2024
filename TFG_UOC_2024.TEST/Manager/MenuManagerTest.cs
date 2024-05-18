@@ -55,7 +55,7 @@ namespace TFG_UOC_2024.TEST.Manager
                 Data = user
             });
 
-            menuServiceMock.Setup(x => x.GetMenu(startTime, endTime, user.Id)).Returns(menu);
+            menuServiceMock.Setup(x => x.GetMenu(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Guid>())).Returns(menu.AsEnumerable());
 
             //Act
             var result = await menuManager.GetMenu(startTime.ToString("yyyy-MM-dd"), endTime.ToString("yyyy-MM-dd"));
@@ -128,12 +128,13 @@ namespace TFG_UOC_2024.TEST.Manager
                 Data = user
             });
 
-            recipeServiceMock.Setup(x => x.GetRecipe()).ReturnsAsync(recipeResponse);
+            recipeServiceMock.Setup(x => x.GetRecipe(It.IsAny<string>())).ReturnsAsync(recipeResponse);
+            recipeServiceMock.Setup(x => x.GetBreakfastRecipe(It.IsAny<string>())).ReturnsAsync(recipeResponse);
 
             menuServiceMock.Setup(x => x.GetMenu(startTime, endTime, user.Id)).Returns(menu);
 
             //Act
-            var result = await menuManager.CreateMenu(startTime, endTime);
+            var result = await menuManager.CreateMenu(startTime, endTime, 0);
 
             //Assert
             Assert.That(result.Status, Is.EqualTo(ServiceStatus.Ok));

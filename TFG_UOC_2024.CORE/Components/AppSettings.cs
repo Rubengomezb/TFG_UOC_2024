@@ -10,9 +10,6 @@ namespace TFG_UOC_2024.CORE.Components
     {
         public string Secret { get; set; }
         public int TokenExpirationInDays { get; set; }
-        public string BaseFoodApiUrl {  get; set; }
-        public string FoodApiToken {  get; set; }
-        public string FoodApiId { get; set; }
         public string BaseRecipeApiUrl { get; set; }
         public string RecipeApiToken { get; set; }
         public string RecipeApiId { get; set; }

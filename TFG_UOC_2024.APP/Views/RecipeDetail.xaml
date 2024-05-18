@@ -4,6 +4,8 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:converters="clr-namespace:TFG_UOC_2024.APP.Converters;assembly=TFG_UOC_2024.APP"
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             xmlns:sfPopup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:model="clr-namespace:TFG_UOC_2024.APP.Model"
              x:Class="TFG_UOC_2024.APP.Views.RecipeDetail"
              Title="Recipe detail"
@@ -15,29 +17,42 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:BoolToIconConverter x:Key="BoolToIconConverter" />
+            <datagrid:DataGridStyle x:Key="customStyle" 
+                                  HeaderRowBackground="#9B5DB0"
+                                  RowTextColor="Black"
+                                  HeaderRowTextColor="White"
+                                  GridLineColor="#9B5DB0"/>
         </ResourceDictionary>
     </ContentPage.Resources>
     <VerticalStackLayout Background="#fbe8fc">
-        <ImageButton Source="back.png" x:Name="backButton" HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin="20,20,0,0">
-            <ImageButton.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding Path=BindingContext.BackCommand, Source = {x:Reference backButton}}" CommandParameter="{Binding}" />
-            </ImageButton.GestureRecognizers>
-            <ImageButton.Behaviors>
-                <toolkit:IconTintColorBehavior TintColor="#9B5DB0" />
-            </ImageButton.Behaviors>
-        </ImageButton>
-        <Frame Opacity="1" CornerRadius="0" WidthRequest="150" HeightRequest="150"  Margin="0,20,0,0" Padding="0" BorderColor="#9B5DB0">
-            <Image Opacity="1" Source="{Binding Image}" WidthRequest="150" HeightRequest="150" VerticalOptions="Center" HorizontalOptions="Center"></Image>
-        </Frame>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Frame Grid.Column="1" Opacity="1" CornerRadius="0" WidthRequest="150" HeightRequest="150"  Margin="0,20,0,0" Padding="0" BorderColor="#9B5DB0">
+                <Image Opacity="1" Source="{Binding Image}" WidthRequest="150" HeightRequest="150" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+            </Frame>
 
-        <ImageButton x:Name="favouriteButton" Source="{Binding IsFavourite, Converter={StaticResource BoolToIconConverter}}" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="40" WidthRequest="40" Margin =" 0,20,20,0">
-            <ImageButton.Behaviors>
-                <toolkit:IconTintColorBehavior TintColor="Red" />
-            </ImageButton.Behaviors>
-            <ImageButton.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding Path=BindingContext.IsFavouriteCommand, Source = {x:Reference favouriteButton}}" CommandParameter="{Binding}" />
-            </ImageButton.GestureRecognizers>
-        </ImageButton>
+            <ImageButton Grid.Column="0" x:Name="infoButton" Source="info.png" BackgroundColor="Transparent" HorizontalOptions="Start" VerticalOptions="End" HeightRequest="30" WidthRequest="30" Margin =" 20,20,0,0">
+                <ImageButton.Behaviors>
+                    <toolkit:IconTintColorBehavior TintColor="BlueViolet" />
+                </ImageButton.Behaviors>
+                <ImageButton.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Path=BindingContext.IsOpenCommand, Source = {x:Reference infoButton}}" CommandParameter="{Binding}" />
+                </ImageButton.GestureRecognizers>
+            </ImageButton>
+
+            <ImageButton Grid.Column="2" x:Name="favouriteButton" Source="{Binding IsFavourite, Converter={StaticResource BoolToIconConverter}}" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="End" HeightRequest="30" WidthRequest="30" Margin =" 0,20,20,0">
+                <ImageButton.Behaviors>
+                    <toolkit:IconTintColorBehavior TintColor="Red" />
+                </ImageButton.Behaviors>
+                <ImageButton.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Path=BindingContext.IsFavouriteCommand, Source = {x:Reference favouriteButton}}" CommandParameter="{Binding}" />
+                </ImageButton.GestureRecognizers>
+            </ImageButton>
+        </Grid>
         
         <Grid Margin="10, 10, 30,10" Opacity="1">
             <Grid.RowDefinitions>
@@ -66,5 +81,37 @@
                 </syncfusion:SfListView.ItemTemplate>
             </syncfusion:SfListView>
         </Grid>
+        <sfPopup:SfPopup x:Name="sfPopup" IsOpen="{Binding IsOpen}">
+            <sfPopup:SfPopup.HeaderTemplate>
+                <DataTemplate>
+                    <StackLayout Background="#9B5DB0">
+                        <Label Text="Nutritional Info" HorizontalTextAlignment="Center" Margin="20" TextColor="White" FontAttributes="Bold" FontSize="18"/>
+                    </StackLayout>
+                </DataTemplate>
+            </sfPopup:SfPopup.HeaderTemplate>
+            <sfPopup:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <StackLayout HeightRequest="140">
+                        <datagrid:SfDataGrid x:Name="dataGrid" HeaderRowHeight="75"
+                               ItemsSource="{Binding NutritionalInfo}" DefaultStyle="{StaticResource customStyle}">
+                            <datagrid:SfDataGrid.Columns>
+                                <datagrid:DataGridNumericColumn HeaderText="Cal. (kCal)"
+                                            MappingName="Calories" 
+                                            Width="78"/>
+                                <datagrid:DataGridNumericColumn  HeaderText="Prots (g)"
+                                            MappingName="Proteins"
+                                            Width="78" />
+                                <datagrid:DataGridNumericColumn  HeaderText="Carbs (g)"
+                                            MappingName="Carbohydrates"
+                                            Width="78" />
+                                <datagrid:DataGridNumericColumn  HeaderText="Fats (g)"
+                                            MappingName="Fats"
+                                            Width="79" />
+                            </datagrid:SfDataGrid.Columns>
+                        </datagrid:SfDataGrid>
+                    </StackLayout>
+                </DataTemplate>
+            </sfPopup:SfPopup.ContentTemplate>
+        </sfPopup:SfPopup>
     </VerticalStackLayout>
 </ContentPage>

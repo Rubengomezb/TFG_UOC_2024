@@ -17,7 +17,7 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class RecipeDetailViewModel : ObservableObject, IQueryAttributable, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        #region Properties
         private readonly IRecipeService _recipeService;
         private RecipeDTO recipe;
 
@@ -35,7 +35,6 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
-
         private bool _isFavourite;
         public bool IsFavourite
         {
@@ -45,6 +44,20 @@ namespace TFG_UOC_2024.APP.ViewModels
                 if (_isFavourite != value)
                 {
                     _isFavourite = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _isOpen;
+        public bool IsOpen
+        {
+            get => _isOpen;
+            set
+            {
+                if (_isOpen != value)
+                {
+                    _isOpen = value;
                     OnPropertyChanged();
                 }
             }
@@ -99,11 +112,12 @@ namespace TFG_UOC_2024.APP.ViewModels
             set { _isFavouriteCommand = value; }
         }
 
-        private Command<object> _backCommand;
-        public Command<object> BackCommand
+        public Command<object> _isOpenCommand;
+        public Command<object> IsOpenCommand
         {
-            get { return _backCommand; }
-            set { _backCommand = value; }
+            get { return _isOpenCommand; }
+            set { _isOpenCommand = value; }
+
         }
 
 
@@ -121,7 +135,34 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
+        private ObservableCollection<NutricionalInfoModel> _nutritionalInfo = new();
+        public ObservableCollection<NutricionalInfoModel> NutritionalInfo
+        {
+            get => _nutritionalInfo;
+            set
+            {
+                if (_nutritionalInfo != value)
+                {
+                    _nutritionalInfo = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private bool _isInitialized = false;
+        #endregion
+
+        #region Constructor
+        public RecipeDetailViewModel(IRecipeService recipeService)
+        {
+            _recipeService = recipeService;
+            _isFavouriteCommand = new Command<object>(MakeFavourite);
+            _isOpenCommand = new Command<object>(OpenCommand);
+        }
+        #endregion
+
+        #region Methods
+        public event PropertyChangedEventHandler PropertyChanged;
         [RelayCommand]
         async Task AppearingAsync()
         {
@@ -133,21 +174,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         [RelayCommand]
         async Task RefreshAsync()
         {
-            /*if (RecipeId != null)
-            {
-                recipe = _recipeService.GetRecipeByIdAsync(Guid.Parse(RecipeId)).Result;
-                Description = recipe.Description;
-                Name = recipe.Name;
-                Image = recipe.ImageUrl;
-                IsFavourite = _recipeService.IsFavourite(Guid.Parse(RecipeId), App.user.Id).Result;
-                foreach (var item in recipe.IngredientNames.Split(';'))
-                {
-                    Ingredients.Add(new IngredientItemModel()
-                    {
-                        Name = item,
-                    });
-                }
-            }*/
         }
 
         public async void MakeFavourite(object obj)
@@ -156,7 +182,7 @@ namespace TFG_UOC_2024.APP.ViewModels
             {
                 await _recipeService.DeleteFavourite(Guid.Parse(RecipeId), App.user.Id);
                 this.IsFavourite = false;
-            }   
+            }
             else
             {
                 await _recipeService.AddFavourite(Guid.Parse(RecipeId), App.user.Id);
@@ -164,17 +190,16 @@ namespace TFG_UOC_2024.APP.ViewModels
             }
         }
 
-        public RecipeDetailViewModel(IRecipeService recipeService)
-        {
-            _recipeService = recipeService;
-            _isFavouriteCommand = new Command<object>(MakeFavourite);
-            _backCommand = new Command<object>(GoBack);
-        }
-
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             RecipeId = query["Id"].ToString();
+            LoadRecipeDetail();
+        }
+
+        public void LoadRecipeDetail()
+        {
             recipe = _recipeService.GetRecipeByIdAsync(Guid.Parse(RecipeId)).Result;
+            if (recipe == null) return;
             Description = recipe.Description;
             Name = recipe.Name;
             Image = recipe.ImageUrl;
@@ -186,16 +211,25 @@ namespace TFG_UOC_2024.APP.ViewModels
                     Name = item,
                 });
             }
+            _nutritionalInfo.Add(new NutricionalInfoModel()
+            {
+                Calories = recipe.Calories,
+                Proteins = recipe.Proteins,
+                Fats = recipe.Fats,
+                Carbohydrates = recipe.Carbohydrates
+            });
+
         }
 
-        public async void GoBack(object obj)
+        private async void OpenCommand(object obj)
         {
-            await Shell.Current.GoToAsync("..");
+            IsOpen = true;
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
     }
 }

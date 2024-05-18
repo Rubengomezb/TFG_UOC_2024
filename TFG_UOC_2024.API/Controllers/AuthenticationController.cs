@@ -9,6 +9,9 @@ using TFG_UOC_2024.DB.Models.Identity;
 
 namespace TFG_UOC_2024.API.Controllers
 {
+    /// <summary>
+    /// Authentication Controller
+    /// </summary>
     [Authorize]
     [Route("api/[controller]")]
     public class AuthenticationController : BaseController
@@ -17,7 +20,6 @@ namespace TFG_UOC_2024.API.Controllers
         private IUserService _userService;
         protected RoleManager<ApplicationRole> _roleManager;
         private IAuthenticationService _authService;
-
 
         public AuthenticationController(
             UserManager<ApplicationUser> userManager,

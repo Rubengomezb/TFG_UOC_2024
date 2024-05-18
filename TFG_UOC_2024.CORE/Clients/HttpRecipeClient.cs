@@ -10,6 +10,9 @@ using TFG_UOC_2024.CORE.Services.Base;
 
 namespace TFG_UOC_2024.CORE.Clients
 {
+    /// <summary>
+    /// Http client to call the Recipe API.
+    /// </summary>
     public class HttpRecipeClient : HttpServiceBase, IHttpRecipeClient
     {
         private string baseApiUrl;
@@ -26,15 +29,9 @@ namespace TFG_UOC_2024.CORE.Clients
             this.ReadConfigParameters();
         }
 
-        private void ReadConfigParameters()
-        {
-            var appSettingsSection = _configuration.GetSection("AppSettings");
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            this.baseApiUrl = appSettings.BaseRecipeApiUrl;
-            this.token = appSettings.RecipeApiToken;
-            this.baseApiId = appSettings.RecipeApiId;
-        }
-
+        /// <summary>
+        /// Get recipes by filters
+        /// </summary>
         public async Task<RecipeResponse> GetRecipe(string filter, string health)
         {
             var filters = "?q={0}&app_id={1}&app_key={2}&from=0&to=50";
@@ -45,6 +42,9 @@ namespace TFG_UOC_2024.CORE.Clients
             return await this.Get<RecipeResponse>(requestUrl);
         }
 
+        /// <summary>
+        /// Get recipes by filters for breakfast.
+        /// </summary>
         public async Task<RecipeResponse> GetBreakfastRecipe(string filter, string health)
         {
 
@@ -57,12 +57,27 @@ namespace TFG_UOC_2024.CORE.Clients
             return await this.Get<RecipeResponse>(requestUrl);
         }
 
+        /// <summary>
+        /// Query paginated recipes.
+        /// </summary>
         public async Task<RecipeResponse> GetRecipePaginated(string filter, int from, int to)
         {
             var parameters = string.Format("?q={0}&app_id={1}&app_key={2}&from={3}&to={4}", filter, this.baseApiId, this.token, from, to);
             var requestUrl = string.Format("{0}{1}", this.baseApiUrl, parameters); ;
 
             return await this.Get<RecipeResponse>(requestUrl);
+        }
+
+        /// <summary>
+        /// Prepare configs to call the API.
+        /// </summary>
+        private void ReadConfigParameters()
+        {
+            var appSettingsSection = _configuration.GetSection("AppSettings");
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            this.baseApiUrl = appSettings.BaseRecipeApiUrl;
+            this.token = appSettings.RecipeApiToken;
+            this.baseApiId = appSettings.RecipeApiId;
         }
     }
 }

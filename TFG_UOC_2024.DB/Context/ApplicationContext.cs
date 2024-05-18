@@ -14,6 +14,9 @@ using System.Reflection.Metadata;
 
 namespace TFG_UOC_2024.DB.Context
 {
+    /// <summary>
+    /// Application context to manage the database.
+    /// </summary>
     public partial class ApplicationContext : IdentityDbContext<
     ApplicationUser, ApplicationRole, Guid,
     ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,

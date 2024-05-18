@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TFG_UOC_2024.CORE.Helpers
 {
+    /// <summary>
+    /// Helper to create a random password.
+    /// </summary>
     internal static class SecurityHelper
     {
         const string LOWER_CASE = "abcdefghijklmnopqursuvwxyz";

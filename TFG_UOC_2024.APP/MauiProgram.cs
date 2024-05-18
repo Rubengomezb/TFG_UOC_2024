@@ -78,7 +78,7 @@ namespace TFG_UOC_2024.APP
             {
                 var baseAddress =
                         DeviceInfo.Platform == DevicePlatform.Android
-                            ? "http://10.0.2.2:5010"
+                            ? "https://10.0.2.2:5011"
                             : "http://192.168.1.33:5010";
 
                 httpClient.BaseAddress = new Uri(baseAddress);

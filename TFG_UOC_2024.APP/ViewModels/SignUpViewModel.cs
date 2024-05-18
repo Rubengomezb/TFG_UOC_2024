@@ -18,6 +18,7 @@ namespace TFG_UOC_2024.APP.ViewModels
 {
     public partial class SignUpViewModel : ObservableObject
     {
+        #region Properties
         [ObservableProperty]
         private string _username;
 
@@ -42,19 +43,30 @@ namespace TFG_UOC_2024.APP.ViewModels
         [ObservableProperty]
         private string _phoneNumber;
 
-        private readonly IAuthService _authService;
+        public bool forTest = false;
 
+        private readonly IAuthService _authService;
+        #endregion
+
+        #region Constructor
         public SignUpViewModel(IAuthService authService)
         {
             _authService = authService;
         }
+        #endregion
 
+        #region Methods
         [RelayCommand]
         public async Task SignUp()
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName) && !string.IsNullOrWhiteSpace(PhoneNumber))
+                if (!string.IsNullOrWhiteSpace(Username) &&
+                    !string.IsNullOrWhiteSpace(Password) &&
+                    !string.IsNullOrWhiteSpace(Email) &&
+                    !string.IsNullOrWhiteSpace(FirstName) &&
+                    !string.IsNullOrWhiteSpace(LastName) &&
+                    !string.IsNullOrWhiteSpace(PhoneNumber))
                 {
                     var signUpDto = new UserInput();
                     signUpDto.UserName = Username;
@@ -78,15 +90,18 @@ namespace TFG_UOC_2024.APP.ViewModels
                     var userLogged = await _authService.LoginAsync(loginDto);
                     if (userLogged != null)
                     {
-                        if (Preferences.ContainsKey(nameof(App.user)))
-                        {
-                            Preferences.Remove(nameof(App.user));
-                        }
-                        string userDetails = JsonConvert.SerializeObject(user);
-                        Preferences.Set(nameof(App.user), userDetails);
+                        //if (Preferences.ContainsKey(nameof(App.user)))
+                        //{
+                        //    Preferences.Remove(nameof(App.user));
+                        //}
+                        //string userDetails = JsonConvert.SerializeObject(user);
+                        //Preferences.Set(nameof(App.user), userDetails);
                         App.user = userLogged;
                         //AppShell.Current.FlyoutHeader = new HeaderControl();
-                        await Shell.Current.GoToAsync("//MainRecipeView");
+                        if (!forTest)
+                        {
+                            await Shell.Current.GoToAsync("//MainRecipeView");
+                        }
                     }
                 }
                 else
@@ -105,5 +120,6 @@ namespace TFG_UOC_2024.APP.ViewModels
         {
             await Shell.Current.GoToAsync("..");
         }
+        #endregion
     }
 }

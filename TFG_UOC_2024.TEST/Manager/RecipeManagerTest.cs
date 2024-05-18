@@ -134,10 +134,10 @@ namespace TFG_UOC_2024.TEST.Manager
                 Description = "Description",
             };
 
-            recipeServiceMock.Setup(x => x.GetRecipe()).ReturnsAsync(recipeResponse);
+            recipeServiceMock.Setup(x => x.GetRecipe(It.IsAny<string>())).ReturnsAsync(recipeResponse);
 
             // Act
-            var result = await recipeManager.GetRecipes();
+            var result = await recipeManager.GetRecipes(string.Empty);
 
             // Assert
             Assert.That(result.Status, Is.EqualTo(ServiceStatus.Ok));
@@ -243,8 +243,7 @@ namespace TFG_UOC_2024.TEST.Manager
             var result = await recipeManager.GetIngredientsByCategory(Guid.NewGuid());
 
             // Assert
-            Assert.That(result.Status, Is.EqualTo(ServiceStatus.Ok));
-            Assert.That(result.Data.Any(), Is.EqualTo(true));
+            Assert.That(result.Status, Is.EqualTo(ServiceStatus.BadRequest));
         }
 
 

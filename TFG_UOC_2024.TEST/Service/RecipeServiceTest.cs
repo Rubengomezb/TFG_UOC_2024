@@ -163,10 +163,10 @@ namespace TFG_UOC_2024.TEST.Service
         {
             // Arrange
             var recipeResponse = new RecipeResponse();
-            _mockRecipeClient.Setup(x => x.GetRecipe(It.IsAny<string>())).ReturnsAsync(recipeResponse);
+            _mockRecipeClient.Setup(x => x.GetRecipe(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(recipeResponse);
 
             // Act
-            var result = await _service.GetRecipe();
+            var result = await _service.GetRecipe(It.IsAny<string>());
 
             // Assert
             Assert.That(recipeResponse, Is.EqualTo(result));

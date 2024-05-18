@@ -16,7 +16,7 @@
         <local:CategoryBehaviour/>
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <Grid Margin="10" RowSpacing="10" Background="#fbe8fc">
+        <Grid Margin="0" RowSpacing="10" Background="#fbe8fc">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
                 <RowDefinition Height="30" />

@@ -92,21 +92,22 @@ namespace TFG_UOC_2024.TEST.Controller
             };
 
             // Asume que Menu es la clase que retorna GetMenu
-            mockMenuManager.Setup(m => m.CreateMenu(startDate, endDate)).ReturnsAsync(genericResp);
+            mockMenuManager.Setup(m => m.CreateMenu(startDate, endDate, It.IsAny<int>())).ReturnsAsync(genericResp);
 
             var controller = new MenuController(mockUserManager, mockDbContext.Object, mockMapper.Object, mockMenuManager.Object, mockLogger.Object, mockConfiguration.Object);
 
             var request = new CreateMenuRequest()
             {
                 StartDate = startDate,
-                EndDate = endDate
+                EndDate = endDate,
+                FoodType = 1,
             };
 
             var actionResult = await controller.CreateMenu(request);
 
             // Assert
-            Assert.That(actionResult.GetType(), Is.EqualTo(typeof(OkResult)));
-            Assert.That(((OkResult)actionResult).StatusCode, Is.EqualTo(200));
+            Assert.That(actionResult.GetType(), Is.EqualTo(typeof(OkObjectResult)));
+            Assert.That(((OkObjectResult)actionResult).StatusCode, Is.EqualTo(200));
         }
     }
 }

@@ -82,10 +82,10 @@ namespace TFG_UOC_2024.TEST.Controller
             };
 
             // Asume que Menu es la clase que retorna GetMenu
-            recipeManagerMock.Setup(m => m.GetRecipes()).ReturnsAsync(serviceResponse);
+            recipeManagerMock.Setup(m => m.GetRecipes(It.IsAny<string>())).ReturnsAsync(serviceResponse);
 
             // Act
-            ActionResult? actionResult = await controller.GetRecipes();
+            ActionResult? actionResult = await controller.GetRecipes(string.Empty);
 
             // Assert
             var result = ((OkObjectResult)actionResult).Value as List<RecipeDTO>;
@@ -161,8 +161,8 @@ namespace TFG_UOC_2024.TEST.Controller
             ActionResult? actionResult = await controller.AddFavority(expectedFavorite);
 
             // Assert
-            Assert.That(actionResult.GetType(), Is.EqualTo(typeof(OkResult)));
-            Assert.That(((OkResult)actionResult).StatusCode, Is.EqualTo(200));
+            Assert.That(actionResult.GetType(), Is.EqualTo(typeof(OkObjectResult)));
+            Assert.That(((OkObjectResult)actionResult).StatusCode, Is.EqualTo(200));
         }
 
         /*[Test]
@@ -205,8 +205,8 @@ namespace TFG_UOC_2024.TEST.Controller
             ActionResult? actionResult = await controller.RemoveFavority(expectedFavorite);
 
             // Assert
-            Assert.That(actionResult.GetType(), Is.EqualTo(typeof(OkResult)));
-            Assert.That(((OkResult)actionResult).StatusCode, Is.EqualTo(200));
+            Assert.That(actionResult.GetType(), Is.EqualTo(typeof(OkObjectResult)));
+            Assert.That(((OkObjectResult)actionResult).StatusCode, Is.EqualTo(200));
         }
     }
 }
