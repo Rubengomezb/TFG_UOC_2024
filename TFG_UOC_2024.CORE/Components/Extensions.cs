@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace TFG_UOC_2024.CORE.Components
 {
+    /// <summary>
+    /// Helper class for string extensions.
+    /// </summary>
     public static class Extensions
     {
         #region Simple

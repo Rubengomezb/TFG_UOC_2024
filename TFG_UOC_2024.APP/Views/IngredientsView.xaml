@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="TFG_UOC_2024.APP.Views.IngredientsView"
+             Title="Ingredients"
+             xmlns:local="clr-namespace:TFG_UOC_2024.APP.Behaviours" 
+             xmlns:model="clr-namespace:TFG_UOC_2024.APP.Model"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             xmlns:chip="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             Shell.BackgroundColor="BlueViolet"
+             Shell.TabBarIsVisible="False">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <local:CategoryBehaviour/>
+    </ContentPage.Behaviors>
+    <ContentPage.Content>
+        <Grid Margin="0" RowSpacing="10" Background="#fbe8fc">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="350" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid x:Name="headerGrid" Grid.Row="0" HeightRequest="60" ColumnSpacing="0" RowSpacing="0" HorizontalOptions="Center">
+                <Border Stroke="#9B5DB0"
+             StrokeThickness="1"
+             StrokeShape="RoundRectangle 20,20,20,20"
+             WidthRequest="350"
+             Padding="2,8"
+             HorizontalOptions="Center">
+
+                    <SearchBar x:Name="filterText" BackgroundColor="White"
+                          Grid.Row="0"
+                          Grid.Column="0"
+                           Margin='{OnPlatform Default="100,5,100,0",iOS="10,5,10,0", WinUI="10,5,10,0", MacCatalyst="0,5,0,0"}'                               
+                           FontSize="18"
+                           IsVisible="true"
+                           HeightRequest="50" WidthRequest='{OnPlatform Android="350"}'
+                           Placeholder="Search here to filter"
+                           HorizontalOptions="Center">
+                    </SearchBar>
+                </Border>
+            </Grid>
+            <Grid x:Name="ChipLayer" Grid.Row="1">
+                <chip:SfChipGroup 
+			        ItemsSource="{Binding SelectedIngredients}" 
+			        ChipPadding="8,8,0,0" 
+			        DisplayMemberPath="Name"
+			        ChipBackground="#edecd5"
+			        ChipTextColor="Black"
+			        HorizontalOptions="Start" 
+			        VerticalOptions="Center"
+                    ChipCornerRadius="15">
+                </chip:SfChipGroup>
+            </Grid>
+            <Grid Grid.Row="2" VerticalOptions="Start" Padding="0,0,0,0" HeightRequest="400">
+                <syncfusion:SfListView x:Name="listIngredientView" ItemSize="80" ItemsSource="{Binding Ingredients}" ItemSpacing="0,0,5,0" SelectionMode="Single">
+                    <syncfusion:SfListView.ItemTemplate>
+                        <DataTemplate x:Name="ItemTemplate" x:DataType="model:IngredientModel">
+                            <ViewCell>
+                                <ViewCell.View>
+                                    <Grid x:Name="grid" RowSpacing="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="1" />
+                                        </Grid.RowDefinitions>
+                                        <Border
+                                            StrokeThickness="1"
+                                            StrokeShape="RoundRectangle 20,20,20,20"
+                                            Padding="2,8"
+                                            HorizontalOptions="Center"
+                                            WidthRequest="350"
+                                            Stroke="#9B5DB0">
+                                            <Grid RowSpacing="10" Padding="10,0,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="3*" />
+                                                    <ColumnDefinition Width="8*" />
+                                                    <ColumnDefinition Width="2*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image Source="{Binding ImageUrl}"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center"
+                                                   HeightRequest="70"
+                                                   WidthRequest="70"/>
+                                                <Grid Grid.Column="1"
+                                                  RowSpacing="1"
+                                                  Padding="25,0,0,0"
+                                                  VerticalOptions="Center">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+                                                    <Label LineBreakMode="NoWrap"
+                                                            TextColor="#9B5DB0"
+                                                            FontAttributes="Bold"
+                                                            Text="{Binding Name}"
+                                                            FontSize="16">
+                                                    </Label>
+                                                </Grid>
+                                                <Grid Grid.Row="0"
+                                                  x:Name="temp"
+                                                  Grid.Column="2"
+                                                  RowSpacing="0"
+                                                  HorizontalOptions="End"
+                                                  Padding="0,0,10,0">
+                                                    <Image Source="add.png" HeightRequest="50" x:Name="SelectIngredient">
+                                                        <Image.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.TapCommand, Source = {x:Reference listIngredientView}}" CommandParameter="{Binding}" />
+                                                        </Image.GestureRecognizers>
+                                                        <Image.Behaviors>
+                                                            <toolkit:IconTintColorBehavior TintColor="#9B5DB0" />
+                                                        </Image.Behaviors>
+                                                    </Image>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </ViewCell.View>
+                            </ViewCell>
+                        </DataTemplate>
+                    </syncfusion:SfListView.ItemTemplate>
+                </syncfusion:SfListView>
+            </Grid>
+            <Grid Grid.Row="3" VerticalOptions="Center" Padding="0,0,0,0" HeightRequest="50">
+                <Button x:Name="GenerateRecipeButton" Text="Generate recipe" FontAttributes="Bold" FontSize="20" VerticalOptions="Start" Margin="30,0,30,0" Background="#9B5DB0">
+                    <Button.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Path=BindingContext.GenerateRecipeCommand, Source = {x:Reference GenerateRecipeButton}}" CommandParameter="{Binding}" />
+                    </Button.GestureRecognizers>
+                </Button>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

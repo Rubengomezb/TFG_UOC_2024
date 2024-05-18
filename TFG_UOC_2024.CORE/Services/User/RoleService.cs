@@ -15,6 +15,7 @@ using TFG_UOC_2024.CORE.Services.Base;
 using TFG_UOC_2024.CORE.Services.Interfaces;
 using TFG_UOC_2024.DB.Context;
 using TFG_UOC_2024.DB.Models.Identity;
+using TFG_UOC_2024.DB.Repository.Interfaces;
 
 namespace TFG_UOC_2024.CORE.Services.User
 {
@@ -22,17 +23,19 @@ namespace TFG_UOC_2024.CORE.Services.User
     {
         #region Constructor
         private RoleManager<ApplicationRole> _roleManager;
+        private readonly IUserRoleRepository _userRoleRepository;
 
         public RoleService(
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IConfiguration configuration,
             IMapper mapper,
-            ApplicationContext context,
+            IUserRoleRepository userRoleRepository,
             ILogger<RoleService> logger,
-            IHttpContextAccessor hca) : base(userManager, context, mapper, hca, logger, configuration)
+            IHttpContextAccessor hca) : base(userManager, mapper, hca, logger, configuration)
         {
             _roleManager = roleManager;
+            _userRoleRepository = userRoleRepository;
         }
         #endregion
 
@@ -50,7 +53,7 @@ namespace TFG_UOC_2024.CORE.Services.User
 
                 foreach (var d in dtos)
                 {
-                    d.Quantity = db.ApplicationUserRoles.Count(o => o.RoleId == d.Id);
+                    d.Quantity = _userRoleRepository.Find(o => o.RoleId == d.Id).Count();
                 }
 
                 return r.Ok(dtos);

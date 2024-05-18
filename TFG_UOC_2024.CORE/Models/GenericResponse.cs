@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using TFG_UOC_2024.CORE.Models.DTOs;
 using static TFG_UOC_2024.DB.Components.Enums;
 
 namespace TFG_UOC_2024.CORE.Models

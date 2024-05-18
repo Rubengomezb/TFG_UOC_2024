@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TFG_UOC_2024.APP.Views.LoginPage"
+             xmlns:inputLayout="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             Title="Login"
+             Shell.FlyoutBehavior="Disabled"
+             Shell.NavBarIsVisible="False"
+             xmlns:viewmodels="clr-namespace:TFG_UOC_2024.APP.ViewModels"
+             x:DataType="viewmodels:LoginPageViewModel">
+    <VerticalStackLayout>
+        <Frame WidthRequest="120" HeightRequest="120"  Margin="0,20,0,0" Padding="0" BorderColor="#9B5DB0">
+            <Image Source="splashia.png" WidthRequest="100" HeightRequest="100" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+        </Frame>
+
+        <Label Text="Sign In to continue" TextColor="#9B5DB0" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center" Margin="0,60,0,0"></Label>
+
+        <Grid RowDefinitions="*, *, *" Margin="0,60,0,0" Padding="10" RowSpacing="10" HorizontalOptions="Center">
+            <StackLayout Orientation="Horizontal">
+                <Image Source="user.png" WidthRequest="30" HeightRequest="30"></Image>
+                <inputLayout:SfTextInputLayout 
+                        Margin="10,0,0,0"
+                        Hint="UserName" 
+                        HeightRequest="80" 
+                        WidthRequest="300"
+                        IsHintAlwaysFloated="true" 
+                        ContainerType="Outlined"
+                        OutlineCornerRadius="8"
+                        ContainerBackground="Transparent"
+                        Stroke="#9B5DB0">
+                    <Entry Placeholder="User Name"
+                                Text="{Binding UserName}"/>
+                    <inputLayout:SfTextInputLayout.HintLabelStyle>
+                        <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                    </inputLayout:SfTextInputLayout.HintLabelStyle>
+                </inputLayout:SfTextInputLayout>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Grid.Row="1">
+                <Image Source="lock.png" WidthRequest="30" HeightRequest="30"></Image>
+                <inputLayout:SfTextInputLayout
+                        Margin="10,0,0,0"
+                        Hint="Password" 
+                        HeightRequest="80" 
+                        WidthRequest="300"
+                        IsHintAlwaysFloated="true" 
+                        ContainerType="Outlined"
+                        OutlineCornerRadius="8"
+                        ContainerBackground="Transparent"
+                        Stroke="#9B5DB0">
+                    <Entry IsPassword="True" Placeholder="●●●●●●●●"
+                                    Text="{Binding Password}"/>
+                    <inputLayout:SfTextInputLayout.HintLabelStyle>
+                        <inputLayout:LabelStyle TextColor="#9B5DB0"/>
+                    </inputLayout:SfTextInputLayout.HintLabelStyle>
+                </inputLayout:SfTextInputLayout>
+            </StackLayout>
+
+        </Grid>
+        <Button Command="{Binding LoginCommand}" FontAttributes="Bold" Text="Login" CornerRadius="10" FontSize="20" VerticalOptions="Center" Margin="30,0,30,0" Background="#9B5DB0"></Button>
+
+        <StackLayout Margin="0,25,0,0" Orientation="Horizontal" HorizontalOptions="Center">
+            <Label Text="New User?" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#9B5DB0" FontSize="Small"></Label>
+            <Button Text="Sign Up" FontSize="Small" TextColor="#9B5DB0" BorderWidth="0" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"  BackgroundColor="Transparent" Command="{Binding SignUpCommand}"/>
+        </StackLayout>
+    </VerticalStackLayout>
+
+</ContentPage>

@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks>net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
-		<OutputType>Exe</OutputType>
+    <OutputType Condition="'$(TargetFramework)' != 'net7.0'">Exe</OutputType>
 		<RootNamespace>TFG_UOC_2024.APP</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
@@ -30,26 +30,102 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+	  <CodesignKey>Apple Development: Created via API (6Q6A85QA59)</CodesignKey>
+	  <CodesignProvision>VS: WildCard Development</CodesignProvision>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <DebugSymbols>False</DebugSymbols>
+	  <Debugger>Native</Debugger>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
+	  <Debugger>Native</Debugger>
+	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="ResourcesNet\AppIcon\appicon.svg" ForegroundFile="ResourcesNet\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="ResourcesNet\Images\splashia.png">
+		  <Color>#512BD4</Color>
+		  <BaseSize>128,128</BaseSize>
+		</MauiSplashScreen>
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
 		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+		<MauiImage Include="ResourcesNet\Images\*" />
+		<MauiImage Update="ResourcesNet\Images\dotnet_bot.svg" BaseSize="168,208" />
 
 		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
+		<MauiFont Include="ResourcesNet\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiAsset Include="ResourcesNet\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiImage Remove="ResourcesNet\Images\splashdietia.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Plugin.Maui.Calendar" Version="1.0.3" />
+		<PackageReference Include="Syncfusion.Maui.Buttons" Version="25.1.42" />
+		<PackageReference Include="Syncfusion.Maui.Calendar" Version="25.1.42" />
+		<PackageReference Include="Syncfusion.Maui.Core" Version="25.1.42" />
+		<PackageReference Include="Syncfusion.Maui.DataForm" Version="25.1.42" />
+		<PackageReference Include="Syncfusion.Maui.DataGrid" Version="25.1.42" />
+		<PackageReference Include="Syncfusion.Maui.Inputs" Version="25.1.42" />
+		<PackageReference Include="Syncfusion.Maui.ListView" Version="25.1.42" />
+		<PackageReference Include="Syncfusion.Maui.Picker" Version="25.1.42" />
+		<PackageReference Include="Syncfusion.Maui.Scheduler" Version="25.1.42" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="ResourcesNet\Images\back.svg" />
+	  <None Remove="ResourcesNet\Images\calendar.svg" />
+	  <None Remove="ResourcesNet\Images\home.png" />
+	  <None Remove="ResourcesNet\Images\info.png" />
+	  <None Remove="ResourcesNet\Images\logout.png" />
+	  <None Remove="ResourcesNet\Images\navigate.png" />
+	  <None Remove="ResourcesNet\Images\navigate.svg" />
+	  <None Remove="ResourcesNet\Images\recipe.svg" />
+	  <None Remove="ResourcesNet\Images\splashdietia.svg" />
+	  <None Remove="ResourcesNet\Images\splashIA.png" />
+	  <None Remove="ResourcesNet\Images\userMenu.svg" />
+	  <None Remove="ResourcesNet\Splash\Captura_de_pantalla_2024-03-03_a_las_12.41.13-removebg-preview.svg" />
+	</ItemGroup>
+	<ItemGroup>
+	  <BundleResource Include="ResourcesNet\Splash\splashdietia.svg" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\TFG_UOC_2024.CORE\TFG_UOC_2024.CORE.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Platform\Android\AndroidHttpMessageHandler.cs">
+	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+	  </Compile>
+	  <Compile Update="Platform\iOS\IosHttpMessageHandler.cs">
+	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiXaml Update="Views\FavouriteView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ApplicationDetailsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
 </Project>

@@ -19,6 +19,9 @@ using TFG_UOC_2024.CORE.Services.Base;
 using TFG_UOC_2024.CORE.Services.Interfaces;
 using TFG_UOC_2024.DB.Context;
 using TFG_UOC_2024.DB.Models.Identity;
+using TFG_UOC_2024.DB.Repository;
+using TFG_UOC_2024.DB.Repository.Interfaces;
+using static TFG_UOC_2024.CORE.Components.Authorization.SystemClaims.Permissions;
 using static TFG_UOC_2024.CORE.Models.DTOs.ContactPropertyDTO;
 
 namespace TFG_UOC_2024.CORE.Services.User
@@ -26,16 +29,25 @@ namespace TFG_UOC_2024.CORE.Services.User
     public class UserService : BaseService, IUserService
     {
         protected RoleManager<ApplicationRole> _roleManager;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IContactRepository _contactRepository;
 
         public UserService(IConfiguration configuration,
             ApplicationContext context,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
+            IUserRepository userRepository,
+            IUserRoleRepository userRoleRepository,
+            IContactRepository contactRepository,
             IMapper mapper,
             ILogger<UserService> logger,
-            IHttpContextAccessor hca) : base(userManager, context, mapper, hca, logger, configuration)
+            IHttpContextAccessor hca) : base(userManager, mapper, hca, logger, configuration)
         {
             _roleManager = roleManager;
+            _userRepository = userRepository;
+            _userRoleRepository = userRoleRepository;
+            _contactRepository = contactRepository;
         }
 
         #region User Related
@@ -60,11 +72,7 @@ namespace TFG_UOC_2024.CORE.Services.User
                 req.sort = "lastName";
 
             // query the users            
-            var list = db.Users
-                        .Include(o => o.Contact)
-                        .Include(o => o.UserRoles)
-                            .ThenInclude(o => o.Role)
-                        .AsQueryable();
+            var list = _userRepository.GetUsers();
             //.Where(o => o.Id != null);
 
             if (!string.IsNullOrEmpty(req.keyword))
@@ -116,7 +124,7 @@ namespace TFG_UOC_2024.CORE.Services.User
             res.Users = mapper.Map<IEnumerable<UserDTO>>(all).ToList();
 
             // get the count from another query
-            var u = db.Users.AsQueryable();
+            var u = _userRepository.GetAll();
 
             if (!string.IsNullOrEmpty(req.keyword))
             {
@@ -153,15 +161,11 @@ namespace TFG_UOC_2024.CORE.Services.User
                 var u = await userManager.Users
                                 .Include(o => o.Contact)
                                 .FirstOrDefaultAsync(o => o.Id == userId.ToGuid());
-
                 if (u == null)
                     return r.NotFound("user not found");
 
                 // get user roles
-                u.UserRoles = db.UserRoles
-                                .Include(o => o.Role)
-                                .Where(o => o.UserId == u.Id).ToList();
-
+                u.UserRoles = _userRoleRepository.GetUserRole(u.Id).ToList();
                 var dto = mapper.Map<UserDTO>(u);
 
                 return r.Ok(dto);
@@ -189,14 +193,19 @@ namespace TFG_UOC_2024.CORE.Services.User
                 if (needsPassword)
                     dto.Password = SecurityHelper.GeneratePassword();
 
+                if (userManager.FindByEmailAsync(dto.Email).Result != null)
+                {
+                    return r.BadRequest("Email already exists");
+                }
+
                 var res = await userManager.CreateAsync(u, dto.Password);
 
                 if (!res.Succeeded)
                     return r.BadRequest(res.Errors);
 
-                db.SaveChanges();
-
-                return r.Ok();
+                await _userRepository.SaveChanges();
+                u = await userManager.FindByEmailAsync(dto.Email);
+                return r.Ok(u.Id);
             }
             catch (Exception ex)
             {
@@ -204,7 +213,6 @@ namespace TFG_UOC_2024.CORE.Services.User
                 return r.BadRequest(ex.Message);
             }
         }
-
 
         public async Task<ServiceResponse<UserSimpleDTO>> UpdateUser(string id, UserSimpleDTO dto)
         {
@@ -226,12 +234,12 @@ namespace TFG_UOC_2024.CORE.Services.User
                     return r.BadRequest(unRes.Errors);
 
                 // update fields
-                u.Contact.FirstName = dto.FirstName;
-                u.Contact.LastName = dto.LastName;
-                u.Contact.Email = dto.Email;
-                u.PhoneNumber = dto.PhoneNumber.ToPhone();
-                u.Email = dto.Email;
-
+                u.Contact.FirstName = u.Contact.FirstName == dto.FirstName ? u.Contact.FirstName : dto.FirstName;
+                u.Contact.LastName = u.Contact.LastName == dto.LastName ? u.Contact.LastName : dto.LastName;
+                u.Contact.Email = u.Contact.Email == dto.Email ? u.Contact.Email : dto.Email;
+                u.PhoneNumber = u.Contact.PhoneNumber.ToPhone() == dto.PhoneNumber.ToPhone() ? u.Contact.PhoneNumber.ToPhone() : dto.PhoneNumber.ToPhone();
+                u.Email = u.Contact.Email == dto.Email ? u.Contact.Email : dto.Email;
+                u.Contact.FoodType = dto.FoodType != u.Contact.FoodType ? dto.FoodType : u.Contact.FoodType;
 
                 // save user
                 var res = await userManager.UpdateAsync(u);
@@ -263,8 +271,8 @@ namespace TFG_UOC_2024.CORE.Services.User
 
             // soft delete the user
             u.IsDeleted = true;
-            db.Users.Update(u);
-            db.SaveChanges();
+            _userRepository.Update(u);
+            _userRepository.SaveChanges();
 
             return r.Ok();
         }
@@ -282,8 +290,8 @@ namespace TFG_UOC_2024.CORE.Services.User
 
             // soft delete the user
             u.IsDeleted = false;
-            db.Users.Update(u);
-            db.SaveChanges();
+            _userRepository.Update(u);
+            _userRepository.SaveChanges();
 
             return r.Ok();
         }
@@ -369,28 +377,12 @@ namespace TFG_UOC_2024.CORE.Services.User
                 if (ur == null) // add
                 {
                     var sql = $"INSERT INTO dbo.AspNetUserRoles (userid, roleid, startdate, expirydate) VALUES ('{req.UserId}', '{req.RoleId}', {dtStart}, {dtExpiry})";
-                    db.Database.ExecuteSqlRaw(sql);
-                    /*var newUr = new ApplicationUserRole
-                    {
-                        RoleId = req.RoleId,
-                        StartDate = req.StartDate,
-                        ExpiryDate = req.ExpiryDate,
-                        UserId = req.UserId
-                    };
-                    db.ApplicationUserRoles.Add(newUr);
-                    db.SaveChanges();
-                    */
+                    _userRepository.GetDbContext().Database.ExecuteSqlRaw(sql);
                 }
                 else // update
                 {
                     var sql = $"UPDATE dbo.AspNetUserRoles SET StartDate = {dtStart}, ExpiryDate = {dtExpiry} WHERE roleid = '{ur.RoleId}' AND userid = '{ur.UserId}'";
-                    db.Database.ExecuteSqlRaw(sql);
-                    /*
-                    ur.StartDate = req.StartDate;
-                    ur.ExpiryDate = req.ExpiryDate;
-                    db.UserRoles.Update(ur);
-                    db.SaveChanges();
-                    */
+                    _userRepository.GetDbContext().Database.ExecuteSqlRaw(sql);
                 }
 
                 return r.Ok();
@@ -448,7 +440,7 @@ namespace TFG_UOC_2024.CORE.Services.User
                 req.OrderBy = new SearchOrderInput() { Id = "lastname", Desc = false };
 
             // query the contacts
-            var list = db.Contact.Where(o => o.IsDeleted == false).AsQueryable();
+            var list = _contactRepository.Find(o => o.IsDeleted == false).AsQueryable();
 
             if (!string.IsNullOrEmpty(req.Keyword))
             {
@@ -522,15 +514,15 @@ namespace TFG_UOC_2024.CORE.Services.User
             var r = new GenericResponse();
 
             // get the contact
-            var u = db.Contact.FirstOrDefault(o => o.Id == id);
+            var u = _contactRepository.GetById(id);
 
             if (u == null)
                 return r.NotFound("Contact Not Found");
 
             // restore
             u.IsDeleted = false;
-            db.Contact.Update(u);
-            db.SaveChanges();
+            _contactRepository.Update(u);
+            _contactRepository.SaveChanges();
 
             return r.Ok();
         }

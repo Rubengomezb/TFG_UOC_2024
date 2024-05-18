@@ -1,24 +1,22 @@
-﻿namespace TFG_UOC_2024.APP
+﻿using TFG_UOC_2024.APP.Services;
+using TFG_UOC_2024.APP.Views;
+
+namespace TFG_UOC_2024.APP
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private readonly IAuthService _authService;
 
-        public MainPage()
+        public MainPage(IAuthService authService)
         {
             InitializeComponent();
+            _authService = authService;
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        protected override async void OnNavigatedTo(NavigatedToEventArgs args)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            base.OnNavigatedTo(args);
+            
         }
     }
 

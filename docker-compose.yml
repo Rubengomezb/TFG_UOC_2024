@@ -1,4 +1,7 @@
 version: '3.8'
+networks:
+  dev:
+    driver: bridge
 services:
   db:
     image: mysql:8.0
@@ -12,9 +15,38 @@ services:
       - MYSQL_ROOT_PASSWORD=mauFJcuf5dhRMQrjj
     ports:
       - '3306:3306'
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
     volumes:
       - db:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - dev
+  app:
+    image: docker.io/library/tfg_uoc_2024
+    depends_on:
+     db:
+        condition: service_healthy
+    container_name: TFG_UOC_2024
+    ports:
+      - "5010:80"
+      - "5011:443"
+    build:
+      context: .
+      dockerfile: TFG_UOC_2024.API/Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=server=db;database=DietIA;user=admin;password=admin;
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=TFG_UOC_2024
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    networks:
+      - dev
 volumes:
   db:
     driver: local

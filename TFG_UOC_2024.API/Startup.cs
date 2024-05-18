@@ -23,7 +23,6 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authentication;
 using TFG_UOC_2024.DB.Context;
 using TFG_UOC_2024.DB.Models.Identity;
 using TFG_UOC_2024.CORE.Components;
@@ -31,6 +30,13 @@ using TFG_UOC_2024.CORE.Services.Interfaces;
 using TFG_UOC_2024.CORE.Services.User;
 using TFG_UOC_2024.API.Components;
 using TFG_UOC_2024.CORE.Helpers;
+using TFG_UOC_2024.CORE.Services.Core;
+using TFG_UOC_2024.DB.Repository.Interfaces;
+using TFG_UOC_2024.DB.Repository;
+using TFG_UOC_2024.CORE.Managers.Interfaces;
+using TFG_UOC_2024.CORE.Managers;
+using TFG_UOC_2024.CORE.Services.Menu;
+using TFG_UOC_2024.CORE.Clients;
 
 namespace TFG_UOC_2024.API
 {
@@ -45,12 +51,10 @@ namespace TFG_UOC_2024.API
             AppEnvironment = env;
         }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Application Insights
-            //TODO: let's do this for prod and works only on windows app services
             services.AddApplicationInsightsTelemetry(Configuration);
 
             // enable caching
@@ -65,7 +69,6 @@ namespace TFG_UOC_2024.API
                         Title = "Sweet System API",
                         Version = "v1",
                         Description = "API for handling user/content data",
-                        // TermsOfService = new Uri("https://example.com/terms"),
                         Contact = new OpenApiContact
                         {
                             Name = "Some Developer",
@@ -74,7 +77,7 @@ namespace TFG_UOC_2024.API
                         },
                     });
 
-                var filePath = Path.Combine(System.AppContext.BaseDirectory, "RainstormTech.API.xml");
+                var filePath = Path.Combine(System.AppContext.BaseDirectory, "TFG_UOC_2024.API.xml");
                 c.IncludeXmlComments(filePath);
             });
 
@@ -108,11 +111,9 @@ namespace TFG_UOC_2024.API
             // add appsettings availability
             services.AddSingleton(Configuration);
 
-            // ability to grab httpcontext
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // automapper - tell it where to find the automapper profile
-            // services.AddAutoMapper(typeof(Startup));
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
             services.AddMvc();
@@ -123,24 +124,17 @@ namespace TFG_UOC_2024.API
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
-            //var aiKey = Configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
             services.AddLogging(loggingBuilder =>
             {
                 //  loggingBuilder.AddApplicationInsights(aiKey);
                 loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
                 loggingBuilder.AddConsole();
                 loggingBuilder.AddDebug();
-                //  loggingBuilder.AddSerilog();
-                //  loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>
-                //             (typeof(Program).FullName, LogLevel.Trace);
 
             });
 
-            // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-
-            // get security key
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
@@ -153,30 +147,12 @@ namespace TFG_UOC_2024.API
             })
             .AddJwtBearer(options =>
             {
-                /*  // optionally can make sure the user still exists in the db on each call
-                options.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = context =>
-                    {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var user = userService.GetById(context.Principal.Identity.Name);
-                        if (user == null)
-                        {
-                            // return unauthorized if user no longer exists
-                            context.Fail("Unauthorized");
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-                */
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    // ValidAudience = "http://dotnetdetail.net",
-                    // ValidIssuer = "http://dotnetdetail.net",
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
@@ -191,9 +167,23 @@ namespace TFG_UOC_2024.API
             // configure DI for application services
 
             /* Authentication / users / roles */
-            services.AddScoped<Microsoft.AspNetCore.Authentication.IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IRecipeManager, RecipeManager>();
+            services.AddScoped<IMenuManager, MenuManager>();
+            services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<IHttpRecipeClient, HttpRecipeClient>();
+            services.AddScoped<IUserRepository>(provider => new UserRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IContactRepository>(provider => new ContactRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IUserRoleRepository>(provider => new UserRoleRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<ICategoryRepository>(provider => new CategoryRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IIngredientRepository>(provider => new IngredientRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IMenuRepository>(provider => new MenuRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IRecipeRepository>(provider => new RecipeRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IUserFavoriteRepository>(provider => new UserFavoriteRepository(provider.GetRequiredService<ApplicationContext>()));
+            services.AddScoped<IUserRoleRepository>(provider => new UserRoleRepository(provider.GetRequiredService<ApplicationContext>()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -202,11 +192,10 @@ namespace TFG_UOC_2024.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseHttpsRedirection();
+                //app.UseHttpsRedirection();
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -227,10 +216,6 @@ namespace TFG_UOC_2024.API
             var cachePeriod = env.IsDevelopment() ? "600" : "604800";
             app.UseStaticFiles(new StaticFileOptions
             {
-                /*FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "assets")),
-                    RequestPath = "/assets", */
-
                 OnPrepareResponse = ctx =>
                 {
                     ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={cachePeriod}");

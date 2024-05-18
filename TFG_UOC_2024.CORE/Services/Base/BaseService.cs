@@ -20,35 +20,23 @@ namespace TFG_UOC_2024.CORE.Services.Base
 
         // define db context
         protected UserManager<ApplicationUser> userManager;
-        protected ApplicationContext db { get; set; }
         protected IMapper mapper { get; set; }
         protected Microsoft.Extensions.Logging.ILogger log;
         protected IConfiguration config;
         protected IHttpContextAccessor httpContextAccessor;
-        protected string domain;
 
         public BaseService(
             UserManager<ApplicationUser> u,
-            ApplicationContext dbContext,
             IMapper m,
             IHttpContextAccessor hca,
             Microsoft.Extensions.Logging.ILogger logger = null,
             IConfiguration configuration = null)
         {
             this.userManager = u;
-            this.db = dbContext;
             this.mapper = m;
             this.log = logger;
             this.config = configuration;
             httpContextAccessor = hca;
-
-            // get the domain, either CdnEndpoint or ApiUrl
-            if (config != null)
-            {
-                domain = !string.IsNullOrEmpty(config.GetValue<string>("CdnEndpoint"))
-                        ? config.GetValue<string>("CdnEndpoint")
-                        : config.GetValue<string>("ApiUrl");
-            }
         }
 
         protected async Task<ApplicationUser> GetUser()

@@ -14,6 +14,8 @@ namespace TFG_UOC_2024.CORE.Services.Interfaces
     {
         ServiceResponse<UserSearchDTO> SearchUsers(UserSearchInput req);
         Task<ServiceResponse<UserSimpleDTO>> GetUser(Guid id);
+
+        Task<ServiceResponse<UserDTO>> GetSelf();
         Task<ServiceResponse<Guid>> AddUser(UserInput dto);
         Task<ServiceResponse<UserSimpleDTO>> UpdateUser(string id, UserSimpleDTO dto);
         Task<GenericResponse> DeleteUser(string id);
