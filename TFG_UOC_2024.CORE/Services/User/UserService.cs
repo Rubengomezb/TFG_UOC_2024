@@ -378,27 +378,11 @@ namespace TFG_UOC_2024.CORE.Services.User
                 {
                     var sql = $"INSERT INTO dbo.AspNetUserRoles (userid, roleid, startdate, expirydate) VALUES ('{req.UserId}', '{req.RoleId}', {dtStart}, {dtExpiry})";
                     _userRepository.GetDbContext().Database.ExecuteSqlRaw(sql);
-                    /*var newUr = new ApplicationUserRole
-                    {
-                        RoleId = req.RoleId,
-                        StartDate = req.StartDate,
-                        ExpiryDate = req.ExpiryDate,
-                        UserId = req.UserId
-                    };
-                    db.ApplicationUserRoles.Add(newUr);
-                    db.SaveChanges();
-                    */
                 }
                 else // update
                 {
                     var sql = $"UPDATE dbo.AspNetUserRoles SET StartDate = {dtStart}, ExpiryDate = {dtExpiry} WHERE roleid = '{ur.RoleId}' AND userid = '{ur.UserId}'";
                     _userRepository.GetDbContext().Database.ExecuteSqlRaw(sql);
-                    /*
-                    ur.StartDate = req.StartDate;
-                    ur.ExpiryDate = req.ExpiryDate;
-                    db.UserRoles.Update(ur);
-                    db.SaveChanges();
-                    */
                 }
 
                 return r.Ok();

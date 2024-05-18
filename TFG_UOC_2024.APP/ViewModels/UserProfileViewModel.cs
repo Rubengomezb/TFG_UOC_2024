@@ -170,8 +170,6 @@ namespace TFG_UOC_2024.APP.ViewModels
 
                 App.user = user;
                 LoadUser();
-                /*string userDetails = JsonConvert.SerializeObject(user);
-                Preferences.Set(nameof(App.user), userDetails);*/
             }
             catch (Exception ex)
             {

@@ -72,7 +72,7 @@ namespace TFG_UOC_2024.APP.TEST.ViewModels
             service.Setup(x => x.GetWeeklyMenuAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>())).ReturnsAsync(menu);
             viewModel.IntializeAppoitments();
 
-            viewModel.SelectedDate = DateTime.Now.AddDays(1);
+            viewModel.SelectedDate = DateTime.Now;
             var result = viewModel.GetSelectedDateAppointments(viewModel.SelectedDate);
             Assert.IsTrue(result.Any());
         }

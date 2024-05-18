@@ -90,14 +90,7 @@ namespace TFG_UOC_2024.APP.ViewModels
                     var userLogged = await _authService.LoginAsync(loginDto);
                     if (userLogged != null)
                     {
-                        //if (Preferences.ContainsKey(nameof(App.user)))
-                        //{
-                        //    Preferences.Remove(nameof(App.user));
-                        //}
-                        //string userDetails = JsonConvert.SerializeObject(user);
-                        //Preferences.Set(nameof(App.user), userDetails);
                         App.user = userLogged;
-                        //AppShell.Current.FlyoutHeader = new HeaderControl();
                         if (!forTest)
                         {
                             await Shell.Current.GoToAsync("//MainRecipeView");

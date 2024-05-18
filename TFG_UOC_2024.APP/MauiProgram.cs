@@ -23,15 +23,6 @@ namespace TFG_UOC_2024.APP
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            /*builder.Services.AddScoped<IPlatformHttpMessageHandler>(_ =>
-            {
-#if ANDROID
-                return new AndroidHttpMessageHandler();
-#else
-                    return new Platforms.iOS.IosHttpMessageHandler();
-#endif
-
-            });*/
 
             builder.ConfigureSyncfusionCore();
             builder.Services.AddCustomApiHttpClient();
@@ -60,7 +51,6 @@ namespace TFG_UOC_2024.APP
             builder.Services.AddTransient<SearchRecipesView>();
             builder.Services.AddTransient<UserProfileView>();
             builder.Services.AddTransient<FavouriteView>();
-
 
 
 #if DEBUG
