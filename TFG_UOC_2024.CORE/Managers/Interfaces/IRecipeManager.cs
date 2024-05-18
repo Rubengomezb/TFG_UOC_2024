@@ -29,6 +29,5 @@ namespace TFG_UOC_2024.CORE.Managers.Interfaces
 
         Task<ServiceResponse<List<RecipeDTO>>> GetRecipes(string health);
 
-        //Task<GenericResponse> AddIngredients();
     }
 }

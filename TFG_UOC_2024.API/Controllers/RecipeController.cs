@@ -52,10 +52,6 @@ namespace TFG_UOC_2024.API.Controllers
         public async Task<ActionResult> IsFavorite(Guid userId, Guid recipeId) =>
             Respond(await _recipeManager.IsFavorite(userId, recipeId));
 
-        /*[HttpPost("ingredients")]
-        public async Task<ActionResult> AddIngredients() =>
-            Respond(await _recipeManager.AddIngredients());*/
-
         [HttpPost("removeFavorite")]
         public async Task<ActionResult> RemoveFavority([FromBody] RecipeFavorite recipeFavorite) =>
             Respond(await _recipeManager.RemoveFavorite(recipeFavorite));
