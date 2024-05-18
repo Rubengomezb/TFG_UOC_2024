@@ -27,10 +27,6 @@ namespace TFG_UOC_2024.DB.Context
 
             var context = serviceProvider.GetRequiredService<ApplicationContext>();
             context.Database.EnsureCreated();
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();
-            }
 
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();

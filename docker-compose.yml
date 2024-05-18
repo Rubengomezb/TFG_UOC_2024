@@ -15,6 +15,12 @@ services:
       - MYSQL_ROOT_PASSWORD=mauFJcuf5dhRMQrjj
     ports:
       - '3306:3306'
+      healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
     volumes:
       - db:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -23,7 +29,8 @@ services:
   app:
     image: docker.io/library/tfg_uoc_2024
     depends_on:
-     - "db"
+     db:
+        condition: service_healthy
     container_name: TFG_UOC_2024
     ports:
       - "5010:80"
